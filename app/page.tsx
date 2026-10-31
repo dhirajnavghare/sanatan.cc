@@ -24,33 +24,66 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Featured Live Application Card: Panchang */}
-        <div className="relative overflow-hidden rounded-3xl border border-amber-200/60 bg-gradient-to-br from-amber-50 via-white to-indigo-50/30 p-6 shadow-sm dark:border-zinc-800 dark:from-zinc-900 dark:via-zinc-900 dark:to-[#171838]/40 sm:p-8">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
-            <div className="space-y-2">
+        {/* Applications Grid: Panchang & Shubh Muhurta Finder */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Featured Application: Panchang */}
+          <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-amber-200/60 bg-gradient-to-br from-amber-50 via-white to-amber-50/20 p-6 shadow-sm dark:border-zinc-800 dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-800/50 sm:p-7">
+            <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold text-amber-800 dark:text-amber-300">
+                <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:text-amber-300">
                   Public Beta
                 </span>
-                <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Calculation-based Ephemeris • Open for Validation
+                <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                  High-Precision Ephemeris
                 </span>
               </div>
-              <h2 className="font-serif text-2xl font-bold text-zinc-900 dark:text-zinc-50 sm:text-3xl">
-                पञ्चाङ्गम् — High-Precision Vedic Panchang
+              <h2 className="font-serif text-xl font-bold text-zinc-900 dark:text-zinc-50 sm:text-2xl">
+                पञ्चाङ्गम् — Vedic Panchang
               </h2>
-              <p className="max-w-lg text-sm text-zinc-600 dark:text-zinc-400">
-                Extremely accurate calculation-based Panchang computed locally from Sun and Moon ephemeris (Lahiri Ayanamsa, VSOP87, Chapront ELP-2000). Enter exact Latitude &amp; Longitude or use GPS. Computes Tithi, Nakshatra, Yoga, Karana, Vara, Shubh Muhurtas, Choghadiya, and festivals.
+              <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                Extremely accurate calculation-based Panchang computed locally from Sun and Moon ephemeris (Lahiri Ayanamsa, VSOP87, ELP-2000). Calculates Tithi, Nakshatra, Yoga, Karana, Vara, Shubh Muhurtas, and Choghadiya.
               </p>
             </div>
 
-            <Link
-              href="/panchang"
-              className="inline-flex flex-none items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 px-6 py-3.5 text-sm font-semibold text-white shadow-md transition hover:from-amber-700 hover:to-amber-800 hover:shadow-lg"
-            >
-              <span>Open Panchang</span>
-              <span>&rarr;</span>
-            </Link>
+            <div className="mt-6">
+              <Link
+                href="/panchang"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 px-5 py-3 text-xs font-semibold text-white shadow-md transition hover:from-amber-700 hover:to-amber-800"
+              >
+                <span>Open Panchang</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Featured Application: Shubh Muhurta Finder */}
+          <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-indigo-200/60 bg-gradient-to-br from-indigo-50/60 via-white to-purple-50/20 p-6 shadow-sm dark:border-zinc-800 dark:from-zinc-900 dark:via-zinc-900 dark:to-[#171838]/60 sm:p-7">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-indigo-500/20 px-2.5 py-0.5 text-[11px] font-bold text-indigo-800 dark:text-indigo-300">
+                  Public Beta
+                </span>
+                <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                  Classical Shastra Engine
+                </span>
+              </div>
+              <h2 className="font-serif text-xl font-bold text-zinc-900 dark:text-zinc-50 sm:text-2xl">
+                शुभ मुहूर्त — Muhurta Finder
+              </h2>
+              <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                Algorithmic discovery across 30 to 180 days for Griha Pravesh, Vivaha, Vehicle Purchase, Business Start, and Property Registration. Filters Bhadra, Rikta Tithis, and identifies Sarvartha Siddhi &amp; Amrita Siddhi yogas.
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <Link
+                href="/muhurta"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-5 py-3 text-xs font-semibold text-white shadow-md transition hover:from-indigo-700 hover:to-indigo-800"
+              >
+                <span>Find Auspicious Muhurtas</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -59,7 +92,14 @@ export default function Home() {
             href="/panchang"
             className="font-medium text-amber-600 underline underline-offset-4 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
           >
-            Explore Panchang Tab &rarr;
+            Panchang &rarr;
+          </Link>
+
+          <Link
+            href="/muhurta"
+            className="font-medium text-indigo-600 underline underline-offset-4 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+          >
+            Muhurta Finder &rarr;
           </Link>
 
           <a
@@ -72,7 +112,7 @@ export default function Home() {
           </a>
 
           <a
-            href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Panchang%20Beta%20Feedback"
+            href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Beta%20Feedback"
             className="font-medium text-amber-600 underline underline-offset-4 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
           >
             Beta Feedback (mail@sanatan.cc)
