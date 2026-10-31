@@ -1,0 +1,22 @@
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repository
+*                   @dhirajnavghare
+
+# Core Application & Next.js Routes
+/app/               @dhirajnavghare
+
+# Astronomical Ephemeris Engine & Vedic Panchang Calculators
+/app/lib/panchang/  @dhirajnavghare
+
+# UI Components & Interactive Widgets
+/app/components/    @dhirajnavghare
+
+# Test Suites & QA Verification
+/e2e/               @dhirajnavghare
+
+# Repository & Workflow Configurations
+/.github/           @dhirajnavghare
+/next.config.ts     @dhirajnavghare
+/package.json       @dhirajnavghare
+/tsconfig.json      @dhirajnavghare
