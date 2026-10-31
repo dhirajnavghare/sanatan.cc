@@ -264,7 +264,8 @@ export function findTransitionTime(
  */
 export function calculatePanchaAnga(
   sunriseTime: Date,
-  ayanamsaSystem: AyanamsaSystem = 'Lahiri'
+  ayanamsaSystem: AyanamsaSystem = 'Lahiri',
+  dayOfWeek?: number
 ): {
   tithi: TransitionEvent<TithiDetails>;
   nakshatra: TransitionEvent<NakshatraDetails>;
@@ -307,14 +308,14 @@ export function calculatePanchaAnga(
   const karanaNext = getKaranaDetails((karanaCurrentIdx + 1) % 60);
 
   // 5. Vara (Weekday at local sunrise)
-  // Date.getUTCDay() for the sunrise timestamp
-  const sunriseUtcDay = sunriseTime.getUTCDay();
+  // Use explicitly provided civil day of week, or fallback to sunrise timestamp UTC day
+  const resolvedDayOfWeek = dayOfWeek !== undefined ? dayOfWeek : sunriseTime.getUTCDay();
   const vara: VaraDetails = {
-    dayOfWeek: sunriseUtcDay,
-    name: VARA_NAMES[sunriseUtcDay],
-    nameDevanagari: VARA_DEVANAGARI[sunriseUtcDay],
-    englishName: VARA_ENGLISH[sunriseUtcDay],
-    lordPlanet: VARA_LORDS[sunriseUtcDay],
+    dayOfWeek: resolvedDayOfWeek,
+    name: VARA_NAMES[resolvedDayOfWeek],
+    nameDevanagari: VARA_DEVANAGARI[resolvedDayOfWeek],
+    englishName: VARA_ENGLISH[resolvedDayOfWeek],
+    lordPlanet: VARA_LORDS[resolvedDayOfWeek],
   };
 
   // 6. Moon Rashi
