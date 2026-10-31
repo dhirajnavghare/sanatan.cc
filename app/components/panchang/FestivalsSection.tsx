@@ -4,11 +4,11 @@ import { PanchangData } from '@/app/lib/panchang/types';
 
 interface FestivalsSectionProps {
   data: PanchangData;
-  onSelectDate: (date: Date) => void;
+  onSelectDate: (isoDate: string) => void;
 }
 
 export default function FestivalsSection({ data, onSelectDate }: FestivalsSectionProps) {
-  const { festivals, upcomingFestivals, location } = data;
+  const { festivals, upcomingFestivals } = data;
 
   return (
     <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -70,12 +70,14 @@ export default function FestivalsSection({ data, onSelectDate }: FestivalsSectio
         <div className="mt-3 divide-y divide-zinc-100 dark:divide-zinc-800">
           {upcomingFestivals.length > 0 ? (
             upcomingFestivals.map((item, idx) => {
+              const [y, m, d] = item.isoDate.split('-').map(Number);
+              const anchor = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
               const formattedDate = new Intl.DateTimeFormat('en-IN', {
-                timeZone: location.timezone,
+                timeZone: 'UTC',
                 weekday: 'short',
                 day: 'numeric',
                 month: 'short',
-              }).format(item.date);
+              }).format(anchor);
 
               const festNames = item.festivals.map((f) => f.name).join(', ');
 
@@ -83,9 +85,9 @@ export default function FestivalsSection({ data, onSelectDate }: FestivalsSectio
                 <button
                   key={idx}
                   type="button"
-                  onClick={() => onSelectDate(item.date)}
+                  onClick={() => onSelectDate(item.isoDate)}
                   className="flex w-full items-center justify-between py-3 text-left transition hover:bg-zinc-50 first:pt-1 last:pb-1 dark:hover:bg-zinc-800/50"
-                  title={`Jump to ${formattedDate}`}
+                  title={`Jump to ${item.isoDate}`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex-none rounded-xl bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">

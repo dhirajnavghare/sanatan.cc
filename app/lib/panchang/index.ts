@@ -18,7 +18,7 @@ import {
   getSunSiderealLongitude,
 } from './panchang-calc';
 import { calculateMuhurtas, calculateChoghadiya } from './muhurta';
-import { calculateFestivals, calculateUpcomingFestivals } from './festivals';
+import { calculateFestivals, calculateUpcomingFestivals, parseCivilDate } from './festivals';
 import { GeoLocation, PanchangData } from './types';
 export * from './types';
 export * from './constants';
@@ -32,14 +32,13 @@ export * from './festivals';
  * Main calculation engine function for Panchang
  */
 export function calculatePanchang(
-  date: Date,
+  dateInput: Date | string,
   location: GeoLocation,
   ayanamsaSystem: AyanamsaSystem = 'Lahiri',
   currentTime?: Date
 ): PanchangData {
-  const year = date.getUTCFullYear();
-  const month = date.getUTCMonth() + 1;
-  const day = date.getUTCDate();
+  const { year, month, day, isoDate } = parseCivilDate(dateInput, location.timezone);
+  const civilDateAnchor = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
 
   // 1. Solar Ephemeris & Times
   const useDip = !!location.useElevationDip;
@@ -54,7 +53,7 @@ export function calculatePanchang(
   );
 
   // Next day's sunrise for ratrimana & nighttime calculations
-  const nextDayDate = new Date(Date.UTC(year, month - 1, day + 1));
+  const nextDayDate = new Date(Date.UTC(year, month - 1, day + 1, 12, 0, 0));
   const nextSunTimes = calculateSunTimes(
     nextDayDate.getUTCFullYear(),
     nextDayDate.getUTCMonth() + 1,
@@ -105,7 +104,7 @@ export function calculatePanchang(
 
   // 4. Masa (Lunar Month) & Samvat
   const masa = calculateMasa(sunTimesRaw.sunrise, panchaAnga.tithi.current, ayanamsaSystem);
-  const samvat = calculateSamvat(date, panchaAnga.sunRashi.current.index, masa);
+  const samvat = calculateSamvat(civilDateAnchor, panchaAnga.sunRashi.current.index, masa);
 
   // 5. Muhurtas & Auspicious/Inauspicious Timings
   const muhurtas = calculateMuhurtas(
@@ -128,8 +127,8 @@ export function calculatePanchang(
   );
 
   // 7. Festivals & Upcoming Vrats
-  const festivals = calculateFestivals(date, location);
-  const upcomingFestivals = calculateUpcomingFestivals(date, location, 6);
+  const festivals = calculateFestivals(isoDate, location);
+  const upcomingFestivals = calculateUpcomingFestivals(isoDate, location, 6);
 
   // 8. Astronomical Details
   const sunPos = getSunPosition(sunriseJd);
@@ -160,7 +159,8 @@ export function calculatePanchang(
   };
 
   return {
-    date,
+    date: civilDateAnchor,
+    isoDate,
     location,
     sunTimes,
     moonTimes,

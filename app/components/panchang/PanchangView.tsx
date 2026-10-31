@@ -12,26 +12,25 @@ import FestivalsSection from './FestivalsSection';
 import AstroParameters from './AstroParameters';
 import LocationModal from './LocationModal';
 
-function formatIsoDate(d: Date, tz: string): string {
+function getTodayIso(tz: string): string {
   try {
-    const parts = new Intl.DateTimeFormat('en-CA', {
+    return new Intl.DateTimeFormat('en-CA', {
       timeZone: tz,
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
-    }).format(d);
-    return parts; // YYYY-MM-DD
+    }).format(new Date());
   } catch {
-    return d.toISOString().slice(0, 10);
+    return new Date().toISOString().slice(0, 10);
   }
 }
 
 export default function PanchangView() {
-  // Default to Ujjain (the ancient zero meridian of Vedic astronomy)
+  // Default to Ujjain (the prime meridian of ancient Indian astronomy)
   const [location, setLocation] = useState<GeoLocation>(PRESET_CITIES[0]);
   const [ayanamsa, setAyanamsa] = useState<AyanamsaSystem>('Lahiri');
-  // Stable anchor date for SSR/prerender:
-  const [selectedDate, setSelectedDate] = useState<Date>(() => new Date(Date.UTC(2026, 9, 31, 6, 0, 0)));
+  // Stable anchor ISO civil date string
+  const [selectedDateStr, setSelectedDateStr] = useState<string>('2026-10-31');
   const [currentTime, setCurrentTime] = useState<Date | undefined>(undefined);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -41,14 +40,19 @@ export default function PanchangView() {
     const timer = setTimeout(() => {
       setMounted(true);
       const now = new Date();
-      setSelectedDate(now);
       setCurrentTime(now);
 
+      let activeLoc = PRESET_CITIES[0];
       try {
         const savedLoc = localStorage.getItem('panchang_custom_location');
         if (savedLoc) {
           const parsed = JSON.parse(savedLoc);
-          if (parsed.latitude !== undefined && parsed.longitude !== undefined) {
+          if (
+            typeof parsed.latitude === 'number' &&
+            typeof parsed.longitude === 'number' &&
+            parsed.timezone
+          ) {
+            activeLoc = parsed;
             setLocation(parsed);
           }
         }
@@ -57,6 +61,9 @@ export default function PanchangView() {
           setAyanamsa(savedAyan as AyanamsaSystem);
         }
       } catch {}
+
+      // Initialize selected date to today's civil date in observer's timezone
+      setSelectedDateStr(getTodayIso(activeLoc.timezone || 'Asia/Kolkata'));
     }, 0);
 
     return () => clearTimeout(timer);
@@ -64,28 +71,42 @@ export default function PanchangView() {
 
   // Compute Panchang data in real-time
   const panchangData = useMemo(() => {
-    return calculatePanchang(selectedDate, location, ayanamsa, currentTime);
-  }, [selectedDate, location, ayanamsa, currentTime]);
+    return calculatePanchang(selectedDateStr, location, ayanamsa, currentTime);
+  }, [selectedDateStr, location, ayanamsa, currentTime]);
 
-  const dateInputValue = useMemo(() => {
-    return formatIsoDate(selectedDate, location.timezone);
-  }, [selectedDate, location.timezone]);
+  const displayDateFormatted = useMemo(() => {
+    try {
+      const [y, m, d] = selectedDateStr.split('-').map(Number);
+      const anchor = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+      return new Intl.DateTimeFormat('en-IN', {
+        timeZone: 'UTC',
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }).format(anchor);
+    } catch {
+      return selectedDateStr;
+    }
+  }, [selectedDateStr]);
 
-  const handleDateChange = (isoString: string) => {
-    if (!isoString) return;
-    const [y, m, d] = isoString.split('-').map(Number);
+  const shiftDay = (days: number) => {
+    const [y, m, d] = selectedDateStr.split('-').map(Number);
     if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-      setSelectedDate(new Date(Date.UTC(y, m - 1, d, 12, 0, 0)));
+      const nextDate = new Date(Date.UTC(y, m - 1, d + days, 12, 0, 0));
+      setSelectedDateStr(nextDate.toISOString().slice(0, 10));
     }
   };
 
-  const shiftDay = (days: number) => {
-    const curMs = selectedDate.getTime();
-    setSelectedDate(new Date(curMs + days * 86400000));
+  const handleDateChange = (isoString: string) => {
+    if (!isoString) return;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(isoString)) {
+      setSelectedDateStr(isoString);
+    }
   };
 
   const handleToday = () => {
-    setSelectedDate(new Date());
+    setSelectedDateStr(getTodayIso(location.timezone || 'Asia/Kolkata'));
   };
 
   return (
@@ -96,6 +117,7 @@ export default function PanchangView() {
         <div className="flex items-center gap-2">
           <button
             type="button"
+            data-testid="location-modal-trigger"
             onClick={() => setIsLocationModalOpen(true)}
             className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-100 hover:border-amber-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
             title="Configure exact Latitude, Longitude, Altitude, Timezone & Ayanamsa"
@@ -110,12 +132,18 @@ export default function PanchangView() {
         </div>
 
         {/* Date Navigator */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
+          <span className="hidden pr-2 text-xs font-medium text-zinc-500 sm:inline dark:text-zinc-400">
+            {displayDateFormatted}
+          </span>
+
           <button
             type="button"
+            data-testid="prev-day-button"
             onClick={() => shiftDay(-1)}
             aria-label="Previous Day"
             className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-bold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+            title="Previous Day"
           >
             ‹
           </button>
@@ -123,22 +151,26 @@ export default function PanchangView() {
           <input
             type="date"
             aria-label="Date Picker"
-            value={mounted ? dateInputValue : ''}
+            data-testid="date-picker-input"
+            value={mounted ? selectedDateStr : '2026-10-31'}
             onChange={(e) => handleDateChange(e.target.value)}
-            className="min-w-[140px] rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-center text-xs font-semibold text-zinc-800 focus:border-amber-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            className="min-w-[135px] rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 py-2 text-center text-xs font-semibold text-zinc-800 focus:border-amber-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           />
 
           <button
             type="button"
+            data-testid="next-day-button"
             onClick={() => shiftDay(1)}
             aria-label="Next Day"
             className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-bold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+            title="Next Day"
           >
             ›
           </button>
 
           <button
             type="button"
+            data-testid="today-button"
             onClick={handleToday}
             className="rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none"
           >
@@ -168,7 +200,7 @@ export default function PanchangView() {
       {/* Festivals & Vrats */}
       <FestivalsSection
         data={panchangData}
-        onSelectDate={(d) => setSelectedDate(d)}
+        onSelectDate={(iso) => setSelectedDateStr(iso)}
       />
 
       {/* Mathematical & Astronomy Transparency */}

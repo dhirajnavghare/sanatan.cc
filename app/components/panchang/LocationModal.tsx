@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { GeoLocation } from '@/app/lib/panchang/types';
 import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
 import PanchangLocationForm from './PanchangLocationForm';
@@ -21,6 +22,15 @@ export default function LocationModal({
   isOpen,
   onClose,
 }: LocationModalProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (updatedLoc: GeoLocation, selectedAyan: AyanamsaSystem) => {
@@ -36,8 +46,12 @@ export default function LocationModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-fade-in"
+    >
       <div
+        onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl bg-white shadow-2xl dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
         role="dialog"
         aria-modal="true"
@@ -52,6 +66,7 @@ export default function LocationModal({
         </button>
 
         <PanchangLocationForm
+          key={`${location.name}_${location.latitude}_${location.longitude}_${ayanamsa}`}
           initialLocation={location}
           initialAyanamsa={ayanamsa}
           onSubmit={handleSubmit}

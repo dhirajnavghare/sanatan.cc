@@ -7,9 +7,9 @@ import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
 
 export interface LocationFormValues {
   name: string;
-  latitude: number | '';
-  longitude: number | '';
-  altitude: number | '';
+  latitude: string;
+  longitude: string;
+  altitude: string;
   timezone: string;
   ayanamsa: AyanamsaSystem;
   useElevationDip: boolean;
@@ -42,9 +42,9 @@ export default function PanchangLocationForm({
 
   const [values, setValues] = useState<LocationFormValues>({
     name: initialLocation.name,
-    latitude: initialLocation.latitude,
-    longitude: initialLocation.longitude,
-    altitude: initialLocation.altitude,
+    latitude: String(initialLocation.latitude),
+    longitude: String(initialLocation.longitude),
+    altitude: String(initialLocation.altitude ?? 0),
     timezone: initialLocation.timezone,
     ayanamsa: initialAyanamsa,
     useElevationDip: initialLocation.useElevationDip ?? false,
@@ -61,19 +61,25 @@ export default function PanchangLocationForm({
       newErrors.name = 'Location name is required.';
     }
 
-    if (values.latitude === '' || isNaN(Number(values.latitude))) {
+    const latTrim = values.latitude.trim();
+    const latNum = parseFloat(latTrim);
+    if (latTrim === '' || isNaN(latNum)) {
       newErrors.latitude = 'Latitude is required.';
-    } else if (Number(values.latitude) < -90 || Number(values.latitude) > 90) {
+    } else if (latNum < -90 || latNum > 90) {
       newErrors.latitude = 'Latitude must be between -90° and +90°.';
     }
 
-    if (values.longitude === '' || isNaN(Number(values.longitude))) {
+    const lonTrim = values.longitude.trim();
+    const lonNum = parseFloat(lonTrim);
+    if (lonTrim === '' || isNaN(lonNum)) {
       newErrors.longitude = 'Longitude is required.';
-    } else if (Number(values.longitude) < -180 || Number(values.longitude) > 180) {
+    } else if (lonNum < -180 || lonNum > 180) {
       newErrors.longitude = 'Longitude must be between -180° and +180°.';
     }
 
-    if (values.altitude !== '' && Number(values.altitude) < 0) {
+    const altTrim = values.altitude.trim();
+    const altNum = parseFloat(altTrim);
+    if (altTrim !== '' && (isNaN(altNum) || altNum < 0)) {
       newErrors.altitude = 'Altitude cannot be negative.';
     }
 
@@ -109,9 +115,9 @@ export default function PanchangLocationForm({
       setValues((prev) => ({
         ...prev,
         name: city.name,
-        latitude: city.latitude,
-        longitude: city.longitude,
-        altitude: city.altitude,
+        latitude: String(city.latitude),
+        longitude: String(city.longitude),
+        altitude: String(city.altitude ?? 0),
         timezone: city.timezone,
         useElevationDip: city.useElevationDip ?? false,
       }));
@@ -138,9 +144,9 @@ export default function PanchangLocationForm({
         setValues((prev) => ({
           ...prev,
           name: `GPS Location (${latitude.toFixed(3)}°, ${longitude.toFixed(3)}°)`,
-          latitude: Number(latitude.toFixed(5)),
-          longitude: Number(longitude.toFixed(5)),
-          altitude: altitude ? Number(altitude.toFixed(1)) : 0,
+          latitude: latitude.toFixed(5),
+          longitude: longitude.toFixed(5),
+          altitude: altitude ? altitude.toFixed(1) : '0',
           timezone: tz,
         }));
         setErrors({});
@@ -160,11 +166,16 @@ export default function PanchangLocationForm({
     e.preventDefault();
     if (!validate()) return;
 
+    const latNum = parseFloat(values.latitude.trim());
+    const lonNum = parseFloat(values.longitude.trim());
+    const altTrim = values.altitude.trim();
+    const altNum = altTrim === '' ? 0 : parseFloat(altTrim);
+
     const validatedLocation: GeoLocation = {
       name: values.name.trim(),
-      latitude: Number(values.latitude),
-      longitude: Number(values.longitude),
-      altitude: values.altitude === '' ? 0 : Number(values.altitude),
+      latitude: latNum,
+      longitude: lonNum,
+      altitude: altNum,
       timezone: values.timezone.trim(),
       useElevationDip: values.useElevationDip,
     };
@@ -172,6 +183,12 @@ export default function PanchangLocationForm({
     onSubmit(validatedLocation, values.ayanamsa);
     setSubmitSuccess(true);
   };
+
+  const currentPresetIdx = PRESET_CITIES.findIndex(
+    (c) =>
+      Math.abs(c.latitude - parseFloat(values.latitude)) < 0.005 &&
+      Math.abs(c.longitude - parseFloat(values.longitude)) < 0.005
+  );
 
   return (
     <form
@@ -219,15 +236,15 @@ export default function PanchangLocationForm({
             data-testid="preset-city-select"
             aria-label="Preset City"
             onChange={handleSelectPreset}
-            defaultValue=""
+            value={currentPresetIdx >= 0 ? currentPresetIdx : ''}
             className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-800 focus:border-amber-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           >
-            <option value="" disabled>
-              -- Or choose from predefined city coordinates --
+            <option value="" disabled={currentPresetIdx >= 0}>
+              {currentPresetIdx >= 0 ? '-- Change Predefined City --' : '-- Choose from Predefined City Coordinates --'}
             </option>
             {PRESET_CITIES.map((city, idx) => (
               <option key={city.name} value={idx}>
-                {city.name}
+                {city.name} ({city.latitude}°, {city.longitude}°)
               </option>
             ))}
           </select>
@@ -287,12 +304,7 @@ export default function PanchangLocationForm({
             type="number"
             step="any"
             value={values.latitude}
-            onChange={(e) =>
-              handleFieldChange(
-                'latitude',
-                e.target.value === '' ? '' : parseFloat(e.target.value)
-              )
-            }
+            onChange={(e) => handleFieldChange('latitude', e.target.value)}
             aria-invalid={!!errors.latitude}
             aria-describedby={errors.latitude ? `${formId}-latitude-error` : undefined}
             placeholder="e.g. 23.1765"
@@ -330,12 +342,7 @@ export default function PanchangLocationForm({
             type="number"
             step="any"
             value={values.longitude}
-            onChange={(e) =>
-              handleFieldChange(
-                'longitude',
-                e.target.value === '' ? '' : parseFloat(e.target.value)
-              )
-            }
+            onChange={(e) => handleFieldChange('longitude', e.target.value)}
             aria-invalid={!!errors.longitude}
             aria-describedby={errors.longitude ? `${formId}-longitude-error` : undefined}
             placeholder="e.g. 75.7885"
@@ -376,12 +383,7 @@ export default function PanchangLocationForm({
             type="number"
             step="any"
             value={values.altitude}
-            onChange={(e) =>
-              handleFieldChange(
-                'altitude',
-                e.target.value === '' ? '' : parseFloat(e.target.value)
-              )
-            }
+            onChange={(e) => handleFieldChange('altitude', e.target.value)}
             aria-invalid={!!errors.altitude}
             aria-describedby={errors.altitude ? `${formId}-altitude-error` : undefined}
             placeholder="e.g. 491"

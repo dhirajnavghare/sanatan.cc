@@ -142,6 +142,7 @@ export interface FestivalEvent {
 
 export interface UpcomingFestival {
   date: Date;
+  isoDate: string;
   daysRemaining: number;
   festivals: FestivalEvent[];
 }
@@ -168,6 +169,7 @@ export interface AstronomicalDetails {
 
 export interface PanchangData {
   date: Date;
+  isoDate: string;
   location: GeoLocation;
   sunTimes: SunTimes;
   moonTimes: MoonTimes;

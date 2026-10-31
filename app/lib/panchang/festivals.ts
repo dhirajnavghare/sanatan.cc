@@ -253,22 +253,47 @@ function getRawFestivals(
   return results;
 }
 
+export function parseCivilDate(
+  dateInput: Date | string,
+  timezone: string
+): { year: number; month: number; day: number; isoDate: string } {
+  if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+    const [y, m, d] = dateInput.split('-').map(Number);
+    return { year: y, month: m, day: d, isoDate: dateInput };
+  }
+  const d = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(d);
+    const [year, month, day] = parts.split('-').map(Number);
+    return { year, month, day, isoDate: parts };
+  } catch {
+    const year = d.getUTCFullYear();
+    const month = d.getUTCMonth() + 1;
+    const day = d.getUTCDate();
+    const isoDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return { year, month, day, isoDate };
+  }
+}
+
 /**
  * Filter multi-day overlaps (picks the optimal day for a festival)
  */
 export function calculateFestivals(
-  date: Date,
+  date: Date | string,
   location: GeoLocation
 ): FestivalEvent[] {
-  const y = date.getUTCFullYear();
-  const m = date.getUTCMonth() + 1;
-  const d = date.getUTCDate();
+  const { year: y, month: m, day: d } = parseCivilDate(date, location.timezone);
 
   const currentDay = getRawFestivals(y, m, d, location);
 
   // Check previous and next day to resolve 2-day spans
-  const prevDate = new Date(Date.UTC(y, m - 1, d - 1));
-  const nextDate = new Date(Date.UTC(y, m - 1, d + 1));
+  const prevDate = new Date(Date.UTC(y, m - 1, d - 1, 12, 0, 0));
+  const nextDate = new Date(Date.UTC(y, m - 1, d + 1, 12, 0, 0));
 
   const prevNames = new Set(
     getRawFestivals(prevDate.getUTCFullYear(), prevDate.getUTCMonth() + 1, prevDate.getUTCDate(), location).map(
@@ -296,20 +321,23 @@ export function calculateFestivals(
  * Find upcoming major festivals up to 180 days ahead
  */
 export function calculateUpcomingFestivals(
-  startDate: Date,
+  startDate: Date | string,
   location: GeoLocation,
   maxResults: number = 6
 ): UpcomingFestival[] {
   const results: UpcomingFestival[] = [];
-  const startMs = Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate());
+  const { year, month, day } = parseCivilDate(startDate, location.timezone);
+  const startMs = Date.UTC(year, month - 1, day, 12, 0, 0);
 
   for (let dayOffset = 1; dayOffset <= 200 && results.length < maxResults; dayOffset++) {
     const curDate = new Date(startMs + dayOffset * 86400000);
-    const dayFestivals = calculateFestivals(curDate, location).filter((f) => f.isMajor);
+    const curIso = curDate.toISOString().slice(0, 10);
+    const dayFestivals = calculateFestivals(curIso, location).filter((f) => f.isMajor);
 
     if (dayFestivals.length > 0) {
       results.push({
         date: curDate,
+        isoDate: curIso,
         daysRemaining: dayOffset,
         festivals: dayFestivals,
       });

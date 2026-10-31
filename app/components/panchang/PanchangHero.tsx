@@ -32,14 +32,17 @@ export default function PanchangHero({ data, onOpenLocationModal }: PanchangHero
   const { tithi, vara, masa, sunTimes, moonTimes, location, festivals } = data;
   const majorFestivals = festivals.filter((f) => f.isMajor);
 
-  // Format calendar date in observer's timezone
+  // Format calendar date reliably without timezone drift
+  const iso = data.isoDate || data.date.toISOString().slice(0, 10);
+  const [y, m, d] = iso.split('-').map(Number);
+  const anchorDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
   const dateFormatted = new Intl.DateTimeFormat('en-IN', {
-    timeZone: location.timezone,
+    timeZone: 'UTC',
     weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-  }).format(data.date);
+  }).format(anchorDate);
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#16173d] via-[#1c1e50] to-[#0d0e26] p-6 text-white shadow-xl ring-1 ring-white/10 sm:p-8">
