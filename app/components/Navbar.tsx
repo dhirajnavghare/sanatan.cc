@@ -55,6 +55,15 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
+          <a
+            href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Panchang%20Beta%20Feedback"
+            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+            title="Send Feedback to mail@sanatan.cc"
+          >
+            <span>✉️</span>
+            <span className="hidden sm:inline">Feedback</span>
+          </a>
+
           <Link
             href="/panchang"
             className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:from-amber-700 hover:to-amber-800 sm:hidden"

@@ -70,6 +70,13 @@ export default function Home() {
           >
             View on GitHub
           </a>
+
+          <a
+            href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Panchang%20Beta%20Feedback"
+            className="font-medium text-amber-600 underline underline-offset-4 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
+          >
+            Beta Feedback (mail@sanatan.cc)
+          </a>
         </div>
       </div>
     </div>

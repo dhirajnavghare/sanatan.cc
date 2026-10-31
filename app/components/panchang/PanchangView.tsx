@@ -202,16 +202,27 @@ export default function PanchangView() {
 
       {/* Rigorous Calculation Disclaimer & Public Beta Notice */}
       <div className="rounded-2xl border border-amber-200/60 bg-amber-50/40 p-4 text-[11px] leading-relaxed text-zinc-600 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-zinc-400">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-            Public Beta
-          </span>
-          <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-            Open for Community &amp; Astronomical Validation
-          </span>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+              Public Beta
+            </span>
+            <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+              Open for Community &amp; Astronomical Validation
+            </span>
+          </div>
+
+          <a
+            href={`mailto:mail@sanatan.cc?subject=Panchang%20Beta%20Feedback%20%26%20Validation&body=Hi%20Sanatan.cc%20Team%2C%0A%0AI%20am%20testing%20the%20Panchang%20Beta%20calculator.%20Here%20is%20my%20feedback%20%2F%20observation%3A%0A%0A-%20Location%3A%20${encodeURIComponent(location.name)}%20(${location.latitude.toFixed(4)}%2C%20${location.longitude.toFixed(4)})%0A-%20Date%20Checked%3A%20${encodeURIComponent(selectedDateStr)}%0A-%20Observation%20%2F%20Discrepancy%3A%0A%0AThanks!`}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none"
+            title="Send calculation feedback or observations to mail@sanatan.cc"
+          >
+            <span>✉️</span>
+            <span>Send Feedback (mail@sanatan.cc)</span>
+          </a>
         </div>
-        <p className="mt-1.5">
-          This Panchang uses pure trigonometric ephemeris calculations (VSOP87 Solar &amp; Chapront ELP-2000 Lunar perturbation models with Lahiri Chitra Paksha ayanamsa) without tabular hardcoding. Planetary positions, sunrise/sunset, solar noon, and horizon crossings are computed locally for your exact latitude, longitude, and elevation with topocentric atmospheric refraction. Transitions represent the exact astronomical second when solilunar elongation or sidereal longitudes cross limb demarcations. We actively cross-validate against verified ephemerides (Drik Panchang, Positional Astronomy Centre NCAC, Astrosage, Date Panchang).
+        <p className="mt-2.5">
+          This Panchang uses pure trigonometric ephemeris calculations (VSOP87 Solar &amp; Chapront ELP-2000 Lunar perturbation models with Lahiri Chitra Paksha ayanamsa) without tabular hardcoding. Planetary positions, sunrise/sunset, solar noon, and horizon crossings are computed locally for your exact latitude, longitude, and elevation with topocentric atmospheric refraction. Transitions represent the exact astronomical second when solilunar elongation or sidereal longitudes cross limb demarcations. We actively cross-validate against verified ephemerides (Drik Panchang, Positional Astronomy Centre NCAC, Astrosage, Date Panchang). We invite your observations and validation reports via <a href="mailto:mail@sanatan.cc" className="font-semibold text-amber-700 underline dark:text-amber-300">mail@sanatan.cc</a>.
         </p>
       </div>
 
