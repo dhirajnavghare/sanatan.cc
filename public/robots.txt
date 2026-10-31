@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Agent Crawl Policy & Content Signals
+Content-Signal: search=yes, ai-train=no
+
+# Sitemap Declaration
+Sitemap: https://sanatan.cc/sitemap.xml

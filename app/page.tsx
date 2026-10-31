@@ -102,20 +102,48 @@ export default function Home() {
             Muhurta Finder &rarr;
           </Link>
 
+          <Link
+            href="/about"
+            className="font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            About
+          </Link>
+
+          <Link
+            href="/contact"
+            className="font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            Contact
+          </Link>
+
+          <Link
+            href="/terms"
+            className="font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            Terms
+          </Link>
+
+          <Link
+            href="/privacy"
+            className="font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            Privacy
+          </Link>
+
           <a
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
           >
-            View on GitHub
+            GitHub
           </a>
 
           <a
             href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Beta%20Feedback"
             className="font-medium text-amber-600 underline underline-offset-4 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
           >
-            Beta Feedback (mail@sanatan.cc)
+            Feedback (mail@sanatan.cc)
           </a>
         </div>
       </div>

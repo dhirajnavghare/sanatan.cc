@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'Panchang (Beta) — High Precision Vedic Calendar & Ephemeris | sanatan.cc',
   description:
     'Worlds most accurate calculation-based Hindu Vedic Panchang in Public Beta for community and astronomical validation. High-precision calculations for Tithi, Nakshatra, Yoga, Karana, Vara, Muhurta, and Choghadiya based on exact latitude, longitude, and elevation.',
+  alternates: {
+    canonical: '/panchang',
+  },
 };
 
 export default function PanchangPage() {

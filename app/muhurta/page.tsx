@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'Shubh Muhurta Finder (Beta) — Auspicious Vedic Timings & Dates | sanatan.cc',
   description:
     'Algorithmic Shubh Muhurta Finder based on authentic classical scriptures (Muhurta Chintamani, Brihat Samhita). Discover optimal dates and daytime Choghadiya windows for Griha Pravesh, Vivaha, Vehicle Purchase, Business Start, Property Registration, and Namakarana with zero hardcoding.',
+  alternates: {
+    canonical: '/muhurta',
+  },
 };
 
 export default function MuhurtaPage() {
