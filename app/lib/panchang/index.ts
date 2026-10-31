@@ -100,7 +100,8 @@ export function calculatePanchang(
   };
 
   // 3. Pancha-Anga (5 Limbs) at Sunrise
-  const panchaAnga = calculatePanchaAnga(sunTimesRaw.sunrise, ayanamsaSystem);
+  const civilDayOfWeek = civilDateAnchor.getUTCDay();
+  const panchaAnga = calculatePanchaAnga(sunTimesRaw.sunrise, ayanamsaSystem, civilDayOfWeek);
 
   // 4. Masa (Lunar Month) & Samvat
   const masa = calculateMasa(sunTimesRaw.sunrise, panchaAnga.tithi.current, ayanamsaSystem);
