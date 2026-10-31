@@ -62,8 +62,18 @@ export default function PanchangView() {
         }
       } catch {}
 
-      // Initialize selected date to today's civil date in observer's timezone
-      setSelectedDateStr(getTodayIso(activeLoc.timezone || 'Asia/Kolkata'));
+      // Initialize selected date: check URL query parameter ?date=YYYY-MM-DD first
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const queryDate = params.get('date');
+        if (queryDate && /^\d{4}-\d{2}-\d{2}$/.test(queryDate)) {
+          setSelectedDateStr(queryDate);
+        } else {
+          setSelectedDateStr(getTodayIso(activeLoc.timezone || 'Asia/Kolkata'));
+        }
+      } catch {
+        setSelectedDateStr(getTodayIso(activeLoc.timezone || 'Asia/Kolkata'));
+      }
     }, 0);
 
     return () => clearTimeout(timer);

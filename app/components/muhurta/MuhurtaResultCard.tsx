@@ -227,7 +227,7 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
       <div className="mt-5 border-t border-zinc-100 pt-3 dark:border-zinc-800">
         <Link
           href={`/panchang?date=${isoDate}`}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-2 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+          className="cursor-pointer inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-2 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         >
           <span>View Full Panchang for this Day</span>
           <span>→</span>

@@ -72,7 +72,7 @@ export default function MuhurtaFilterBar({
                 key={opt.value}
                 type="button"
                 onClick={() => onDaysCountChange(opt.value)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
                   daysCount === opt.value
                     ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100'
                     : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
@@ -95,7 +95,7 @@ export default function MuhurtaFilterBar({
                 key={opt.value}
                 type="button"
                 onClick={() => onSuitabilityFilterChange(opt.value)}
-                className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
+                className={`cursor-pointer rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
                   suitabilityFilter === opt.value
                     ? 'border-amber-500 bg-amber-50 font-bold text-amber-900 ring-1 ring-amber-500/30 dark:border-amber-400 dark:bg-amber-950/40 dark:text-amber-200'
                     : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300'

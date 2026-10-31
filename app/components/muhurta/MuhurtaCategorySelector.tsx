@@ -32,7 +32,7 @@ export default function MuhurtaCategorySelector({
               key={cat.id}
               type="button"
               onClick={() => onSelectCategory(cat.id)}
-              className={`group flex items-start gap-3 rounded-2xl border p-3.5 text-left transition-all duration-200 ${
+              className={`group flex items-start gap-3 rounded-2xl border p-3.5 text-left cursor-pointer transition-all duration-200 ${
                 isSelected
                   ? 'border-amber-500 bg-amber-50/90 shadow-sm ring-2 ring-amber-500/40 dark:bg-amber-950/40 dark:ring-amber-400/40'
                   : 'border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:bg-zinc-800/60'
