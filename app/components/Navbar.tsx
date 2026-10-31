@@ -44,8 +44,8 @@ export default function Navbar() {
                 >
                   {link.name}
                   {link.name === 'Panchang' && (
-                    <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.2 text-[10px] font-semibold text-amber-700 dark:text-amber-300">
-                      Live
+                    <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                      Beta
                     </span>
                   )}
                 </Link>
@@ -57,9 +57,12 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/panchang"
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:from-amber-700 hover:to-amber-800 sm:hidden"
+            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:from-amber-700 hover:to-amber-800 sm:hidden"
           >
             <span>पञ्चाङ्गम्</span>
+            <span className="rounded bg-black/20 px-1 py-0.2 text-[9px] font-bold uppercase tracking-wider">
+              Beta
+            </span>
           </Link>
           <a
             href="https://github.com/dhirajnavghare/sanatan.cc"

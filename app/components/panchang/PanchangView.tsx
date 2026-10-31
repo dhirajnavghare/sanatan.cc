@@ -209,13 +209,18 @@ export default function PanchangView() {
         location={location}
       />
 
-      {/* Rigorous Calculation Disclaimer */}
-      <div className="rounded-2xl border border-zinc-200/60 bg-zinc-50/50 p-4 text-[11px] leading-relaxed text-zinc-500 dark:border-zinc-800/60 dark:bg-zinc-900/40 dark:text-zinc-400">
-        <p className="font-semibold text-zinc-700 dark:text-zinc-300">
-          Precision Astronomical Model:
-        </p>
-        <p className="mt-1">
-          This Panchang uses full trigonometric ephemeris calculations (VSOP87 Solar &amp; Chapront ELP-2000 Lunar perturbation models with Lahiri Chitra Paksha ayanamsa). Planetary positions, sunrise/sunset, solar noon, and horizon crossings are computed locally for your exact latitude, longitude, and elevation with topocentric atmospheric refraction. Transitions represent the exact astronomical second when solilunar elongation or sidereal longitudes cross limb demarcations.
+      {/* Rigorous Calculation Disclaimer & Public Beta Notice */}
+      <div className="rounded-2xl border border-amber-200/60 bg-amber-50/40 p-4 text-[11px] leading-relaxed text-zinc-600 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-zinc-400">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+            Public Beta
+          </span>
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+            Open for Community &amp; Astronomical Validation
+          </span>
+        </div>
+        <p className="mt-1.5">
+          This Panchang uses pure trigonometric ephemeris calculations (VSOP87 Solar &amp; Chapront ELP-2000 Lunar perturbation models with Lahiri Chitra Paksha ayanamsa) without tabular hardcoding. Planetary positions, sunrise/sunset, solar noon, and horizon crossings are computed locally for your exact latitude, longitude, and elevation with topocentric atmospheric refraction. Transitions represent the exact astronomical second when solilunar elongation or sidereal longitudes cross limb demarcations. We actively cross-validate against verified ephemerides (Drik Panchang, Positional Astronomy Centre NCAC, Astrosage, Date Panchang).
         </p>
       </div>
 

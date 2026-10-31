@@ -30,10 +30,10 @@ export default function Home() {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 text-xs font-bold text-amber-800 dark:text-amber-300">
-                  Live Application
+                  Public Beta
                 </span>
                 <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Calculation-based Ephemeris
+                  Calculation-based Ephemeris • Open for Validation
                 </span>
               </div>
               <h2 className="font-serif text-2xl font-bold text-zinc-900 dark:text-zinc-50 sm:text-3xl">

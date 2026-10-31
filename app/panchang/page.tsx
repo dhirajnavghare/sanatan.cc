@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import PanchangView from '@/app/components/panchang/PanchangView';
 
 export const metadata: Metadata = {
-  title: 'Panchang — High Precision Vedic Calendar & Ephemeris | sanatan.cc',
+  title: 'Panchang (Beta) — High Precision Vedic Calendar & Ephemeris | sanatan.cc',
   description:
-    'Worlds most accurate calculation-based Hindu Vedic Panchang. High-precision calculations for Tithi, Nakshatra, Yoga, Karana, Vara, Muhurta, and Choghadiya based on exact latitude, longitude, and elevation.',
+    'Worlds most accurate calculation-based Hindu Vedic Panchang in Public Beta for community and astronomical validation. High-precision calculations for Tithi, Nakshatra, Yoga, Karana, Vara, Muhurta, and Choghadiya based on exact latitude, longitude, and elevation.',
 };
 
 export default function PanchangPage() {

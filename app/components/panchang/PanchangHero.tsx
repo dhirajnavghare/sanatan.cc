@@ -53,9 +53,16 @@ export default function PanchangHero({ data, onOpenLocationModal }: PanchangHero
       <div className="relative flex flex-col justify-between gap-6 md:flex-row md:items-center">
         {/* Left Side: Headline & Tithi */}
         <div className="space-y-2">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <span className="font-serif text-2xl font-bold tracking-wide text-amber-400 sm:text-3xl">
               पञ्चाङ्गम्
+            </span>
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-300 shadow-sm backdrop-blur-sm"
+              title="Public Beta — Active mathematical verification against traditional observatories and almanacs"
+            >
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
+              Beta
             </span>
             <button
               onClick={onOpenLocationModal}
