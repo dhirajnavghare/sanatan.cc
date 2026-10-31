@@ -7,8 +7,9 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'Panchang', href: '/panchang' },
+    { name: 'Home', href: '/', beta: false },
+    { name: 'Panchang', href: '/panchang', beta: true },
+    { name: 'Muhurta', href: '/muhurta', beta: true },
   ];
 
   return (
@@ -43,7 +44,7 @@ export default function Navbar() {
                   }`}
                 >
                   {link.name}
-                  {link.name === 'Panchang' && (
+                  {link.beta && (
                     <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
                       Beta
                     </span>
@@ -64,15 +65,20 @@ export default function Navbar() {
             <span className="hidden sm:inline">Feedback</span>
           </a>
 
-          <Link
-            href="/panchang"
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:from-amber-700 hover:to-amber-800 sm:hidden"
-          >
-            <span>पञ्चाङ्गम्</span>
-            <span className="rounded bg-black/20 px-1 py-0.2 text-[9px] font-bold uppercase tracking-wider">
-              Beta
-            </span>
-          </Link>
+          <div className="flex items-center gap-1.5 sm:hidden">
+            <Link
+              href="/panchang"
+              className="flex items-center gap-1 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:from-amber-700 hover:to-amber-800"
+            >
+              <span>पञ्चाङ्ग</span>
+            </Link>
+            <Link
+              href="/muhurta"
+              className="flex items-center gap-1 rounded-xl bg-gradient-to-r from-indigo-700 to-indigo-800 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:from-indigo-800 hover:to-indigo-900"
+            >
+              <span>मुहूर्त</span>
+            </Link>
+          </div>
           <a
             href="https://github.com/dhirajnavghare/sanatan.cc"
             target="_blank"
