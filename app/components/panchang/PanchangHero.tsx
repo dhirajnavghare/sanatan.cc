@@ -8,6 +8,70 @@ interface PanchangHeroProps {
   onOpenLocationModal: () => void;
 }
 
+const WEEKDAYS_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEKDAYS_LONG = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
+const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+const MONTHS_LONG = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+/**
+ * Deterministic date formatter: short (e.g., "Sat, 31 Oct 2026")
+ * Completely immune to browser vs Node.js ICU comma/punctuation hydration differences.
+ */
+export function formatCivilDateShort(isoDate: string): string {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-').map(Number);
+  if (isNaN(y) || isNaN(m) || isNaN(d)) return isoDate;
+  const anchor = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  const dow = anchor.getUTCDay();
+  return `${WEEKDAYS_SHORT[dow]}, ${d} ${MONTHS_SHORT[m - 1]} ${y}`;
+}
+
+/**
+ * Deterministic date formatter: long (e.g., "Saturday, 31 October 2026")
+ */
+export function formatCivilDateLong(isoDate: string): string {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-').map(Number);
+  if (isNaN(y) || isNaN(m) || isNaN(d)) return isoDate;
+  const anchor = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  const dow = anchor.getUTCDay();
+  return `${WEEKDAYS_LONG[dow]}, ${d} ${MONTHS_LONG[m - 1]} ${y}`;
+}
+
 export function formatPanchangTime(
   date: Date | null,
   timezone: string,
@@ -15,14 +79,14 @@ export function formatPanchangTime(
 ): string {
   if (!date) return '—';
   try {
-    const formatter = new Intl.DateTimeFormat('en-IN', {
+    const formatter = new Intl.DateTimeFormat('en-US', {
       timeZone: timezone,
       hour: 'numeric',
       minute: '2-digit',
       hour12: true,
       ...(options?.showDate ? { month: 'short', day: 'numeric' } : {}),
     });
-    return formatter.format(date).toUpperCase();
+    return formatter.format(date).replace(/[\u202F\u00A0]/g, ' ').toUpperCase();
   } catch {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
@@ -32,17 +96,9 @@ export default function PanchangHero({ data, onOpenLocationModal }: PanchangHero
   const { tithi, vara, masa, sunTimes, moonTimes, location, festivals } = data;
   const majorFestivals = festivals.filter((f) => f.isMajor);
 
-  // Format calendar date reliably without timezone drift
+  // Format calendar date deterministically without timezone drift or hydration mismatches
   const iso = data.isoDate || data.date.toISOString().slice(0, 10);
-  const [y, m, d] = iso.split('-').map(Number);
-  const anchorDate = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-  const dateFormatted = new Intl.DateTimeFormat('en-IN', {
-    timeZone: 'UTC',
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(anchorDate);
+  const dateFormatted = formatCivilDateLong(iso);
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#16173d] via-[#1c1e50] to-[#0d0e26] p-6 text-white shadow-xl ring-1 ring-white/10 sm:p-8">
@@ -85,7 +141,7 @@ export default function PanchangHero({ data, onOpenLocationModal }: PanchangHero
             <span className="font-medium text-amber-200">{vara.name}</span> ({vara.nameDevanagari})
           </p>
 
-          <p className="text-xs text-indigo-300">
+          <p className="text-xs text-indigo-300" suppressHydrationWarning>
             {dateFormatted} • Coordinates: {location.latitude.toFixed(4)}°N, {location.longitude.toFixed(4)}°E (Alt: {location.altitude}m)
           </p>
 
@@ -119,27 +175,31 @@ export default function PanchangHero({ data, onOpenLocationModal }: PanchangHero
           <span className="block text-[11px] font-medium uppercase tracking-wider text-amber-300">
             🌅 Sunrise (सूर्योदय)
           </span>
-          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl">
+          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl" suppressHydrationWarning>
             {formatPanchangTime(sunTimes.sunrise, location.timezone)}
           </b>
-          <span className="text-[10px] text-indigo-200">Dawn: {formatPanchangTime(sunTimes.civilDawn, location.timezone)}</span>
+          <span className="text-[10px] text-indigo-200" suppressHydrationWarning>
+            Dawn: {formatPanchangTime(sunTimes.civilDawn, location.timezone)}
+          </span>
         </div>
 
         <div className="rounded-2xl bg-white/5 p-3 backdrop-blur-sm">
           <span className="block text-[11px] font-medium uppercase tracking-wider text-amber-300">
             🌇 Sunset (सूर्यास्त)
           </span>
-          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl">
+          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl" suppressHydrationWarning>
             {formatPanchangTime(sunTimes.sunset, location.timezone)}
           </b>
-          <span className="text-[10px] text-indigo-200">Dusk: {formatPanchangTime(sunTimes.civilDusk, location.timezone)}</span>
+          <span className="text-[10px] text-indigo-200" suppressHydrationWarning>
+            Dusk: {formatPanchangTime(sunTimes.civilDusk, location.timezone)}
+          </span>
         </div>
 
         <div className="rounded-2xl bg-white/5 p-3 backdrop-blur-sm">
           <span className="block text-[11px] font-medium uppercase tracking-wider text-indigo-200">
             ☀️ Solar Noon (मध्याह्न)
           </span>
-          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl">
+          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl" suppressHydrationWarning>
             {formatPanchangTime(sunTimes.solarNoon, location.timezone)}
           </b>
           <span className="text-[10px] text-indigo-200">Day length: {Math.floor(sunTimes.dayLengthMs / 3600000)}h {Math.floor((sunTimes.dayLengthMs % 3600000) / 60000)}m</span>
@@ -149,7 +209,7 @@ export default function PanchangHero({ data, onOpenLocationModal }: PanchangHero
           <span className="block text-[11px] font-medium uppercase tracking-wider text-indigo-200">
             🌕 Moonrise (चन्द्रोदय)
           </span>
-          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl">
+          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl" suppressHydrationWarning>
             {formatPanchangTime(moonTimes.moonrise, location.timezone)}
           </b>
           <span className="text-[10px] text-indigo-200">Age: {moonTimes.moonAgeDays.toFixed(1)} days</span>
@@ -159,7 +219,7 @@ export default function PanchangHero({ data, onOpenLocationModal }: PanchangHero
           <span className="block text-[11px] font-medium uppercase tracking-wider text-indigo-200">
             🌑 Moonset (चन्द्रास्त)
           </span>
-          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl">
+          <b className="mt-0.5 block font-mono text-lg font-bold text-white sm:text-xl" suppressHydrationWarning>
             {formatPanchangTime(moonTimes.moonset, location.timezone)}
           </b>
           <span className="text-[10px] text-indigo-200">Night: {Math.floor(sunTimes.nightLengthMs / 3600000)}h {Math.floor((sunTimes.nightLengthMs % 3600000) / 60000)}m</span>

@@ -36,7 +36,7 @@ export default function MuhurtaSection({ data }: MuhurtaSectionProps) {
         </div>
 
         <div className="text-right">
-          <span className="font-mono text-sm font-bold text-zinc-900 dark:text-zinc-50">
+          <span className="font-mono text-sm font-bold text-zinc-900 dark:text-zinc-50" suppressHydrationWarning>
             {formatPanchangTime(period.startTime, tz)} – {formatPanchangTime(period.endTime, tz)}
           </span>
         </div>

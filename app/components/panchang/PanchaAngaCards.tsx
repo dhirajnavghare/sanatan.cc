@@ -48,7 +48,7 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
 
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-300">
-              <span>Till {formatPanchangTime(tithi.endTime, tz, { showDate: true })}</span>
+              <span suppressHydrationWarning>Till {formatPanchangTime(tithi.endTime, tz, { showDate: true })}</span>
               <span className="text-[11px] font-mono text-zinc-400">{Math.round(tithi.progressPercent)}%</span>
             </div>
             {/* Progress Bar */}
@@ -88,7 +88,7 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
 
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-300">
-              <span>Till {formatPanchangTime(nakshatra.endTime, tz, { showDate: true })}</span>
+              <span suppressHydrationWarning>Till {formatPanchangTime(nakshatra.endTime, tz, { showDate: true })}</span>
               <span className="text-[11px] font-mono text-zinc-400">{Math.round(nakshatra.progressPercent)}%</span>
             </div>
             {/* Progress Bar */}
@@ -134,7 +134,7 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
 
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-300">
-              <span>Till {formatPanchangTime(yoga.endTime, tz, { showDate: true })}</span>
+              <span suppressHydrationWarning>Till {formatPanchangTime(yoga.endTime, tz, { showDate: true })}</span>
               <span className="text-[11px] font-mono text-zinc-400">{Math.round(yoga.progressPercent)}%</span>
             </div>
             {/* Progress Bar */}
@@ -174,7 +174,7 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
 
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-300">
-              <span>Till {formatPanchangTime(karana.endTime, tz, { showDate: true })}</span>
+              <span suppressHydrationWarning>Till {formatPanchangTime(karana.endTime, tz, { showDate: true })}</span>
               <span className="text-[11px] font-mono text-zinc-400">{Math.round(karana.progressPercent)}%</span>
             </div>
             {/* Progress Bar */}
@@ -212,7 +212,7 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
                 {vara.nameDevanagari} • Ruling Planet: <strong className="text-zinc-800 dark:text-zinc-200">{vara.lordPlanet}</strong>
               </span>
             </div>
-            <div className="mt-2 text-xs text-zinc-500 sm:mt-0 sm:text-right dark:text-zinc-400">
+            <div className="mt-2 text-xs text-zinc-500 sm:mt-0 sm:text-right dark:text-zinc-400" suppressHydrationWarning>
               Civil day ruled by sunrise at {formatPanchangTime(data.sunTimes.sunrise, tz)}
             </div>
           </div>

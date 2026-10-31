@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { calculatePanchang, GeoLocation, PRESET_CITIES } from '@/app/lib/panchang';
 import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
-import PanchangHero from './PanchangHero';
+import PanchangHero, { formatCivilDateShort } from './PanchangHero';
 import PanchaAngaCards from './PanchaAngaCards';
 import MuhurtaSection from './MuhurtaSection';
 import ChoghadiyaSection from './ChoghadiyaSection';
@@ -75,19 +75,7 @@ export default function PanchangView() {
   }, [selectedDateStr, location, ayanamsa, currentTime]);
 
   const displayDateFormatted = useMemo(() => {
-    try {
-      const [y, m, d] = selectedDateStr.split('-').map(Number);
-      const anchor = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-      return new Intl.DateTimeFormat('en-IN', {
-        timeZone: 'UTC',
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }).format(anchor);
-    } catch {
-      return selectedDateStr;
-    }
+    return formatCivilDateShort(selectedDateStr);
   }, [selectedDateStr]);
 
   const shiftDay = (days: number) => {
@@ -133,7 +121,10 @@ export default function PanchangView() {
 
         {/* Date Navigator */}
         <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
-          <span className="hidden pr-2 text-xs font-medium text-zinc-500 sm:inline dark:text-zinc-400">
+          <span
+            className="hidden pr-2 text-xs font-medium text-zinc-500 sm:inline dark:text-zinc-400"
+            suppressHydrationWarning
+          >
             {displayDateFormatted}
           </span>
 

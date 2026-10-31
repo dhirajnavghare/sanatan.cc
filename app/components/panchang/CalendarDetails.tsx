@@ -39,7 +39,7 @@ export default function CalendarDetails({ data }: CalendarDetailsProps) {
           </p>
           <div className="mt-4 border-t border-zinc-100 pt-3 text-xs text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
             <span>Next Sankranti: </span>
-            <strong className="text-zinc-800 dark:text-zinc-200">
+            <strong className="text-zinc-800 dark:text-zinc-200" suppressHydrationWarning>
               {formatPanchangTime(sunRashi.endTime, tz, { showDate: true })}
             </strong>{' '}
             into {sunRashi.next.name}
@@ -59,7 +59,7 @@ export default function CalendarDetails({ data }: CalendarDetailsProps) {
           </p>
           <div className="mt-4 border-t border-zinc-100 pt-3 text-xs text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
             <span>Till </span>
-            <strong className="text-zinc-800 dark:text-zinc-200">
+            <strong className="text-zinc-800 dark:text-zinc-200" suppressHydrationWarning>
               {formatPanchangTime(moonRashi.endTime, tz, { showDate: true })}
             </strong>
             , then {moonRashi.next.name}

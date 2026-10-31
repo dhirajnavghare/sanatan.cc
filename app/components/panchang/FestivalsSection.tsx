@@ -1,6 +1,7 @@
 'use client';
 
 import { PanchangData } from '@/app/lib/panchang/types';
+import { formatCivilDateShort } from './PanchangHero';
 
 interface FestivalsSectionProps {
   data: PanchangData;
@@ -70,15 +71,7 @@ export default function FestivalsSection({ data, onSelectDate }: FestivalsSectio
         <div className="mt-3 divide-y divide-zinc-100 dark:divide-zinc-800">
           {upcomingFestivals.length > 0 ? (
             upcomingFestivals.map((item, idx) => {
-              const [y, m, d] = item.isoDate.split('-').map(Number);
-              const anchor = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-              const formattedDate = new Intl.DateTimeFormat('en-IN', {
-                timeZone: 'UTC',
-                weekday: 'short',
-                day: 'numeric',
-                month: 'short',
-              }).format(anchor);
-
+              const formattedDate = formatCivilDateShort(item.isoDate);
               const festNames = item.festivals.map((f) => f.name).join(', ');
 
               return (
@@ -90,7 +83,10 @@ export default function FestivalsSection({ data, onSelectDate }: FestivalsSectio
                   title={`Jump to ${item.isoDate}`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex-none rounded-xl bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                    <span
+                      className="flex-none rounded-xl bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
+                      suppressHydrationWarning
+                    >
                       {formattedDate}
                     </span>
                     <div>

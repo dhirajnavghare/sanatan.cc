@@ -109,10 +109,10 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
               </div>
 
               <div className="mt-3 border-t border-zinc-200/50 pt-2 text-[11px] dark:border-zinc-800">
-                <div className="font-mono font-bold text-zinc-800 dark:text-zinc-200">
+                <div className="font-mono font-bold text-zinc-800 dark:text-zinc-200" suppressHydrationWarning>
                   {formatPanchangTime(ch.startTime, tz)}
                 </div>
-                <div className="text-[10px] text-zinc-400">
+                <div className="text-[10px] text-zinc-400" suppressHydrationWarning>
                   to {formatPanchangTime(ch.endTime, tz)}
                 </div>
                 <div className="mt-1 text-[10px] text-zinc-500 dark:text-zinc-400">
