@@ -1,0 +1,25 @@
+# sanatan.cc
+
+> An open-source digital platform preserving Hindu Dharma spiritual texts and providing world-class, high-precision calculation-based Vedic ephemeris applications.
+
+Calculations are computed locally from first principles using VSOP87 planetary perturbation theory, Chapront ELP-2000 lunar theory, and Lahiri Chitrapaksha Ayanamsa. Zero tabular hardcoding.
+
+## Core Applications
+
+- [Panchang (पञ्चाङ्गम्)](https://sanatan.cc/panchang): Real-time local astronomical Hindu calendar computing Tithi, Nakshatra, Yoga, Karana, Vara, Shubh Muhurtas (Brahma, Abhijit, Vijaya, Amrit Kaal), Inauspicious Kaal (Rahu Kaal, Yamaganda, Gulika Kaal), and Daytime/Nighttime Choghadiya for any coordinates on Earth.
+- [Shubh Muhurta Finder (शुभ मुहूर्त शोधक)](https://sanatan.cc/muhurta): Algorithmic discovery of auspicious dates and daytime time windows across 30 to 180 days for Griha Pravesh, Vivaha, Vehicle Purchase, Business Start, Property Registration, Gold Buying, and Namakarana. Strictly filters Bhadra (Vishti Karana), Rikta Tithis, and malefic Panchakas while identifying Sarvartha Siddhi & Amrita Siddhi yogas.
+
+## Documentation & Methodology
+
+- [About sanatan.cc](https://sanatan.cc/about): Mission, open-source principles, astronomical algorithms, and privacy architecture.
+- [Contact & Feedback](https://sanatan.cc/contact): Inquiries, validation reports, and maintainer correspondence (mail@sanatan.cc).
+- [Terms of Service](https://sanatan.cc/terms): Open-source MIT license and educational/spiritual usage disclaimers.
+- [Privacy Policy](https://sanatan.cc/privacy): Zero analytics, zero tracking, and local device-only coordinate storage.
+
+## Agent & Machine Interfaces
+
+- [Markdown Representations](https://sanatan.cc/): Send `Accept: text/markdown` in your request headers to receive lightweight, token-efficient Markdown representations of any page.
+- [In-Browser WebMCP Tools](https://sanatan.cc/): Exposes `calculate_panchang` and `find_shubh_muhurta` tools to browser-based agents via `navigator.modelContext`.
+- [MCP Server Card (SEP-1649)](https://sanatan.cc/.well-known/mcp/server-card.json): Machine-readable Model Context Protocol server metadata and capability manifest.
+- [XML Sitemap](https://sanatan.cc/sitemap.xml): Complete URL index for crawlers and search agents.
+- [Robots Policy & Content Signals](https://sanatan.cc/robots.txt): Declares `Content-Signal: search=yes, ai-train=no` and sitemap location.

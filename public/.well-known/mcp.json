@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/mcp-server-card/v1.json",
+  "version": "1.0",
+  "protocolVersion": "2025-06-18",
+  "serverInfo": {
+    "name": "cc.sanatan.vedic-ephemeris",
+    "title": "sanatan.cc Vedic Ephemeris & Shubh Muhurta Server",
+    "version": "0.1.0",
+    "description": "High-precision computational Vedic astronomy engine providing real-time Panchang (Tithi, Nakshatra, Yoga, Karana, Vara, Choghadiya) and classical Shubh Muhurta discovery via Model Context Protocol.",
+    "iconUrl": "https://sanatan.cc/favicon.ico",
+    "documentationUrl": "https://sanatan.cc/llms.txt"
+  },
+  "transport": {
+    "type": "streamable-http",
+    "endpoint": "https://sanatan.cc/api/mcp"
+  },
+  "capabilities": {
+    "logging": {},
+    "prompts": {
+      "listChanged": false
+    },
+    "resources": {
+      "subscribe": false,
+      "listChanged": false
+    },
+    "tools": {
+      "listChanged": false
+    }
+  },
+  "_meta": {
+    "provider": {
+      "organization": "sanatan.cc",
+      "contact": "mail@sanatan.cc",
+      "repository": "https://github.com/dhirajnavghare/sanatan.cc"
+    }
+  }
+}
