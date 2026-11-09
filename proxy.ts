@@ -18,6 +18,10 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
 - **URL:** https://sanatan.cc/muhurta
 - **Description:** Algorithmic discovery across 30 to 180 days for Griha Pravesh, Vivaha, Vehicle Purchase, Business Start, Property Registration, Gold Buying, and Namakarana. Strictly filters Bhadra (Vishti Karana), Rikta Tithis (4th, 9th, 14th), and malefic Panchakas while identifying Sarvartha Siddhi & Amrita Siddhi yogas.
 
+### 3. Hindu Festival Timeline & Calendar (उत्सव एवं व्रत पञ्चाङ्ग)
+- **URL:** https://sanatan.cc/festivals
+- **Description:** Chronological timeline of 150+ sacred Hindu festivals, fasts, Ekadashi vrats, and solar transits computed with Drik Panchang, Dharmasindhu, and Nirnayasindhu astronomical rules. Features puja muhurta windows, presiding deities, and traditional observance guidance.
+
 ## Documentation & Organization
 
 - **About:** https://sanatan.cc/about (Mission, ephemeris mathematics, and privacy architecture)
@@ -72,6 +76,21 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
   7. **Namakarana (नामकरण संस्कार):** Sacred 10th/12th day naming ceremonies.
   8. **Universal Siddhi Yogas (सर्वार्थ सिद्धि / अमृत सिद्धि):** Universal auspicious undertakings.
 - **WebMCP Tool:** Call \`find_shubh_muhurta\` in browser agent sessions to query dates across any horizon.
+`;
+  }
+
+  if (pathname === '/festivals') {
+    const year = searchParams.get('year') || '2026';
+    const category = searchParams.get('category') || 'all';
+    return `# Hindu Festival Timeline & Calendar (सनातन उत्सव एवं व्रत) — sanatan.cc
+
+> Complete annual chronological timeline of Hindu festivals, fasts, Ekadashi vrats, and sacred days calculated according to Drik Panchang, Dharmasindhu, and Nirnayasindhu astronomical rules.
+
+- **Canonical URL:** https://sanatan.cc/festivals
+- **Selected Year:** ${year}
+- **Selected Category:** ${category}
+- **Coverage:** 150+ annual celebrations, 24 Ekadashis, Jayantis, and solar Sankranti transits.
+- **Features:** Exact puja muhurta windows, presiding deities, Vedic significance, and daily Panchang deep-links.
 `;
   }
 

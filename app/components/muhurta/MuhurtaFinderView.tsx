@@ -15,7 +15,6 @@ import MuhurtaFilterBar from './MuhurtaFilterBar';
 import MuhurtaResultCard from './MuhurtaResultCard';
 import MuhurtaSkeleton from './MuhurtaSkeleton';
 import LocationModal from '../panchang/LocationModal';
-import AppTabSwitcher from '../common/AppTabSwitcher';
 
 function getTodayIso(tz?: string): string {
   try {
@@ -176,9 +175,6 @@ export default function MuhurtaFinderView() {
           className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-600 animate-pulse"
         />
       )}
-
-      {/* Top Application Tab Switcher */}
-      <AppTabSwitcher />
 
       {/* Top Controls: Location & Search Horizon Anchor */}
       <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/90 bg-white p-3.5 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800 dark:bg-zinc-900">

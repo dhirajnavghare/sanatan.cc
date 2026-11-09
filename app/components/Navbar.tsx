@@ -9,7 +9,8 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', href: '/', icon: '🏠', beta: false },
     { name: 'Panchang', href: '/panchang', devanagari: 'पञ्चाङ्ग', icon: '🗓', beta: true },
-    { name: 'Shubh Muhurta', href: '/muhurta', devanagari: 'शुभ मुहूर्त', icon: '✨', beta: true },
+    { name: 'Muhurta', href: '/muhurta', devanagari: 'शुभ मुहूर्त', icon: '✨', beta: true },
+    { name: 'Festivals', href: '/festivals', devanagari: 'व्रत-त्योहार', icon: '🪔', beta: true },
   ];
 
   return (
@@ -33,18 +34,21 @@ export default function Navbar() {
 
         {/* Central Segmented Tab Switcher (Desktop & Tablet) */}
         <nav
+          role="tablist"
           className="hidden items-center rounded-2xl border border-zinc-200/80 bg-zinc-100/80 p-1 backdrop-blur-md sm:flex dark:border-zinc-800 dark:bg-zinc-900/80"
           aria-label="Main Navigation Tabs"
         >
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
             return (
               <Link
                 key={link.href}
                 href={link.href}
+                role="tab"
+                aria-selected={isActive}
                 className={`relative flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
                   isActive
-                    ? 'bg-white text-zinc-950 shadow-sm ring-1 ring-black/5 dark:bg-zinc-800 dark:text-amber-300 dark:ring-white/10'
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md shadow-amber-500/25 ring-1 ring-amber-400/50'
                     : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
                 }`}
               >
@@ -54,7 +58,7 @@ export default function Navbar() {
                   <span
                     className={`rounded-full px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider ${
                       isActive
-                        ? 'bg-amber-500/20 text-amber-800 dark:bg-amber-400/20 dark:text-amber-300'
+                        ? 'bg-white/25 text-white'
                         : 'bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
                     }`}
                   >
@@ -98,16 +102,18 @@ export default function Navbar() {
 
       {/* Mobile Sub-Navigation Bar */}
       <div className="flex border-t border-zinc-200/60 bg-zinc-50/70 p-1.5 sm:hidden dark:border-zinc-800/60 dark:bg-zinc-900/70">
-        <div className="grid w-full grid-cols-3 gap-1">
+        <div role="tablist" aria-label="Mobile Navigation Tabs" className="grid w-full grid-cols-4 gap-1">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
             return (
               <Link
                 key={link.href}
                 href={link.href}
+                role="tab"
+                aria-selected={isActive}
                 className={`flex items-center justify-center gap-1 rounded-xl py-1.5 text-xs font-semibold transition ${
                   isActive
-                    ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-amber-300'
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-sm'
                     : 'text-zinc-600 dark:text-zinc-400'
                 }`}
               >

@@ -44,14 +44,21 @@ export default function Home() {
                 <span>✨ Find Shubh Muhurtas</span>
                 <span>&rarr;</span>
               </Link>
+              <Link
+                href="/festivals"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-5 py-3 text-xs font-bold text-white backdrop-blur-md transition hover:bg-white/20 cursor-pointer"
+              >
+                <span>🪔 Festivals Timeline</span>
+                <span>&rarr;</span>
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* Applications Grid: Panchang & Shubh Muhurta Finder */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {/* Applications Grid: Panchang, Shubh Muhurta Finder & Festival Timeline */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Application 1: Panchang */}
-          <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/90 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 sm:p-8">
+          <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/90 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-2xl text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
@@ -141,6 +148,54 @@ export default function Home() {
                 className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-5 py-3 text-xs font-bold text-white shadow-md shadow-indigo-600/20 transition hover:from-indigo-700 hover:to-indigo-800 cursor-pointer"
               >
                 <span>Discover Auspicious Muhurtas</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Application 3: Hindu Festivals Timeline */}
+          <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/90 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500/10 text-2xl text-orange-600 dark:bg-orange-400/10 dark:text-orange-400">
+                  🪔
+                </span>
+                <span className="rounded-full bg-orange-500/20 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-orange-800 dark:text-orange-300">
+                  New Feature
+                </span>
+              </div>
+
+              <div>
+                <h2 className="font-serif text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                  उत्सव एवं व्रत — Festivals Timeline
+                </h2>
+                <p className="mt-1 text-xs text-orange-700 dark:text-orange-400 font-medium">
+                  Chronological Hindu Festival &amp; Vrat Calendar
+                </p>
+              </div>
+
+              <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                Astronomically verified timeline of 150+ sacred Hindu festivals, Ekadashi vrats, Jayantis, and solar transits. Features Dharmasindhu vyapti rules, puja muhurta windows, presiding deities, and traditional observance guidance for any year.
+              </p>
+
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {['Diwali', 'Shivaratri', 'Holi', 'Navratri', 'Ekadashi', 'Ganesh Utsav', 'Puja Muhurtas'].map((f) => (
+                  <span
+                    key={f}
+                    className="rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <Link
+                href="/festivals"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 px-5 py-3 text-xs font-bold text-white shadow-md shadow-orange-500/20 transition hover:from-orange-600 hover:to-amber-700 cursor-pointer"
+              >
+                <span>Explore Festivals Timeline</span>
                 <span>&rarr;</span>
               </Link>
             </div>
