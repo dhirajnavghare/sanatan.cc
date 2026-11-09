@@ -51,12 +51,19 @@ export default function Home() {
                 <span>🪔 Festivals Timeline</span>
                 <span>&rarr;</span>
               </Link>
+              <Link
+                href="/devatas"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-5 py-3 text-xs font-bold text-white backdrop-blur-md transition hover:bg-white/20 cursor-pointer"
+              >
+                <span>🕉️ Devi Devatas</span>
+                <span>&rarr;</span>
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* Applications Grid: Panchang, Shubh Muhurta Finder & Festival Timeline */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Applications Grid: Panchang, Shubh Muhurta Finder, Festival Timeline & Devi Devatas */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Application 1: Panchang */}
           <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/90 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
             <div className="space-y-4">
@@ -196,6 +203,54 @@ export default function Home() {
                 className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 px-5 py-3 text-xs font-bold text-white shadow-md shadow-orange-500/20 transition hover:from-orange-600 hover:to-amber-700 cursor-pointer"
               >
                 <span>Explore Festivals Timeline</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Application 4: Hindu Devi Devatas */}
+          <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/90 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-2xl text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
+                  🕉️
+                </span>
+                <span className="rounded-full bg-amber-500/20 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+                  New Feature
+                </span>
+              </div>
+
+              <div>
+                <h2 className="font-serif text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                  देवी-देवता — Devi Devatas
+                </h2>
+                <p className="mt-1 text-xs text-amber-700 dark:text-amber-400 font-medium">
+                  Vedic Philosophy, Sacred Mantras &amp; Divine Iconography
+                </p>
+              </div>
+
+              <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                Immersive repository of sacred Hindu deities across Shaiva, Vaishnava, Shakta, and Smarta traditions. Features authentic Sanskrit mantras with English meanings, philosophical tatva, vahanas, ayudhas, historic temples, and deep-links to daily Panchang tithis and annual festivals.
+              </p>
+
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {['Shiva', 'Vishnu', 'Durga', 'Ganesha', 'Krishna', 'Rama', 'Hanuman', 'Lakshmi', 'Mantras', 'Temples'].map((d) => (
+                  <span
+                    key={d}
+                    className="rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <Link
+                href="/devatas"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 py-3 text-xs font-bold text-white shadow-md shadow-amber-500/20 transition hover:from-amber-600 hover:to-orange-600 cursor-pointer"
+              >
+                <span>Explore Devi Devatas</span>
                 <span>&rarr;</span>
               </Link>
             </div>

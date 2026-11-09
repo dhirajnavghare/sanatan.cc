@@ -22,6 +22,10 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
 - **URL:** https://sanatan.cc/festivals
 - **Description:** Chronological timeline of 150+ sacred Hindu festivals, fasts, Ekadashi vrats, and solar transits computed with Drik Panchang, Dharmasindhu, and Nirnayasindhu astronomical rules. Features puja muhurta windows, presiding deities, and traditional observance guidance.
 
+### 4. Hindu Devi Devatas (सनातन देवी-देवता दर्शन)
+- **URL:** https://sanatan.cc/devatas
+- **Description:** Vedic repository of Hindu deities: Shiva, Vishnu, Durga, Ganesha, Krishna, Rama, Hanuman, Lakshmi, Saraswati, Surya, Kartikeya, and Kali. Explores Vedic tatva philosophy, divine iconography, authentic Sanskrit mantras with English translations, major historic temples, and traditional offerings.
+
 ## Documentation & Organization
 
 - **About:** https://sanatan.cc/about (Mission, ephemeris mathematics, and privacy architecture)
@@ -91,6 +95,22 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
 - **Selected Category:** ${category}
 - **Coverage:** 150+ annual celebrations, 24 Ekadashis, Jayantis, and solar Sankranti transits.
 - **Features:** Exact puja muhurta windows, presiding deities, Vedic significance, and daily Panchang deep-links.
+`;
+  }
+
+  if (pathname === '/devatas') {
+    const tradition = searchParams.get('tradition') || 'all';
+    const query = searchParams.get('q') || '';
+    return `# Hindu Devi Devatas (सनातन देवी-देवता दर्शन एवं महामन्त्र) — sanatan.cc
+
+> Vedic philosophical and devotional repository of principal Hindu deities, sacred Sanskrit mantras, divine forms (Svarupa), iconography, and historic pilgrimage temples.
+
+- **Canonical URL:** https://sanatan.cc/devatas
+- **Selected Tradition:** ${tradition}
+- **Search Query:** ${query || 'None'}
+- **Coverage:** Lord Shiva, Lord Vishnu, Maa Durga, Lord Ganesha, Lord Krishna, Lord Rama, Lord Hanuman, Maa Mahalakshmi, Maa Saraswati, Surya Bhagavan, Lord Kartikeya (Murugan), and Maa Kali.
+- **Traditions:** Smarta Panchayatana, Shaiva, Vaishnava, Shakta, Ganapatya, Kaumara, Saura, and Hanuman.
+- **Features:** Devanagari Sanskrit mantras with IAST and English meanings, temple directories, traditional offerings, and deep-links to the daily Panchang.
 `;
   }
 
