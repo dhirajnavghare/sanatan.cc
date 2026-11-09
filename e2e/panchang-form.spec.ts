@@ -11,12 +11,11 @@ test.describe('Panchang Astronomical Form & Location Verification Suite', () => 
     await page.goto(TARGET_ROUTE_URL);
     await page.waitForLoadState('domcontentloaded');
 
-    // If testing the modal integration, trigger the configuration form
+    // Trigger the configuration modal reliably
     const locationTrigger = page.locator('button', { hasText: '📍' }).first();
-    if (await locationTrigger.isVisible()) {
-      await locationTrigger.click();
-      await page.waitForSelector('[role="dialog"], [data-testid="panchang-location-form"]');
-    }
+    await locationTrigger.waitFor({ state: 'visible', timeout: 10000 });
+    await locationTrigger.click();
+    await page.waitForSelector('[role="dialog"], [data-testid="panchang-location-form"]', { timeout: 10000 });
   });
 
   test('should render all required astronomical input fields with accessible roles', async ({ page }) => {
