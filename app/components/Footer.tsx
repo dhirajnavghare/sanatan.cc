@@ -61,6 +61,14 @@ export default function Footer() {
                   Devi Devatas (देवी-देवता) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/temples"
+                  className="transition hover:text-amber-600 dark:hover:text-amber-400"
+                >
+                  Temples &amp; Tirthas (तीर्थ-मन्दिर) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
+                </Link>
+              </li>
             </ul>
           </div>
 

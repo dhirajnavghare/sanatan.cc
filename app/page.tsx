@@ -58,12 +58,19 @@ export default function Home() {
                 <span>🕉️ Devi Devatas</span>
                 <span>&rarr;</span>
               </Link>
+              <Link
+                href="/temples"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-5 py-3 text-xs font-bold text-white backdrop-blur-md transition hover:bg-white/20 cursor-pointer"
+              >
+                <span>🛕 Temples &amp; Tirthas</span>
+                <span>&rarr;</span>
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* Applications Grid: Panchang, Shubh Muhurta Finder, Festival Timeline & Devi Devatas */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {/* Applications Grid: Panchang, Shubh Muhurta Finder, Festival Timeline, Devi Devatas & Temples */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Application 1: Panchang */}
           <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/90 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
             <div className="space-y-4">
@@ -251,6 +258,54 @@ export default function Home() {
                 className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 py-3 text-xs font-bold text-white shadow-md shadow-amber-500/20 transition hover:from-amber-600 hover:to-orange-600 cursor-pointer"
               >
                 <span>Explore Devi Devatas</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Application 5: Hindu Sanatan Temples & Tirthas */}
+          <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/90 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-2xl text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
+                  🛕
+                </span>
+                <span className="rounded-full bg-amber-500/20 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+                  New Feature
+                </span>
+              </div>
+
+              <div>
+                <h2 className="font-serif text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                  तीर्थ-मन्दिर — Temples &amp; Tirthas
+                </h2>
+                <p className="mt-1 text-xs text-amber-700 dark:text-amber-400 font-medium">
+                  Sacred Pilgrimage Circuits, Puranic Lore &amp; Local Panchang
+                </p>
+              </div>
+
+              <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                Spiritual repository of iconic Hindu temples: 12 Jyotirlingas, 4 Char Dhams, Shakti Peethas, Pancha Bhoota Sthalams, and global sanctuaries. Features architectural styles, sacred rivers, darshan schedules, and real-time local Panchang calculations at exact geographic coordinates.
+              </p>
+
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {['12 Jyotirlingas', 'Char Dham', 'Shakti Peethas', 'Pancha Bhoota', 'Ayodhya', 'Kashi', 'Puri', 'Tirupati'].map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <Link
+                href="/temples"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 py-3 text-xs font-bold text-white shadow-md shadow-amber-500/20 transition hover:from-amber-600 hover:to-orange-600 cursor-pointer"
+              >
+                <span>Explore Sacred Temples &amp; Tirthas</span>
                 <span>&rarr;</span>
               </Link>
             </div>

@@ -26,6 +26,10 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
 - **URL:** https://sanatan.cc/devatas
 - **Description:** Vedic repository of Hindu deities: Shiva, Vishnu, Durga, Ganesha, Krishna, Rama, Hanuman, Lakshmi, Saraswati, Surya, Kartikeya, and Kali. Explores Vedic tatva philosophy, divine iconography, authentic Sanskrit mantras with English translations, major historic temples, and traditional offerings.
 
+### 5. Hindu Sanatan Temples & Tirthas (सनातन तीर्थ एवं मन्दिर)
+- **URL:** https://sanatan.cc/temples
+- **Description:** Pilgrimage guide to sacred Hindu temples and pilgrimage circuits: 12 Jyotirlingas, 4 Char Dhams, 51 Shakti Peethas, Pancha Bhoota Sthalams, Divya Desams, and Global Sanctuaries. Features Puranic lore, architectural styles, sacred rivers, darshan timings, and real-time local Panchang calculations.
+
 ## Documentation & Organization
 
 - **About:** https://sanatan.cc/about (Mission, ephemeris mathematics, and privacy architecture)
@@ -111,6 +115,27 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
 - **Coverage:** Lord Shiva, Lord Vishnu, Maa Durga, Lord Ganesha, Lord Krishna, Lord Rama, Lord Hanuman, Maa Mahalakshmi, Maa Saraswati, Surya Bhagavan, Lord Kartikeya (Murugan), and Maa Kali.
 - **Traditions:** Smarta Panchayatana, Shaiva, Vaishnava, Shakta, Ganapatya, Kaumara, Saura, and Hanuman.
 - **Features:** Devanagari Sanskrit mantras with IAST and English meanings, temple directories, traditional offerings, and deep-links to the daily Panchang.
+`;
+  }
+
+  if (pathname === '/temples') {
+    const circuit = searchParams.get('circuit') || 'all';
+    const query = searchParams.get('q') || '';
+    return `# Hindu Sanatan Temples & Tirthas (सनातन तीर्थ एवं दिव्य मन्दिर) — sanatan.cc
+
+> Sacred pilgrimage guide to the eternal tirthas and divine temples of Hindu Dharma across Bharat and the global diaspora.
+
+- **Canonical URL:** https://sanatan.cc/temples
+- **Selected Circuit:** ${circuit}
+- **Search Query:** ${query || 'None'}
+- **Circuits Covered:**
+  - **12 Dvadasha Jyotirlingas:** Somnath, Mallikarjuna, Mahakaleshwar, Omkareshwar, Kedarnath, Trimbakeshwar, Kashi Vishwanath, Ramanathaswamy.
+  - **4 Grand Char Dhams:** Badrinath, Jagannath Puri, Dwarkadhish, and Ramanathaswamy.
+  - **Sacred Shakti Peethas:** Kamakhya (Nilachal), Vaishno Devi, and Kalighat.
+  - **Pancha Bhoota Sthalams:** Chidambaram (Akasa/Ether), Thiruvannamalai (Agni/Fire).
+  - **Maha Kshetras & Divya Desams:** Sri Ranganathaswamy (Srirangam), Tirumala Balaji, Ram Janmabhoomi (Ayodhya), Meenakshi Amman (Madurai).
+  - **Global Sanctuaries:** Pashupatinath (Nepal), Batu Caves (Malaysia), Akshardham (Robbinsville, NJ), Prambanan (Java, Indonesia).
+- **Features:** Authentic Puranic lore, architectural styles, sacred rivers, darshan & aarti schedules, and real-time local Panchang calculations at exact geographic coordinates.
 `;
   }
 
