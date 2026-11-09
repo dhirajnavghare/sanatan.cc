@@ -165,7 +165,6 @@ test.describe('Homepage Interactive End-to-End Suite', () => {
   });
 
   test('should filter sacred temples by circuit categories', async ({ page }) => {
-    await expect(page.getByText('Sacred Temples & Tirthas')).toBeVisible();
     const heading = page.getByRole('heading', { name: /Sacred Temples & Tirthas|तीर्थ एवं मन्दिर/i });
     await expect(heading).toBeVisible();
 
