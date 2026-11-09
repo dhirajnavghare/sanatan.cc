@@ -9,6 +9,7 @@ import {
   MUHURTA_CATEGORIES,
 } from '@/app/lib/muhurta-finder/categories';
 import { MuhurtaCategoryId, MuhurtaDayEvaluation } from '@/app/lib/muhurta-finder/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 import MuhurtaHero from './MuhurtaHero';
 import MuhurtaCategorySelector from './MuhurtaCategorySelector';
 import MuhurtaFilterBar from './MuhurtaFilterBar';
@@ -39,6 +40,9 @@ function parseJsonWithDates(text: string): MuhurtaDayEvaluation[] {
 }
 
 export default function MuhurtaFinderView() {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const [selectedCategory, setSelectedCategory] = useState<MuhurtaCategoryId>('griha_pravesh');
   const [daysCount, setDaysCount] = useState<30 | 60 | 90 | 180>(30);
   const [suitabilityFilter, setSuitabilityFilter] = useState<'All' | 'Good' | 'Optimal'>('Good');
@@ -199,12 +203,12 @@ export default function MuhurtaFinderView() {
         {/* Start Anchor Date Navigator */}
         <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
           <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-            Search from:
+            {isHi ? 'खोज आरम्भ दिनांक:' : 'Search from:'}
           </span>
 
           <input
             type="date"
-            aria-label="Start Date"
+            aria-label={isHi ? 'प्रारम्भ दिनांक' : 'Start Date'}
             value={startDateStr}
             onChange={(e) => {
               if (e.target.value && /^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) {
@@ -217,9 +221,9 @@ export default function MuhurtaFinderView() {
           <button
             type="button"
             onClick={() => setStartDateStr(getTodayIso(location.timezone))}
-            className="rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none"
+            className="rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none cursor-pointer"
           >
-            Today
+            {isHi ? 'आज' : 'Today'}
           </button>
         </div>
       </div>
@@ -269,13 +273,21 @@ export default function MuhurtaFinderView() {
             🔍
           </div>
           <h3 className="mt-4 font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100">
-            No Muhurtas match the selected filter
+            {isHi ? 'चयनित फिल्टर के अनुसार कोई मुहूर्त नहीं मिला' : 'No Muhurtas match the selected filter'}
           </h3>
           <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-            Within the next {daysCount} days, no dates meet the strict{' '}
-            <strong>{suitabilityFilter}</strong> criterion for {categoryMeta.title}. Classical texts
-            strictly exclude Rikta Tithis (4th, 9th, 14th), Bhadra (Vishti Karana), and inauspicious
-            Panchakas for this activity.
+            {isHi ? (
+              <>
+                अगले {daysCount} दिनों में {categoryMeta.titleDevanagari} हेतु कोई तिथि उपयुक्तता मापदण्ड पर खरी नहीं उतरी। शास्त्रीय ग्रन्थों के अनुसार रिक्ता तिथियाँ (४, ९, १४), भद्रा (विष्टि करण) तथा अशुभ पञ्चक सर्वथा वर्जित हैं।
+              </>
+            ) : (
+              <>
+                Within the next {daysCount} days, no dates meet the strict{' '}
+                <strong>{suitabilityFilter}</strong> criterion for {categoryMeta.title}. Classical texts
+                strictly exclude Rikta Tithis (4th, 9th, 14th), Bhadra (Vishti Karana), and inauspicious
+                Panchakas for this activity.
+              </>
+            )}
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             {suitabilityFilter !== 'All' && (
@@ -284,7 +296,9 @@ export default function MuhurtaFinderView() {
                 onClick={() => setSuitabilityFilter('All')}
                 className="cursor-pointer rounded-xl bg-amber-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600"
               >
-                Show All Auspicious Days ({rawEvaluations?.length ?? 0} found)
+                {isHi
+                  ? `सभी शुभ दिवस देखें (${rawEvaluations?.length ?? 0} उपलब्ध)`
+                  : `Show All Auspicious Days (${rawEvaluations?.length ?? 0} found)`}
               </button>
             )}
             {daysCount < 180 && (
@@ -293,7 +307,9 @@ export default function MuhurtaFinderView() {
                 onClick={() => setDaysCount(daysCount === 30 ? 60 : daysCount === 60 ? 90 : 180)}
                 className="cursor-pointer rounded-xl border border-zinc-300 bg-zinc-50 px-4 py-2 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
               >
-                Expand Search Horizon to {daysCount === 30 ? '60' : daysCount === 60 ? '90' : '180'} Days
+                {isHi
+                  ? `खोज अवधि बढ़ाकर ${daysCount === 30 ? '६०' : daysCount === 60 ? '९०' : '१८०'} दिन करें`
+                  : `Expand Search Horizon to ${daysCount === 30 ? '60' : daysCount === 60 ? '90' : '180'} Days`}
               </button>
             )}
           </div>
@@ -305,37 +321,47 @@ export default function MuhurtaFinderView() {
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2 max-w-3xl">
             <h4 className="font-serif text-base font-bold text-zinc-900 dark:text-zinc-100">
-              Classical Shastra Calculations &amp; Verification Methodology
+              {isHi
+                ? 'शास्त्रीय मुहूर्त गणना एवं सत्यापन पद्धति'
+                : 'Classical Shastra Calculations & Verification Methodology'}
             </h4>
             <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-              Unlike static table lookups, this finder computes high-precision planetary positions on our high-performance backend using local astronomical equations (Swiss Ephemeris &amp; Jean Meeus VSOP87 algorithms). It continuously calculates:
+              {isHi
+                ? 'सामान्य सारिणी-आधारित ऍप्स के विपरीत, हमारा तन्त्र बैकएंड पर शुद्ध खगोलीय समीकरणों (VSOP87 एवं चाप्रोंट ELP-2000) से सूक्ष्म गणना करता है:'
+                : 'Unlike static table lookups, this finder computes high-precision planetary positions on our high-performance backend using local astronomical equations (Swiss Ephemeris & Jean Meeus VSOP87 algorithms). It continuously calculates:'}
             </p>
             <ul className="grid grid-cols-1 gap-1 text-xs text-zinc-600 sm:grid-cols-2 dark:text-zinc-400">
               <li className="flex items-center gap-1.5">
                 <span className="text-amber-500 font-bold">•</span>
-                <strong>Shodash Samskara Rules:</strong> <em>Muhurta Chintamani</em> &amp; <em>Brihat Samhita</em>
+                <strong>{isHi ? 'षोडश संस्कार नियम:' : 'Shodash Samskara Rules:'}</strong>{' '}
+                <em>{isHi ? 'मुहूर्तचिन्तामणि एवं बृहत्संहिता' : 'Muhurta Chintamani & Brihat Samhita'}</em>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="text-amber-500 font-bold">•</span>
-                <strong>Special Yogas:</strong> Sarvartha Siddhi, Amrita Siddhi, Guru Pushya
+                <strong>{isHi ? 'विशिष्ट सिद्धि योग:' : 'Special Yogas:'}</strong>{' '}
+                {isHi ? 'सर्वार्थ सिद्धि, अमृत सिद्धि, गुरु पुष्य' : 'Sarvartha Siddhi, Amrita Siddhi, Guru Pushya'}
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="text-amber-500 font-bold">•</span>
-                <strong>Dosha Exclusion:</strong> Bhadra (Vishti), Rikta Tithis, Mrityu/Agni Panchaka
+                <strong>{isHi ? 'दोष परिहार:' : 'Dosha Exclusion:'}</strong>{' '}
+                {isHi ? 'भद्रा (विष्टि), रिक्ता तिथियाँ, मृत्यु/अग्नि पञ्चक' : 'Bhadra (Vishti), Rikta Tithis, Mrityu/Agni Panchaka'}
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="text-amber-500 font-bold">•</span>
-                <strong>Dynamic Choghadiya:</strong> Exact daytime divisions derived from solar rise &amp; set
+                <strong>{isHi ? 'गतिक चौघड़िया:' : 'Dynamic Choghadiya:'}</strong>{' '}
+                {isHi ? 'सूर्योदय एवं सूर्यास्त आधारित दिनमान विभाजन' : 'Exact daytime divisions derived from solar rise & set'}
               </li>
             </ul>
           </div>
 
           <div className="flex-none rounded-2xl border border-amber-500/20 bg-amber-50 p-4 text-xs dark:border-amber-400/20 dark:bg-amber-950/30">
             <div className="font-bold text-amber-900 dark:text-amber-200">
-              Active Public Beta
+              {isHi ? 'सक्रिय सार्वजनिक बीटा' : 'Active Public Beta'}
             </div>
             <p className="mt-1 text-[11px] text-amber-800/90 dark:text-amber-300/90 max-w-xs">
-              Help us build the most accurate astronomical platform. If your local tradition or regional almanac shows an alternate calculation, send your notes to:
+              {isHi
+                ? 'यदि आपके स्थानीय पञ्चाङ्ग में कोई भिन्न मत अथवा अवलोकन हो, तो कृपया अपना प्रेक्षण साझा करें:'
+                : 'Help us build the most accurate astronomical platform. If your local tradition or regional almanac shows an alternate calculation, send your notes to:'}
             </p>
             <a
               href="mailto:mail@sanatan.cc?subject=Muhurta%20Finder%20Feedback"

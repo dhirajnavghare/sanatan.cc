@@ -2,16 +2,42 @@
 
 import { MUHURTA_CATEGORIES } from '@/app/lib/muhurta-finder/categories';
 import { MuhurtaCategoryId } from '@/app/lib/muhurta-finder/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 interface MuhurtaCategorySelectorProps {
   selectedCategory: MuhurtaCategoryId;
   onSelectCategory: (id: MuhurtaCategoryId) => void;
 }
 
+const CATEGORY_SUBTITLES_HI: Record<string, string> = {
+  griha_pravesh: 'गृहप्रवेश एवं नूतन वास',
+  vivaha: 'पाणिग्रहण एवं वैवाहिक संस्कार',
+  vehicle_purchase: 'नूतन वाहन क्रय मुहूर्त',
+  business_start: 'व्यापार, दुकान एवं उद्योग आरम्भ',
+  property_purchase: 'भूमि, भवन एवं रजिस्ट्री',
+  gold_purchase: 'स्वर्ण, आभूषण एवं धातु क्रय',
+  namakarana: 'शिशु नामकरण संस्कार',
+  sarvartha_siddhi: 'सर्वकार्य सिद्धि योग',
+};
+
+const CATEGORY_SUBTITLES_EN: Record<string, string> = {
+  griha_pravesh: 'Housewarming ceremony',
+  vivaha: 'Sacred wedding rituals',
+  vehicle_purchase: 'Vehicle purchase & registry',
+  business_start: 'New venture or shop opening',
+  property_purchase: 'Land or property registry',
+  gold_purchase: 'Gold & jewelry buying',
+  namakarana: 'Newborn naming ceremony',
+  sarvartha_siddhi: 'Universal auspicious works',
+};
+
 export default function MuhurtaCategorySelector({
   selectedCategory,
   onSelectCategory,
 }: MuhurtaCategorySelectorProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
@@ -19,10 +45,10 @@ export default function MuhurtaCategorySelector({
           <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10 text-xs font-bold text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
             🎯
           </span>
-          <span>Auspicious Category (कार्य एवं संस्कार वर्ग)</span>
+          <span>{isHi ? 'कार्य एवं संस्कार वर्ग' : 'Auspicious Category'}</span>
         </h2>
         <span className="text-xs text-zinc-500 dark:text-zinc-400">
-          Classical Vedic Shastra criteria
+          {isHi ? 'वैदिक शास्त्रसम्मत मानदण्ड' : 'Classical Vedic Shastra criteria'}
         </span>
       </div>
 
@@ -63,7 +89,7 @@ export default function MuhurtaCategorySelector({
                       : 'text-zinc-900 dark:text-zinc-100'
                   }`}
                 >
-                  {cat.title}
+                  {isHi ? cat.titleDevanagari : cat.title}
                 </div>
                 <div
                   className={`truncate text-[11px] font-medium ${
@@ -72,7 +98,7 @@ export default function MuhurtaCategorySelector({
                       : 'text-zinc-500 dark:text-zinc-400'
                   }`}
                 >
-                  {cat.titleDevanagari}
+                  {isHi ? (CATEGORY_SUBTITLES_HI[cat.id] || cat.titleDevanagari) : (CATEGORY_SUBTITLES_EN[cat.id] || cat.title)}
                 </div>
               </div>
             </button>

@@ -2,13 +2,28 @@
 
 import { useState } from 'react';
 import { PanchangData } from '@/app/lib/panchang/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import { cleanPlanetLord } from '@/app/lib/i18n/formatters';
 import { formatPanchangTime } from './PanchangHero';
 
 interface ChoghadiyaSectionProps {
   data: PanchangData;
 }
 
+const CHOGHADIYA_QUALITY_HI: Record<string, string> = {
+  Amrit: 'अमृत',
+  Shubh: 'शुभ',
+  Labh: 'लाभ',
+  Char: 'चर',
+  Rog: 'रोग',
+  Kaal: 'काल',
+  Udveg: 'उद्वेग',
+};
+
 export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const [activeTab, setActiveTab] = useState<'day' | 'night'>('day');
   const { choghadiya, location } = data;
   const tz = location.timezone;
@@ -23,10 +38,12 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
             <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10 text-xs font-bold text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
               ⏱
             </span>
-            <span>Choghadiya (चौघड़िया मुहूर्त)</span>
+            <span>{isHi ? 'चौघड़िया मुहूर्त' : 'Choghadiya Timings'}</span>
           </h2>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Vedic 8-fold daylight & nighttime muhurta divisions based on solar weekday
+            {isHi
+              ? 'वार-आधारित दिन एवं रात्रि के ८-८ चौघड़िया मुहूर्त विभाजन'
+              : 'Vedic 8-fold daylight & nighttime muhurta divisions based on solar weekday'}
           </p>
         </div>
 
@@ -47,7 +64,7 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
                 : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
             }`}
           >
-            ☀️ Day Choghadiya (दिन)
+            {isHi ? '☀️ दिन का चौघड़िया' : '☀️ Day Choghadiya'}
           </button>
           <button
             type="button"
@@ -60,7 +77,7 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
                 : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
             }`}
           >
-            🌙 Night Choghadiya (रात्रि)
+            {isHi ? '🌙 रात्रि का चौघड़िया' : '🌙 Night Choghadiya'}
           </button>
         </div>
       </div>
@@ -86,7 +103,7 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
               {ch.isCurrent && (
                 <span className="absolute -top-2 right-2 flex items-center gap-1 rounded-full bg-amber-500 px-2 py-0.5 text-[9px] font-bold text-white shadow">
                   <span className="h-1.5 w-1.5 animate-ping rounded-full bg-white" />
-                  NOW
+                  {isHi ? 'वर्तमान' : 'NOW'}
                 </span>
               )}
 
@@ -102,17 +119,14 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
                         : 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200'
                     }`}
                   >
-                    {ch.quality}
+                    {isHi ? CHOGHADIYA_QUALITY_HI[ch.quality] || ch.quality : ch.quality}
                   </span>
                 </div>
 
                 <div className="mt-1.5">
                   <h4 className="font-serif text-base font-bold text-zinc-900 dark:text-zinc-50">
-                    {ch.name}
+                    {isHi ? ch.nameDevanagari : ch.name}
                   </h4>
-                  <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
-                    {ch.nameDevanagari}
-                  </span>
                 </div>
               </div>
 
@@ -121,10 +135,12 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
                   {formatPanchangTime(ch.startTime, tz)}
                 </div>
                 <div className="text-[10px] text-zinc-400" suppressHydrationWarning>
-                  to {formatPanchangTime(ch.endTime, tz)}
+                  {isHi ? 'से' : 'to'} {formatPanchangTime(ch.endTime, tz)}
                 </div>
                 <div className="mt-1 text-[10px] text-zinc-500 dark:text-zinc-400">
-                  Lord: {ch.ruler}
+                  {isHi
+                    ? `स्वामी: ${cleanPlanetLord(ch.ruler, true)}`
+                    : `Lord: ${cleanPlanetLord(ch.ruler, false)}`}
                 </div>
               </div>
             </div>

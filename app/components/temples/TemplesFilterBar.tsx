@@ -1,6 +1,7 @@
 'use client';
 
 import { TempleCircuit, TempleTradition } from '@/app/lib/temples/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 interface TemplesFilterBarProps {
   searchQuery: string;
@@ -30,6 +31,9 @@ export default function TemplesFilterBar({
   totalMatching,
   totalAll,
 }: TemplesFilterBarProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const isFiltered = searchQuery.trim() !== '' || selectedCircuit !== 'all' || selectedTradition !== 'all';
 
   return (
@@ -45,7 +49,11 @@ export default function TemplesFilterBar({
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search temples, cities, rivers, deities (e.g. Kashi, Kedarnath, Ganga, Jagannath, Ujjain)..."
+            placeholder={
+              isHi
+                ? 'मन्दिर, नगर, पावन नदी अथवा देवता खोजें (जैसे: काशी, केदारनाथ, गंगा, जगन्नाथ, उज्जैन)...'
+                : 'Search temples, cities, rivers, deities (e.g. Kashi, Kedarnath, Ganga, Jagannath, Ujjain)...'
+            }
             className="w-full rounded-2xl border border-zinc-200/90 bg-zinc-50/70 py-2.5 pl-10 pr-9 text-xs text-zinc-900 placeholder-zinc-400 transition focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 dark:border-zinc-800 dark:bg-zinc-950/70 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-amber-400 dark:focus:bg-zinc-950"
           />
           {searchQuery && (
@@ -53,7 +61,7 @@ export default function TemplesFilterBar({
               type="button"
               onClick={() => onSearchChange('')}
               className="absolute inset-y-0 right-0 flex items-center pr-3 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
-              title="Clear search"
+              title={isHi ? 'खोज रिक्त करें' : 'Clear search'}
             >
               ✕
             </button>
@@ -64,7 +72,7 @@ export default function TemplesFilterBar({
         <div className="flex items-center gap-3 sm:justify-end">
           <div className="flex items-center gap-1.5">
             <label htmlFor="temple-tradition-select" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
-              Tradition:
+              {isHi ? 'परम्परा:' : 'Tradition:'}
             </label>
             <select
               id="temple-tradition-select"
@@ -72,17 +80,25 @@ export default function TemplesFilterBar({
               onChange={(e) => onTraditionChange(e.target.value as TempleTradition)}
               className="rounded-2xl border border-zinc-200/90 bg-zinc-50/70 px-3 py-2 text-xs font-semibold text-zinc-900 transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 dark:border-zinc-800 dark:bg-zinc-950/70 dark:text-zinc-100 dark:focus:border-amber-400 cursor-pointer"
             >
-              <option value="all">All Traditions (सर्व परम्परा)</option>
-              <option value="shaiva">Shaiva (शैव)</option>
-              <option value="vaishnava">Vaishnava (वैष्णव)</option>
-              <option value="shakta">Shakta (शाक्त)</option>
-              <option value="smarta">Smarta (स्मार्त)</option>
-              <option value="kaumara">Kaumara (कौमार)</option>
+              <option value="all">{isHi ? 'सर्व परम्परा' : 'All Traditions'}</option>
+              <option value="shaiva">{isHi ? 'शैव' : 'Shaiva'}</option>
+              <option value="vaishnava">{isHi ? 'वैष्णव' : 'Vaishnava'}</option>
+              <option value="shakta">{isHi ? 'शाक्त' : 'Shakta'}</option>
+              <option value="smarta">{isHi ? 'स्मार्त' : 'Smarta'}</option>
+              <option value="kaumara">{isHi ? 'कौमार' : 'Kaumara'}</option>
             </select>
           </div>
 
           <div className="text-xs text-zinc-500 dark:text-zinc-400">
-            Showing <strong className="font-semibold text-zinc-900 dark:text-zinc-100">{totalMatching}</strong> of {totalAll}
+            {isHi ? (
+              <>
+                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">{totalMatching}</strong> / {totalAll} प्रदर्शित
+              </>
+            ) : (
+              <>
+                Showing <strong className="font-semibold text-zinc-900 dark:text-zinc-100">{totalMatching}</strong> of {totalAll}
+              </>
+            )}
           </div>
 
           {isFiltered && (
@@ -95,7 +111,7 @@ export default function TemplesFilterBar({
               }}
               className="rounded-xl border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-700 transition hover:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 cursor-pointer whitespace-nowrap"
             >
-              Reset
+              {isHi ? 'रीसेट' : 'Reset'}
             </button>
           )}
         </div>
@@ -116,8 +132,7 @@ export default function TemplesFilterBar({
                   : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
               }`}
             >
-              <span>{circ.label}</span>
-              <span className="text-[11px] opacity-80">({circ.labelDevanagari})</span>
+              <span>{isHi ? circ.labelDevanagari : circ.label}</span>
               <span
                 className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
                   isActive

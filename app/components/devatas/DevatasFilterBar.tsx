@@ -1,6 +1,7 @@
 'use client';
 
 import { DeityTradition } from '@/app/lib/devatas/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 interface DevatasFilterBarProps {
   searchQuery: string;
@@ -26,6 +27,9 @@ export default function DevatasFilterBar({
   totalMatching,
   totalAll,
 }: DevatasFilterBarProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const isFiltered = searchQuery.trim() !== '' || selectedTradition !== 'all';
 
   return (
@@ -40,7 +44,11 @@ export default function DevatasFilterBar({
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search deities, mantras, temples, tatva (e.g. Shiva, Krishna, Mahamrityunjaya, Kedarnath)..."
+            placeholder={
+              isHi
+                ? 'देवी-देवता, मन्त्र, तीर्थ अथवा तात्विक स्वरूप खोजें (जैसे: शिव, कृष्ण, महामृत्युंजय, केदारनाथ)...'
+                : 'Search deities, mantras, temples, tatva (e.g. Shiva, Krishna, Mahamrityunjaya, Kedarnath)...'
+            }
             className="w-full rounded-2xl border border-zinc-200/90 bg-zinc-50/70 py-2.5 pl-10 pr-9 text-xs text-zinc-900 placeholder-zinc-400 transition focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 dark:border-zinc-800 dark:bg-zinc-950/70 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-amber-400 dark:focus:bg-zinc-950"
           />
           {searchQuery && (
@@ -48,7 +56,7 @@ export default function DevatasFilterBar({
               type="button"
               onClick={() => onSearchChange('')}
               className="absolute inset-y-0 right-0 flex items-center pr-3 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
-              title="Clear search"
+              title={isHi ? 'खोज रिक्त करें' : 'Clear search'}
             >
               ✕
             </button>
@@ -58,7 +66,15 @@ export default function DevatasFilterBar({
         {/* Counter and Clear Filters Button */}
         <div className="flex items-center justify-between gap-3 sm:justify-end">
           <div className="text-xs text-zinc-500 dark:text-zinc-400">
-            Showing <strong className="font-semibold text-zinc-900 dark:text-zinc-100">{totalMatching}</strong> of {totalAll}
+            {isHi ? (
+              <>
+                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">{totalMatching}</strong> / {totalAll} प्रदर्शित
+              </>
+            ) : (
+              <>
+                Showing <strong className="font-semibold text-zinc-900 dark:text-zinc-100">{totalMatching}</strong> of {totalAll}
+              </>
+            )}
           </div>
           {isFiltered && (
             <button
@@ -69,7 +85,7 @@ export default function DevatasFilterBar({
               }}
               className="rounded-xl border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-700 transition hover:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 cursor-pointer"
             >
-              Reset Filters
+              {isHi ? 'रीसेट करें' : 'Reset Filters'}
             </button>
           )}
         </div>
@@ -90,8 +106,7 @@ export default function DevatasFilterBar({
                   : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
               }`}
             >
-              <span>{trad.label}</span>
-              <span className="text-[11px] opacity-80">({trad.labelDevanagari})</span>
+              <span>{isHi ? trad.labelDevanagari : trad.label}</span>
               <span
                 className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
                   isActive

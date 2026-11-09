@@ -10,6 +10,7 @@ export interface FestivalTimelineItem {
   isMajor: boolean;
   date: string; // ISO format 'YYYY-MM-DD'
   formattedDate: string; // e.g. "Sunday, Nov 8, 2026"
+  formattedDateDevanagari?: string; // e.g. "रविवार, 8 नवंबर 2026"
   dayOfWeek: string; // e.g. "Sunday"
   dayOfWeekDevanagari: string; // e.g. "रविवार"
   daysRemaining: number; // relative to query/today date

@@ -1,6 +1,7 @@
 'use client';
 
 import { FestivalCategory } from '@/app/lib/festivals/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 interface FestivalsFilterBarProps {
   searchQuery: string;
@@ -33,6 +34,9 @@ export default function FestivalsFilterBar({
   onMonthChange,
   months,
 }: FestivalsFilterBarProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   return (
     <div className="space-y-4 rounded-3xl border border-zinc-200/90 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
       {/* Top Search & Month Select Row */}
@@ -46,15 +50,19 @@ export default function FestivalsFilterBar({
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search festivals, deities, fasts (e.g. Diwali, Shivaratri, Ekadashi, Ganesh)..."
+            placeholder={
+              isHi
+                ? 'पर्व, देवता अथवा व्रत खोजें (जैसे: दीपावली, शिवरात्रि, एकादशी, गणेश)...'
+                : 'Search festivals, deities, fasts (e.g. Diwali, Shivaratri, Ekadashi, Ganesh)...'
+            }
             className="w-full rounded-2xl border border-zinc-200/90 bg-zinc-50/70 py-2.5 pl-10 pr-9 text-xs text-zinc-900 placeholder-zinc-400 transition focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 dark:border-zinc-800 dark:bg-zinc-950/70 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-amber-400 dark:focus:bg-zinc-950"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => onSearchChange('')}
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
-              title="Clear search"
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
+              title={isHi ? 'खोज रिक्त करें' : 'Clear search'}
             >
               ✕
             </button>
@@ -64,18 +72,18 @@ export default function FestivalsFilterBar({
         {/* Month Selector Dropdown */}
         <div className="flex items-center gap-2">
           <label htmlFor="festival-month-select" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
-            Month:
+            {isHi ? 'माह:' : 'Month:'}
           </label>
           <select
             id="festival-month-select"
             value={selectedMonth || ''}
             onChange={(e) => onMonthChange(e.target.value ? parseInt(e.target.value, 10) : undefined)}
-            className="rounded-2xl border border-zinc-200/90 bg-zinc-50/70 px-3 py-2 text-xs font-semibold text-zinc-900 transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 dark:border-zinc-800 dark:bg-zinc-950/70 dark:text-zinc-100 dark:focus:border-amber-400"
+            className="rounded-2xl border border-zinc-200/90 bg-zinc-50/70 px-3 py-2 text-xs font-semibold text-zinc-900 transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 dark:border-zinc-800 dark:bg-zinc-950/70 dark:text-zinc-100 dark:focus:border-amber-400 cursor-pointer"
           >
-            <option value="">All Months (पूरा वर्ष)</option>
+            <option value="">{isHi ? 'सभी माह (सम्पूर्ण वर्ष)' : 'All Months'}</option>
             {months.map((m) => (
               <option key={m.monthNumber} value={m.monthNumber}>
-                {m.monthName} ({m.monthNameHindi}) {m.count > 0 ? `(${m.count})` : ''}
+                {isHi ? m.monthNameHindi : m.monthName} {m.count > 0 ? `(${m.count})` : ''}
               </option>
             ))}
           </select>
@@ -97,8 +105,7 @@ export default function FestivalsFilterBar({
                   : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
               }`}
             >
-              <span>{cat.label}</span>
-              <span className="hidden sm:inline text-[10px] opacity-80">({cat.labelDevanagari})</span>
+              <span>{isHi ? cat.labelDevanagari : cat.label}</span>
               <span
                 className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
                   isActive

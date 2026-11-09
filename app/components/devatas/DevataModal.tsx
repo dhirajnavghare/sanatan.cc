@@ -3,13 +3,33 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DeityRecord } from '@/app/lib/devatas/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import {
+  cleanAyudha,
+  cleanOffering,
+  cleanIndianLocation,
+  cleanTempleSignificance,
+  cleanBilingualTitle,
+} from '@/app/lib/i18n/formatters';
 
 interface DevataModalProps {
   deity: DeityRecord | null;
   onClose: () => void;
 }
 
+const TRADITION_HI: Record<string, string> = {
+  Shaiva: 'शैव',
+  Vaishnava: 'वैष्णव',
+  Shakta: 'शाक्त',
+  Ganapatya: 'गाणपत्य',
+  Saura: 'सौर',
+  Kaumara: 'कौमार',
+};
+
 export default function DevataModal({ deity, onClose }: DevataModalProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const [copiedMantraIdx, setCopiedMantraIdx] = useState<number | null>(null);
 
   // Close on ESC key
@@ -67,24 +87,21 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
               <span
                 className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${deity.colorTheme.badgeBg} ${deity.colorTheme.badgeText} ${deity.colorTheme.border}`}
               >
-                {deity.tradition} Tradition
+                {isHi ? (TRADITION_HI[deity.tradition] || deity.tradition) : `${deity.tradition} Tradition`}
               </span>
               {deity.isPanchaDeva && (
                 <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:border-amber-400/30 dark:text-amber-300">
                   <span>✨</span>
-                  <span>Pancha Deva (स्मार्त पंचायतन)</span>
+                  <span>{isHi ? 'स्मार्त पञ्चायतन' : 'Smarta Panchayatana'}</span>
                 </span>
               )}
             </div>
 
             <h2 id="devata-modal-title" className="font-serif text-2xl font-black text-zinc-900 dark:text-zinc-50 sm:text-3xl">
-              {deity.name}
+              {isHi ? deity.nameDevanagari : deity.name}
             </h2>
-            <div className="font-serif text-lg font-bold text-amber-700 dark:text-amber-400">
-              {deity.nameDevanagari}
-            </div>
             <p className="text-xs text-zinc-600 dark:text-zinc-400">
-              {deity.subtitle} • <span className="font-serif">{deity.subtitleDevanagari}</span>
+              {isHi ? (deity.subtitleDevanagari || deity.subtitle) : deity.subtitle}
             </p>
           </div>
 
@@ -92,7 +109,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
             type="button"
             onClick={onClose}
             className="rounded-2xl border border-zinc-200 bg-zinc-50 p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-100 cursor-pointer"
-            title="Close dialog (Esc)"
+            title={isHi ? 'संवाद बन्द करें (Esc)' : 'Close dialog (Esc)'}
           >
             <span className="sr-only">Close</span>
             ✕
@@ -105,25 +122,41 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {deity.vahana && (
               <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
-                <span className="text-[10px] uppercase font-bold text-zinc-400">Vahana (Mount)</span>
-                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">{deity.vahana}</p>
+                <span className="text-[10px] uppercase font-bold text-zinc-400">
+                  {isHi ? 'वाहन' : 'Vahana'}
+                </span>
+                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">
+                  {cleanVahana(deity.vahana, isHi)}
+                </p>
               </div>
             )}
             {deity.consort && (
               <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
-                <span className="text-[10px] uppercase font-bold text-zinc-400">Consort (Shakti)</span>
-                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">{deity.consort}</p>
+                <span className="text-[10px] uppercase font-bold text-zinc-400">
+                  {isHi ? 'शक्ति / सहचरी' : 'Consort'}
+                </span>
+                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">
+                  {cleanParens(deity.consort, isHi)}
+                </p>
               </div>
             )}
             {deity.abode && (
               <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
-                <span className="text-[10px] uppercase font-bold text-zinc-400">Abode (Dhama)</span>
-                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">{deity.abode}</p>
+                <span className="text-[10px] uppercase font-bold text-zinc-400">
+                  {isHi ? 'परम धाम' : 'Abode'}
+                </span>
+                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">
+                  {cleanParens(deity.abode, isHi)}
+                </p>
               </div>
             )}
             <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
-              <span className="text-[10px] uppercase font-bold text-zinc-400">Sacred Day</span>
-              <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">{deity.sacredDay}</p>
+              <span className="text-[10px] uppercase font-bold text-zinc-400">
+                {isHi ? 'प्रिय वार' : 'Sacred Day'}
+              </span>
+              <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">
+                {cleanSacredDay(deity.sacredDay, isHi)}
+              </p>
             </div>
           </div>
 
@@ -131,7 +164,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
           {deity.ayudhas && deity.ayudhas.length > 0 && (
             <div className="space-y-1.5">
               <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                Ayudhas (Sacred Implements &amp; Weapons)
+                {isHi ? 'आयुध एवं अस्त्र-शस्त्र' : 'Sacred Implements & Weapons (Ayudhas)'}
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {deity.ayudhas.map((ayudha) => (
@@ -139,7 +172,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
                     key={ayudha}
                     className="rounded-xl border border-zinc-200 bg-white px-2.5 py-1 text-xs font-semibold text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
                   >
-                    ⚔️ {ayudha}
+                    ⚔️ {cleanAyudha(ayudha, isHi)}
                   </span>
                 ))}
               </div>
@@ -150,7 +183,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
           <div className="space-y-1.5 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 dark:border-amber-500/15 dark:bg-amber-950/20">
             <h3 className="font-serif text-sm font-bold text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
               <span>🕉️</span>
-              <span>Vedic Philosophy &amp; Tatva (तात्विक स्वरूप)</span>
+              <span>{isHi ? 'तात्विक स्वरूप एवं दर्शन' : 'Vedic Philosophy & Tatva'}</span>
             </h3>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
               {deity.tatva}
@@ -161,7 +194,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
           <div className="space-y-1.5 rounded-2xl border border-zinc-200 bg-zinc-50/60 p-4 dark:border-zinc-800 dark:bg-zinc-950/60">
             <h3 className="font-serif text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
               <span>👁️</span>
-              <span>Iconography &amp; Divine Symbolism (रूप एवं प्रतीक)</span>
+              <span>{isHi ? 'दिव्य स्वरूप एवं प्रतीक' : 'Iconography & Divine Symbolism'}</span>
             </h3>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
               {deity.iconography}
@@ -172,7 +205,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
           <div className="space-y-3">
             <h3 className="font-serif text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
               <span>📜</span>
-              <span>Sacred Sanskrit Mantras (महामन्त्र एवं स्तोत्र)</span>
+              <span>{isHi ? 'महामन्त्र एवं स्तोत्र' : 'Sacred Sanskrit Mantras'}</span>
             </h3>
             <div className="space-y-3">
               {deity.keyMantras.map((mantra, idx) => (
@@ -194,17 +227,24 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
                       }
                       className="rounded-lg border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] font-semibold text-zinc-600 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 cursor-pointer"
                     >
-                      {copiedMantraIdx === idx ? '✓ Copied!' : '📋 Copy'}
+                      {copiedMantraIdx === idx
+                        ? (isHi ? '✓ प्रतिलिपि!' : '✓ Copied!')
+                        : (isHi ? '📋 प्रतिलिपि' : '📋 Copy')}
                     </button>
                   </div>
                   <div className="mt-3 font-serif text-sm font-semibold leading-relaxed text-zinc-900 dark:text-zinc-100">
                     {mantra.devanagari}
                   </div>
-                  <div className="mt-1 font-mono text-[11px] italic text-zinc-500 dark:text-zinc-400">
-                    {mantra.transliteration}
-                  </div>
+                  {!isHi && (
+                    <div className="mt-1 font-mono text-[11px] italic text-zinc-500 dark:text-zinc-400">
+                      {mantra.transliteration}
+                    </div>
+                  )}
                   <div className="mt-2 text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">
-                    <strong className="text-zinc-700 dark:text-zinc-300">Meaning:</strong> {mantra.meaning}
+                    <strong className="text-zinc-700 dark:text-zinc-300">
+                      {isHi ? 'भावार्थ:' : 'Meaning:'}
+                    </strong>{' '}
+                    {mantra.meaning}
                   </div>
                 </div>
               ))}
@@ -215,7 +255,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
           <div className="space-y-3">
             <h3 className="font-serif text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
               <span>🏛️</span>
-              <span>Major Historic Temples &amp; Sanctuaries (प्रमुख तीर्थ स्थल)</span>
+              <span>{isHi ? 'प्रमुख तीर्थ स्थल एवं मन्दिर' : 'Major Historic Temples & Sanctuaries'}</span>
             </h3>
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               {deity.majorTemples.map((temple) => (
@@ -223,9 +263,9 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
                   key={temple.name}
                   className="rounded-2xl border border-zinc-200/90 bg-zinc-50/70 p-3 dark:border-zinc-800 dark:bg-zinc-950/70"
                 >
-                  <div className="font-semibold text-zinc-900 dark:text-zinc-100">{temple.name}</div>
-                  <div className="text-[11px] text-amber-700 dark:text-amber-400">📍 {temple.location}</div>
-                  <div className="mt-1 text-[11px] text-zinc-600 dark:text-zinc-400">{temple.significance}</div>
+                  <div className="font-semibold text-zinc-900 dark:text-zinc-100">{cleanBilingualTitle(temple.name, isHi)}</div>
+                  <div className="text-[11px] text-amber-700 dark:text-amber-400">📍 {cleanIndianLocation(temple.location, isHi)}</div>
+                  <div className="mt-1 text-[11px] text-zinc-600 dark:text-zinc-400">{cleanTempleSignificance(temple.significance, isHi)}</div>
                 </div>
               ))}
             </div>
@@ -235,7 +275,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
           {deity.traditionalOfferings && deity.traditionalOfferings.length > 0 && (
             <div className="space-y-1.5">
               <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                Traditional Offerings (नैवेद्य एवं पूजन सामग्री)
+                {isHi ? 'नैवेद्य एवं प्रिय पूजन सामग्री' : 'Traditional Offerings'}
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {deity.traditionalOfferings.map((offering) => (
@@ -243,7 +283,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
                     key={offering}
                     className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-xs font-semibold text-amber-800 dark:text-amber-300"
                   >
-                    🌺 {offering}
+                    🌺 {cleanOffering(offering, isHi)}
                   </span>
                 ))}
               </div>
@@ -257,14 +297,14 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
                 href={`/festivals?q=${encodeURIComponent(deity.name.split('/')[0].trim())}`}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-xs font-bold text-orange-800 transition hover:bg-orange-500/20 dark:text-orange-300"
               >
-                <span>🪔 View Festivals &amp; Vrats</span>
+                <span>{isHi ? '🪔 सम्बद्ध पर्व एवं व्रत देखें' : '🪔 View Festivals & Vrats'}</span>
                 <span>&rarr;</span>
               </Link>
               <Link
                 href="/panchang"
                 className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-100 px-3 py-1.5 text-xs font-bold text-zinc-700 transition hover:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
               >
-                <span>🗓 Check Today&apos;s Tithi in Panchang</span>
+                <span>{isHi ? '🗓 आज की तिथि पञ्चाङ्ग में देखें' : "🗓 Check Today's Tithi in Panchang"}</span>
                 <span>&rarr;</span>
               </Link>
             </div>
@@ -273,7 +313,7 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
               onClick={onClose}
               className="rounded-xl bg-zinc-900 px-4 py-1.5 text-xs font-bold text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 cursor-pointer"
             >
-              Close
+              {isHi ? 'बन्द करें' : 'Close'}
             </button>
           </div>
         </div>
@@ -281,3 +321,57 @@ export default function DevataModal({ deity, onClose }: DevataModalProps) {
     </div>
   );
 }
+
+function cleanVahana(vahana: string | undefined, isHi: boolean): string {
+  if (!vahana) return '';
+  const match = vahana.match(/\(([^)]+)\)/);
+  if (isHi && match) return match[1].trim();
+  if (isHi) {
+    if (vahana.includes('Nandi')) return 'नन्दी';
+    if (vahana.includes('Garuda')) return 'गरुड़';
+    if (vahana.includes('Mooshaka') || vahana.includes('Mouse')) return 'मूषक';
+    if (vahana.includes('Lion') || vahana.includes('Tiger')) return 'सिंह / व्याघ्र';
+    if (vahana.includes('Swan') || vahana.includes('Hamsa')) return 'हंस';
+    if (vahana.includes('Peacock')) return 'मयूर';
+    if (vahana.includes('Elephant') || vahana.includes('Airavata')) return 'ऐरावत';
+    if (vahana.includes('Horse')) return 'सप्त अश्व रथ';
+  }
+  return vahana.split('(')[0].trim();
+}
+
+function cleanSacredDay(day: string | undefined, isHi: boolean): string {
+  if (!day) return '';
+  if (!isHi) {
+    return day.split('(')[0].trim();
+  }
+  return day
+    .replace(/Monday/g, 'सोमवार')
+    .replace(/Tuesday/g, 'मंगलवार')
+    .replace(/Wednesday/g, 'बुधवार')
+    .replace(/Thursday/g, 'गुरुवार')
+    .replace(/Friday/g, 'शुक्रवार')
+    .replace(/Saturday/g, 'शनिवार')
+    .replace(/Sunday/g, 'रविवार')
+    .replace(/Somavara/gi, '')
+    .replace(/Guruvara/gi, '')
+    .replace(/Mangalavara/gi, '')
+    .replace(/Budhavara/gi, '')
+    .replace(/Shukravara/gi, '')
+    .replace(/Shanivara/gi, '')
+    .replace(/Ravivara/gi, '')
+    .replace(/Ekadashi/g, 'एकादशी')
+    .replace(/Ashtami/g, 'अष्टमी')
+    .replace(/Pradosha/g, 'प्रदोष')
+    .replace(/[()]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function cleanParens(val: string | undefined, isHi: boolean): string {
+  if (!val) return '';
+  const match = val.match(/\(([^)]+)\)/);
+  if (isHi && match) return match[1].trim();
+  if (isHi) return val;
+  return val.split('(')[0].trim();
+}
+

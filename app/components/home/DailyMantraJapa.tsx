@@ -2,46 +2,66 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 interface SacredMantra {
   title: string;
+  titleDevanagari: string;
   deity: string;
+  deityDevanagari: string;
   devanagari: string;
   transliteration: string;
   meaning: string;
+  meaningHindi: string;
   benefits: string;
+  benefitsHindi: string;
 }
 
 const MANTRAS_COLLECTION: SacredMantra[] = [
   {
-    title: 'महामृत्युंजय मन्त्र (Maha Mrityunjaya Mantra)',
-    deity: 'Lord Shiva (Mahadeva)',
+    title: 'Maha Mrityunjaya Mantra',
+    titleDevanagari: 'महामृत्युंजय मन्त्र',
+    deity: 'Lord Shiva',
+    deityDevanagari: 'भगवान देवाधिदेव शिव',
     devanagari: 'ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम्।\nउर्वारुकमिव बन्धनान्मृत्योर्मुक्षीय मामृतात्॥',
     transliteration:
       'Om Tryambakam Yajamahe Sugandhim Pushti-Vardhanam |\nUrvarukam-Iva Bandhanan-Mrityor-Mukshiya Mamritat ||',
     meaning:
       'We worship the Three-Eyed Lord (Shiva), fragrant and nourisher of all beings. May He liberate us from death and worldly bondage, like a ripe cucumber easily detached from its vine, and grant us liberation into immortality.',
+    meaningHindi:
+      'हम त्रिनेत्रधारी भगवान शिव की आराधना करते हैं, जो सुगन्धित और सभी जीवों के पोषक हैं। जिस प्रकार पका हुआ खरबूजा बेल से अनायास मुक्त हो जाता है, उसी प्रकार वे हमें मृत्यु और सांसारिक बंधनों से मुक्त कर अमृतत्व प्रदान करें।',
     benefits: 'Bestows spiritual strength, long life, freedom from fear, and physical and mental healing.',
+    benefitsHindi: 'आत्मिक बल, दीर्घायु, भयमुक्ति तथा शारीरिक व मानसिक आरोग्य प्रदान करता है।',
   },
   {
-    title: 'गायत्री मन्त्र (Gayatri Mantra)',
-    deity: 'Devi Gayatri / Savitr (Solar Divine)',
+    title: 'Gayatri Mantra',
+    titleDevanagari: 'गायत्री मन्त्र',
+    deity: 'Devi Gayatri',
+    deityDevanagari: 'देवी गायत्री',
     devanagari: 'ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं\nभर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्॥',
     transliteration:
       'Om Bhur Bhuvah Svah Tat-Savitur-Varenyam |\nBhargo Devasya Dheemahi Dhiyo Yo Nah Prachodayat ||',
     meaning:
       'We meditate upon the transcendental glory of the Supreme Divine Sun (Savitr), the creator of physical, mental, and celestial spheres. May that Divine Light illuminate and awaken our intellect.',
+    meaningHindi:
+      'हम उस प्राणस्वरूप, दुःखनाशक, सुखस्वरूप, श्रेष्ठ, तेजस्वी, पापनाशक, देवस्वरूप परमात्मा का ध्यान करते हैं। वह परमात्मा हमारी बुद्धि को सन्मार्ग की ओर प्रेरित करे।',
     benefits: 'Awakens higher wisdom, sharpens intellect, dispels darkness, and elevates consciousness.',
+    benefitsHindi: 'सद्बुद्धि, विवेक, तेजस्विता, अन्धकार निवारण और चेतना का उन्नयन करता है।',
   },
   {
-    title: 'शान्ति मन्त्र (Universal Peace Prayer)',
-    deity: 'Brahman (Supreme Universal Reality)',
+    title: 'Universal Peace Prayer',
+    titleDevanagari: 'शान्ति मन्त्र',
+    deity: 'Brahman',
+    deityDevanagari: 'परब्रह्म परमात्मा',
     devanagari: 'ॐ असतो मा सद्गमय। तमसो मा ज्योतिर्गमय।\nमृत्योर्मा अमृतं गमय। ॐ शान्तिः शान्तिः शान्तिः॥',
     transliteration:
       'Om Asato Ma Sadgamaya | Tamaso Ma Jyotirgamaya |\nMrityor-Ma Amritam Gamaya | Om Shantih Shantih Shantih ||',
     meaning:
       'Lead us from falsehood to truth. Lead us from darkness to light. Lead us from death to immortality. Om, peace, peace, peace.',
+    meaningHindi:
+      'हे प्रभु! हमें असत्य से सत्य की ओर ले चलें। हमें अज्ञान रूपी अंधकार से ज्ञान रूपी प्रकाश की ओर ले चलें। हमें मृत्यु से अमरता की ओर ले चलें। ॐ शान्तिः शान्तिः शान्तिः॥',
     benefits: 'Removes ignorance, clears confusion, brings mental serenity and cosmic peace.',
+    benefitsHindi: 'अज्ञान निवारण, मानसिक शांति, भ्रममुक्ति और वैश्विक शांति स्थापित करता है।',
   },
 ];
 
@@ -51,12 +71,16 @@ export default function DailyMantraJapa() {
   const [copied, setCopied] = useState(false);
   const [japaCount, setJapaCount] = useState(0);
   const [completedMalas, setCompletedMalas] = useState(0);
+  const { language } = useLanguage();
 
   const activeMantra = MANTRAS_COLLECTION[mantraIndex];
 
   const handleCopy = async () => {
     try {
-      const text = `${activeMantra.title}\n\n${activeMantra.devanagari}\n\n${activeMantra.transliteration}\n\nMeaning:\n${activeMantra.meaning}`;
+      const title = language === 'hi' ? activeMantra.titleDevanagari : activeMantra.title;
+      const meaning = language === 'hi' ? activeMantra.meaningHindi : activeMantra.meaning;
+      const translit = language === 'hi' ? '' : `\n\n${activeMantra.transliteration}`;
+      const text = `${title}\n\n${activeMantra.devanagari}${translit}\n\n${language === 'hi' ? 'भावार्थ:' : 'Meaning:'}\n${meaning}`;
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -86,13 +110,15 @@ export default function DailyMantraJapa() {
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
             <span>📿</span>
-            <span>दैनिक मन्त्र साधना एवं जप माला • Daily Japa &amp; Sacred Stotras</span>
+            <span>{language === 'hi' ? 'दैनिक मन्त्र साधना एवं जप माला' : 'Daily Japa & Sacred Stotras'}</span>
           </div>
           <h2 className="mt-1 font-serif text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            Sacred Mantra &amp; 108 Japa Counter
+            {language === 'hi' ? 'पवित्र मन्त्र एवं १०८ जप माला' : 'Sacred Mantra & 108 Japa Counter'}
           </h2>
           <p className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
-            Chant divine Sanskrit mantras with interactive digital mala counting and classical philosophy
+            {language === 'hi'
+              ? 'डिजिटल माला और दार्शनिक भावार्थ के साथ पवित्र वैदिक मन्त्रों का जप करें'
+              : 'Chant divine Sanskrit mantras with interactive digital mala counting and classical philosophy'}
           </p>
         </div>
 
@@ -112,7 +138,7 @@ export default function DailyMantraJapa() {
                   : 'border border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-white dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
               }`}
             >
-              Mantra {idx + 1}
+              {language === 'hi' ? `मन्त्र ${idx + 1}` : `Mantra ${idx + 1}`}
             </button>
           ))}
         </div>
@@ -124,7 +150,7 @@ export default function DailyMantraJapa() {
           <div>
             <div className="flex items-center justify-between">
               <span className="rounded-full bg-amber-500/15 px-3 py-1 text-xs font-bold text-amber-900 dark:text-amber-300">
-                {activeMantra.deity}
+                {language === 'hi' ? activeMantra.deityDevanagari : activeMantra.deity}
               </span>
               <button
                 type="button"
@@ -132,12 +158,16 @@ export default function DailyMantraJapa() {
                 className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 cursor-pointer"
               >
                 <span>{copied ? '✓' : '📋'}</span>
-                <span>{copied ? 'Copied!' : 'Copy Mantra'}</span>
+                <span>
+                  {copied
+                    ? (language === 'hi' ? 'कॉपी हुआ!' : 'Copied!')
+                    : (language === 'hi' ? 'मन्त्र कॉपी करें' : 'Copy Mantra')}
+                </span>
               </button>
             </div>
 
             <h3 className="mt-4 font-serif text-xl font-bold text-zinc-900 dark:text-zinc-50">
-              {activeMantra.title}
+              {language === 'hi' ? activeMantra.titleDevanagari : activeMantra.title}
             </h3>
 
             {/* Devanagari Script */}
@@ -147,18 +177,25 @@ export default function DailyMantraJapa() {
               </p>
             </div>
 
-            {/* Transliteration */}
-            <p className="mt-3 font-serif text-xs italic leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line text-center">
-              {activeMantra.transliteration}
-            </p>
+            {/* Transliteration: Only shown in English mode */}
+            {language === 'en' && (
+              <p className="mt-3 font-serif text-xs italic leading-relaxed text-zinc-600 dark:text-zinc-400 whitespace-pre-line text-center">
+                {activeMantra.transliteration}
+              </p>
+            )}
 
             {/* Meaning Toggle */}
             {showMeaning && (
               <div className="mt-4 rounded-xl border border-zinc-200/60 bg-white/60 p-3.5 text-xs text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-300">
-                <p className="font-semibold text-amber-900 dark:text-amber-300">Spiritual Meaning:</p>
-                <p className="mt-1 leading-relaxed">{activeMantra.meaning}</p>
+                <p className="font-semibold text-amber-900 dark:text-amber-300">
+                  {language === 'hi' ? 'आध्यात्मिक भावार्थ:' : 'Spiritual Meaning:'}
+                </p>
+                <p className="mt-1 leading-relaxed">
+                  {language === 'hi' ? activeMantra.meaningHindi : activeMantra.meaning}
+                </p>
                 <p className="mt-2 text-[11px] text-zinc-500">
-                  <strong>Sacred Benefit:</strong> {activeMantra.benefits}
+                  <strong>{language === 'hi' ? 'दिव्य फल:' : 'Sacred Benefit:'}</strong>{' '}
+                  {language === 'hi' ? activeMantra.benefitsHindi : activeMantra.benefits}
                 </p>
               </div>
             )}
@@ -170,14 +207,16 @@ export default function DailyMantraJapa() {
               onClick={() => setShowMeaning((prev) => !prev)}
               className="font-semibold text-amber-700 hover:text-amber-800 dark:text-amber-400 cursor-pointer"
             >
-              {showMeaning ? 'Hide Meaning' : 'Show Spiritual Meaning'}
+              {showMeaning
+                ? (language === 'hi' ? 'भावार्थ छिपाएं' : 'Hide Meaning')
+                : (language === 'hi' ? 'आध्यात्मिक भावार्थ देखें' : 'Show Spiritual Meaning')}
             </button>
 
             <Link
               href="/devatas"
               className="font-semibold text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
             >
-              Explore All Deities &amp; Mantras &rarr;
+              {language === 'hi' ? 'सभी देवी-देवता एवं स्तोत्र देखें →' : 'Explore All Deities & Mantras →'}
             </Link>
           </div>
         </div>
@@ -186,10 +225,10 @@ export default function DailyMantraJapa() {
         <div className="flex flex-col items-center justify-between rounded-2xl border border-zinc-200/80 bg-zinc-50/70 p-6 dark:border-zinc-800 dark:bg-zinc-950">
           <div className="w-full text-center">
             <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
-              Interactive Japa Mala
+              {language === 'hi' ? 'इंटरैक्टिव जप माला' : 'Interactive Japa Mala'}
             </span>
             <h4 className="mt-0.5 font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100">
-              108 Bead Counter
+              {language === 'hi' ? '१०८ मनका जप गणक' : '108 Bead Counter'}
             </h4>
           </div>
 
@@ -223,7 +262,9 @@ export default function DailyMantraJapa() {
               <span className="font-mono text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">
                 {japaCount}
               </span>
-              <span className="text-[11px] font-semibold text-zinc-400">/ 108 Beads</span>
+              <span className="text-[11px] font-semibold text-zinc-400">
+                {language === 'hi' ? '/ १०८ मनके' : '/ 108 Beads'}
+              </span>
               <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
                 {percentProgress}%
               </span>
@@ -238,21 +279,23 @@ export default function DailyMantraJapa() {
               className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 py-3.5 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition-all duration-150 hover:from-amber-600 hover:to-amber-800 active:scale-95 cursor-pointer"
             >
               <span className="text-lg transition-transform group-hover:scale-125">📿</span>
-              <span>Count +1 Bead</span>
+              <span>{language === 'hi' ? 'मनका गणना (+१)' : 'Count +1 Bead'}</span>
             </button>
 
             {completedMalas > 0 && (
               <p className="text-center text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                🎉 {completedMalas} Full {completedMalas === 1 ? 'Mala' : 'Malas'} (108) Completed!
+                {language === 'hi'
+                  ? `🎉 ${completedMalas} पूर्ण माला (१०८) सम्पन्न!`
+                  : `🎉 ${completedMalas} Full ${completedMalas === 1 ? 'Mala' : 'Malas'} (108) Completed!`}
               </p>
             )}
 
             <button
               type="button"
               onClick={handleResetJapa}
-              className="text-center text-xs font-semibold text-zinc-600 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+              className="text-center text-xs font-semibold text-zinc-600 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer"
             >
-              Reset Counter
+              {language === 'hi' ? 'रीसेट करें' : 'Reset Counter'}
             </button>
           </div>
         </div>

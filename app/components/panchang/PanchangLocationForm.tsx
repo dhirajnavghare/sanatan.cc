@@ -4,6 +4,7 @@ import { useState, useId } from 'react';
 import { GeoLocation } from '@/app/lib/panchang/types';
 import { PRESET_CITIES } from '@/app/lib/panchang/constants';
 import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 export interface LocationFormValues {
   name: string;
@@ -39,6 +40,8 @@ export default function PanchangLocationForm({
   className = '',
 }: PanchangLocationFormProps) {
   const formId = useId();
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
 
   const [values, setValues] = useState<LocationFormValues>({
     name: initialLocation.name,
@@ -201,10 +204,12 @@ export default function PanchangLocationForm({
       {/* Header */}
       <div className="border-b border-zinc-100 pb-3 dark:border-zinc-800">
         <h3 className="font-serif text-lg font-bold text-zinc-900 dark:text-zinc-50">
-          Location &amp; Ephemeris Parameters
+          {isHi ? 'स्थान एवं पञ्चाङ्ग गणना मानदण्ड' : 'Location & Ephemeris Parameters'}
         </h3>
         <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          Input exact geographical coordinates and computation options for astronomical calculation.
+          {isHi
+            ? 'खगोलीय गणना हेतु सटीक भौगोलिक निर्देशांक एवं विकल्प दर्ज करें।'
+            : 'Input exact geographical coordinates and computation options for astronomical calculation.'}
         </p>
       </div>
 
@@ -214,7 +219,7 @@ export default function PanchangLocationForm({
           data-testid="form-success-banner"
           className="rounded-xl bg-emerald-50 p-3 text-xs font-semibold text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
         >
-          ✓ Calculation parameters updated successfully.
+          {isHi ? '✓ गणना मानदण्ड सफलतापूर्वक अद्यतन किए गए।' : '✓ Calculation parameters updated successfully.'}
         </div>
       )}
 
@@ -225,22 +230,28 @@ export default function PanchangLocationForm({
           data-testid="gps-detect-button"
           onClick={handleGpsDetect}
           disabled={isLocating}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 disabled:opacity-50 cursor-pointer"
         >
           <span>📍</span>
-          <span>{isLocating ? 'Detecting GPS...' : 'Use GPS Coordinates'}</span>
+          <span>
+            {isLocating
+              ? (isHi ? 'GPS खोजा जा रहा है...' : 'Detecting GPS...')
+              : (isHi ? 'GPS निर्देशांक उपयोग करें' : 'Use GPS Coordinates')}
+          </span>
         </button>
 
         <div className="flex-1 min-w-[200px]">
           <select
             data-testid="preset-city-select"
-            aria-label="Preset City"
+            aria-label={isHi ? 'पूर्व-निर्धारित नगर' : 'Preset City'}
             onChange={handleSelectPreset}
             value={currentPresetIdx >= 0 ? currentPresetIdx : ''}
-            className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-800 focus:border-amber-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-800 focus:border-amber-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 cursor-pointer"
           >
             <option value="" disabled={currentPresetIdx >= 0}>
-              {currentPresetIdx >= 0 ? '-- Change Predefined City --' : '-- Choose from Predefined City Coordinates --'}
+              {currentPresetIdx >= 0
+                ? (isHi ? '-- पूर्व-निर्धारित नगर बदलें --' : '-- Change Predefined City --')
+                : (isHi ? '-- पूर्व-निर्धारित नगर चुनें --' : '-- Choose from Predefined City Coordinates --')}
             </option>
             {PRESET_CITIES.map((city, idx) => (
               <option key={city.name} value={idx}>
@@ -257,7 +268,7 @@ export default function PanchangLocationForm({
           htmlFor={`${formId}-name`}
           className="block text-xs font-semibold text-zinc-800 dark:text-zinc-200"
         >
-          Location Label / City Name <span className="text-rose-500">*</span>
+          {isHi ? 'स्थान / नगर का नाम' : 'Location Label / City Name'} <span className="text-rose-500">*</span>
         </label>
         <input
           id={`${formId}-name`}
@@ -295,7 +306,7 @@ export default function PanchangLocationForm({
             htmlFor={`${formId}-latitude`}
             className="block text-xs font-semibold text-zinc-800 dark:text-zinc-200"
           >
-            Latitude (Decimal Degrees) <span className="text-rose-500">*</span>
+            {isHi ? 'अक्षांश (दशमलव अंश)' : 'Latitude (Decimal Degrees)'} <span className="text-rose-500">*</span>
           </label>
           <input
             id={`${formId}-latitude`}
@@ -333,7 +344,7 @@ export default function PanchangLocationForm({
             htmlFor={`${formId}-longitude`}
             className="block text-xs font-semibold text-zinc-800 dark:text-zinc-200"
           >
-            Longitude (Decimal Degrees) <span className="text-rose-500">*</span>
+            {isHi ? 'रेखांश (दशमलव अंश)' : 'Longitude (Decimal Degrees)'} <span className="text-rose-500">*</span>
           </label>
           <input
             id={`${formId}-longitude`}
@@ -374,7 +385,7 @@ export default function PanchangLocationForm({
             htmlFor={`${formId}-altitude`}
             className="block text-xs font-semibold text-zinc-800 dark:text-zinc-200"
           >
-            Altitude (Meters above Sea Level)
+            {isHi ? 'ऊँचाई (समुद्र तल से मीटर)' : 'Altitude (Meters above Sea Level)'}
           </label>
           <input
             id={`${formId}-altitude`}
@@ -393,7 +404,9 @@ export default function PanchangLocationForm({
                 : 'border-zinc-200 bg-zinc-50 focus:border-amber-500 dark:border-zinc-700 dark:bg-zinc-800'
             }`}
           />
-          <span className="text-[10px] text-zinc-400">Used for geometric horizon dip calculation</span>
+          <span className="text-[10px] text-zinc-400">
+            {isHi ? 'ज्यामितीय क्षितिज अवनमन गणना हेतु प्रयुक्त' : 'Used for geometric horizon dip calculation'}
+          </span>
           {errors.altitude && (
             <p
               id={`${formId}-altitude-error`}
@@ -412,7 +425,7 @@ export default function PanchangLocationForm({
             htmlFor={`${formId}-timezone`}
             className="block text-xs font-semibold text-zinc-800 dark:text-zinc-200"
           >
-            Timezone (IANA Identifier) <span className="text-rose-500">*</span>
+            {isHi ? 'समय क्षेत्र (IANA कोड)' : 'Timezone (IANA Identifier)'} <span className="text-rose-500">*</span>
           </label>
           <input
             id={`${formId}-timezone`}
@@ -454,14 +467,18 @@ export default function PanchangLocationForm({
             type="checkbox"
             checked={values.useElevationDip}
             onChange={(e) => handleFieldChange('useElevationDip', e.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-amber-600 focus:ring-amber-500 dark:border-zinc-700"
+            className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-amber-600 focus:ring-amber-500 dark:border-zinc-700 cursor-pointer"
           />
           <div>
             <span className="block text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-              Apply Horizon Elevation Dip to Sunrise / Sunset
+              {isHi
+                ? 'सूर्योदय / सूर्यास्त में क्षितिज अवनमन लागू करें'
+                : 'Apply Horizon Elevation Dip to Sunrise / Sunset'}
             </span>
             <span className="block text-[11px] text-zinc-500 dark:text-zinc-400">
-              Disabled by default to conform to standard civil almanac tables (sea-level 0m baseline).
+              {isHi
+                ? 'नागरिक पञ्चाङ्गों (समुद्र तल ० मी.) के अनुरूप सामान्यतः निष्क्रिय।'
+                : 'Disabled by default to conform to standard civil almanac tables (sea-level 0m baseline).'}
             </span>
           </div>
         </label>
@@ -470,16 +487,16 @@ export default function PanchangLocationForm({
       {/* Ayanamsa Selection */}
       <div className="border-t border-zinc-100 pt-3 dark:border-zinc-800">
         <label className="block text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-          Ayanamsa System
+          {isHi ? 'अयनांश प्रणाली' : 'Ayanamsa System'}
         </label>
         <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
           {(
             [
-              { id: 'Lahiri', label: 'Lahiri (Official NCAC)', desc: 'Indian Ephemeris Standard' },
-              { id: 'TrueChitra', label: 'True Chitra', desc: 'Spica at 180°' },
-              { id: 'KP', label: 'Krishnamurti (KP)', desc: 'KP System' },
-              { id: 'Raman', label: 'B.V. Raman', desc: 'Raman Ayanamsa' },
-              { id: 'Sayana', label: 'Sayana (Tropical)', desc: '0° Ayanamsa' },
+              { id: 'Lahiri', label: isHi ? 'लाहिरी (राष्ट्रीय मानक)' : 'Lahiri (Official NCAC)', desc: isHi ? 'भारतीय पञ्चाङ्ग मानक' : 'Indian Ephemeris Standard' },
+              { id: 'TrueChitra', label: isHi ? 'सत्य चित्र पक्ष' : 'True Chitra', desc: isHi ? 'चित्रा नक्षत्र १८०° पर' : 'Spica at 180°' },
+              { id: 'KP', label: isHi ? 'कृष्णमूर्ति' : 'Krishnamurti (KP)', desc: isHi ? 'केपी पद्धति' : 'KP System' },
+              { id: 'Raman', label: isHi ? 'बी.वी. रामन' : 'B.V. Raman', desc: isHi ? 'रामन अयनांश' : 'Raman Ayanamsa' },
+              { id: 'Sayana', label: isHi ? 'सायन (निरयनांश शून्य)' : 'Sayana (Tropical)', desc: isHi ? '०° अयनांश' : '0° Ayanamsa' },
             ] as const
           ).map((item) => (
             <button
@@ -487,7 +504,7 @@ export default function PanchangLocationForm({
               type="button"
               data-testid={`ayanamsa-option-${item.id}`}
               onClick={() => handleFieldChange('ayanamsa', item.id)}
-              className={`rounded-xl border p-2.5 text-left text-xs transition ${
+              className={`rounded-xl border p-2.5 text-left text-xs transition cursor-pointer ${
                 values.ayanamsa === item.id
                   ? 'border-amber-500 bg-amber-50 text-amber-900 ring-1 ring-amber-500 dark:bg-amber-950/60 dark:text-amber-200'
                   : 'border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300'
@@ -507,17 +524,17 @@ export default function PanchangLocationForm({
             type="button"
             data-testid="form-cancel-button"
             onClick={onCancel}
-            className="rounded-xl px-4 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            className="rounded-xl px-4 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 cursor-pointer"
           >
-            Cancel
+            {isHi ? 'रद्द करें' : 'Cancel'}
           </button>
         )}
         <button
           type="submit"
           data-testid="form-submit-button"
-          className="rounded-xl bg-amber-500 px-5 py-2 text-xs font-semibold text-white shadow-md transition hover:bg-amber-600 focus:outline-none"
+          className="rounded-xl bg-amber-500 px-5 py-2 text-xs font-semibold text-white shadow-md transition hover:bg-amber-600 focus:outline-none cursor-pointer"
         >
-          Save &amp; Recalculate
+          {isHi ? 'सहेजें एवं पुनर्गणना करें' : 'Save & Recalculate'}
         </button>
       </div>
     </form>

@@ -2,13 +2,39 @@
 
 import Link from 'next/link';
 import { TempleRecord } from '@/app/lib/temples/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import {
+  cleanBilingualTitle,
+  cleanFestivalName,
+  cleanIndianLocation,
+  cleanDarshanTimings,
+} from '@/app/lib/i18n/formatters';
 
 interface TempleCardProps {
   temple: TempleRecord;
   onOpenModal: (temple: TempleRecord) => void;
 }
 
+const CIRCUIT_HI: Record<string, string> = {
+  '12 Jyotirlingas': 'द्वादश ज्योतिर्लिंग',
+  'Char Dham': 'चार धाम',
+  'Shakti Peethas': 'शक्तिपीठ',
+  'Pancha Bhoota': 'पंचभूत स्थल',
+  'Global Heritage': 'वैश्विक तीर्थ',
+};
+
+const TEMPLE_TRADITION_HI: Record<string, string> = {
+  Shaiva: 'शैव',
+  Vaishnava: 'वैष्णव',
+  Shakta: 'शाक्त',
+  Smarta: 'स्मार्त',
+  Kaumara: 'कौमार',
+};
+
 export default function TempleCard({ temple, onOpenModal }: TempleCardProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   return (
     <div
       onClick={() => onOpenModal(temple)}
@@ -26,30 +52,32 @@ export default function TempleCard({ temple, onOpenModal }: TempleCardProps) {
             <span
               className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${temple.colorTheme.badgeBg} ${temple.colorTheme.badgeText} ${temple.colorTheme.border}`}
             >
-              {temple.circuit}
+              {isHi ? (CIRCUIT_HI[temple.circuit] || temple.circuit) : temple.circuit}
             </span>
             <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-              {temple.tradition}
+              {isHi ? (TEMPLE_TRADITION_HI[temple.tradition] || temple.tradition) : temple.tradition}
             </span>
           </div>
 
           <span className="text-[11px] font-medium text-zinc-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-            Tap for darshan lore &rarr;
+            {isHi ? 'दर्शन एवं इतिहास →' : 'Tap for darshan lore →'}
           </span>
         </div>
 
-        {/* Temple Title & Devanagari */}
+        {/* Temple Title */}
         <div>
           <h3 className="font-serif text-xl font-bold text-zinc-900 group-hover:text-amber-600 dark:text-zinc-50 dark:group-hover:text-amber-400 transition-colors sm:text-2xl">
-            {temple.name}
+            {isHi ? temple.nameDevanagari : temple.name}
           </h3>
-          <div className="mt-0.5 font-serif text-sm font-semibold text-amber-700 dark:text-amber-400">
-            {temple.nameDevanagari}
-          </div>
           <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
             <span>📍</span>
             <span>
-              {temple.location.city}, {temple.location.state} ({temple.location.country})
+              {isHi
+                ? cleanIndianLocation(
+                    `${temple.location.city}, ${temple.location.state} (${temple.location.country === 'India' ? 'भारत' : temple.location.country})`,
+                    true
+                  )
+                : `${temple.location.city}, ${temple.location.state} (${temple.location.country})`}
             </span>
           </div>
         </div>
@@ -57,19 +85,25 @@ export default function TempleCard({ temple, onOpenModal }: TempleCardProps) {
         {/* Quick Highlights (Deity, Sacred River) */}
         <div className="space-y-1.5 rounded-2xl border border-zinc-100 bg-zinc-50/60 p-3 text-[11px] dark:border-zinc-800/60 dark:bg-zinc-950/50">
           <div>
-            <span className="text-zinc-400">Primary Deity:</span>{' '}
-            <strong className="text-zinc-800 dark:text-zinc-200 font-semibold">{temple.primaryDeity}</strong>
+            <span className="text-zinc-400">{isHi ? 'प्रधान आराध्य:' : 'Primary Deity:'}</span>{' '}
+            <strong className="text-zinc-800 dark:text-zinc-200 font-semibold">
+              {isHi
+                ? (temple.primaryDeityDevanagari || temple.primaryDeity)
+                : temple.primaryDeity.replace(/\s*\([^)]*\)/g, '').trim()}
+            </strong>
           </div>
           {temple.sacredRiver && (
             <div>
-              <span className="text-zinc-400">Sacred River / Sangam:</span>{' '}
-              <span className="text-zinc-700 dark:text-zinc-300 font-medium">{temple.sacredRiver}</span>
+              <span className="text-zinc-400">{isHi ? 'पवित्र नदी / संगम:' : 'Sacred River / Sangam:'}</span>{' '}
+              <span className="text-zinc-700 dark:text-zinc-300 font-medium">
+                {cleanBilingualTitle(temple.sacredRiver, isHi)}
+              </span>
             </div>
           )}
           <div>
-            <span className="text-zinc-400">Darshan:</span>{' '}
+            <span className="text-zinc-400">{isHi ? 'दर्शन समय:' : 'Darshan:'}</span>{' '}
             <span className="text-zinc-700 dark:text-zinc-300 font-medium truncate inline-block max-w-[280px]">
-              {temple.darshanTimings.split('(')[0]}
+              {cleanDarshanTimings(temple.darshanTimings.split('(')[0], isHi)}
             </span>
           </div>
         </div>
@@ -82,7 +116,7 @@ export default function TempleCard({ temple, onOpenModal }: TempleCardProps) {
         {/* Major Festivals */}
         <div className="space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-            Key Observances:
+            {isHi ? 'प्रमुख उत्सव:' : 'Key Observances:'}
           </span>
           <div className="flex flex-wrap gap-1">
             {temple.majorFestivals.slice(0, 2).map((f) => (
@@ -90,12 +124,12 @@ export default function TempleCard({ temple, onOpenModal }: TempleCardProps) {
                 key={f}
                 className="rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
               >
-                🪔 {f.split('(')[0].trim()}
+                🪔 {cleanFestivalName(f, isHi)}
               </span>
             ))}
             {temple.majorFestivals.length > 2 && (
               <span className="rounded-lg bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-                +{temple.majorFestivals.length - 2} more
+                +{temple.majorFestivals.length - 2} {isHi ? 'अन्य' : 'more'}
               </span>
             )}
           </div>
@@ -112,7 +146,7 @@ export default function TempleCard({ temple, onOpenModal }: TempleCardProps) {
           }}
           className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-2 text-xs font-bold text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 cursor-pointer"
         >
-          <span>विस्तृत दर्शन (Lore)</span>
+          <span>{isHi ? 'विस्तृत दर्शन' : 'Darshan & History'}</span>
           <span>&rarr;</span>
         </button>
 
@@ -122,7 +156,7 @@ export default function TempleCard({ temple, onOpenModal }: TempleCardProps) {
           className="inline-flex items-center gap-1 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
           title={`Compute local Vedic Panchang at ${temple.name}`}
         >
-          <span>🗓 Local Panchang</span>
+          <span>{isHi ? '🗓 स्थानीय पञ्चाङ्ग' : '🗓 Local Panchang'}</span>
         </Link>
       </div>
     </div>

@@ -2,6 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Festivals Timeline End-to-End Suite', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      try {
+        localStorage.clear();
+      } catch {}
+    });
     await page.goto('/festivals');
     await page.waitForLoadState('domcontentloaded');
   });
@@ -14,8 +19,8 @@ test.describe('Festivals Timeline End-to-End Suite', () => {
     await expect(festivalsTab).toBeVisible();
     await expect(festivalsTab).toHaveAttribute('aria-selected', 'true');
 
-    // Verify Hero title in Hindi
-    const heroTitle = page.locator('h1:has-text("सनातन उत्सव एवं व्रत पञ्चाङ्ग")');
+    // Verify Hero title
+    const heroTitle = page.locator('h1:has-text("Festivals"), h1:has-text("सनातन उत्सव एवं व्रत पञ्चाङ्ग")');
     await expect(heroTitle).toBeVisible();
 
     // Verify timeline cards are rendered

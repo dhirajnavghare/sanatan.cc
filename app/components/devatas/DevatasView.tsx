@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { DeityRecord, DeityTradition } from '@/app/lib/devatas/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 import DevatasHero from './DevatasHero';
 import DevatasFilterBar from './DevatasFilterBar';
 import DevataCard from './DevataCard';
@@ -19,6 +20,8 @@ interface DevatasViewProps {
 
 export default function DevatasView({ initialDeities, traditions }: DevatasViewProps) {
   const searchParams = useSearchParams();
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
 
   // Initialize directly from URL search parameters
   const initialTrad = (searchParams.get('tradition') as DeityTradition) || 'all';
@@ -140,10 +143,12 @@ export default function DevatasView({ initialDeities, traditions }: DevatasViewP
         <div className="rounded-3xl border border-zinc-200 bg-white p-12 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <span className="text-4xl">🕉️</span>
           <h3 className="mt-3 font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100">
-            No deities found matching your search
+            {isHi ? 'आपकी खोज के अनुसार कोई देवता नहीं मिले' : 'No deities found matching your search'}
           </h3>
           <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Try adjusting your search keywords or clearing the tradition filter.
+            {isHi
+              ? 'कृपया अन्य शब्द से खोजें अथवा परम्परा फिल्टर रीसेट करें।'
+              : 'Try adjusting your search keywords or clearing the tradition filter.'}
           </p>
           <button
             type="button"
@@ -153,7 +158,7 @@ export default function DevatasView({ initialDeities, traditions }: DevatasViewP
             }}
             className="mt-4 rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white shadow-md transition hover:bg-amber-700 cursor-pointer"
           >
-            Reset Filters
+            {isHi ? 'रीसेट करें' : 'Reset Filters'}
           </button>
         </div>
       )}

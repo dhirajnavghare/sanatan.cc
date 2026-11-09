@@ -1,6 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 export default function Footer() {
+  const { language } = useLanguage();
+
   return (
     <footer className="border-t border-zinc-200/80 bg-white/70 py-10 text-xs text-zinc-600 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/70 dark:text-zinc-400">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -16,17 +21,19 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
-              Open-source digital initiative dedicated to authentic Hindu Dharma spiritual texts, high-precision mathematical astrology, and Vedic astronomical ephemeris.
+              {language === 'hi'
+                ? 'सनातन धर्म के प्रामाणिक ग्रंथों, उच्च परिशुद्धता गणितीय ज्योतिष एवं वैदिक खगोलीय गणना को समर्पित खुला डिजिटल उपक्रम।'
+                : 'Open-source digital initiative dedicated to authentic Hindu Dharma spiritual texts, high-precision mathematical astrology, and Vedic astronomical ephemeris.'}
             </p>
             <div className="text-[11px] text-zinc-400">
-              CC0 1.0 Universal • Zero trackers
+              {language === 'hi' ? 'CC0 1.0 सार्वभौमिक • शून्य ट्रैकर' : 'CC0 1.0 Universal • Zero trackers'}
             </div>
           </div>
 
           {/* Applications */}
           <div className="space-y-2.5">
             <h4 className="font-serif text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-200">
-              Applications
+              {language === 'hi' ? 'अनुप्रयोग' : 'Applications'}
             </h4>
             <ul className="space-y-1.5 text-xs">
               <li>
@@ -34,7 +41,7 @@ export default function Footer() {
                   href="/panchang"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  Panchang (पञ्चाङ्गम्) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
+                  {language === 'hi' ? 'पञ्चाङ्ग' : 'Panchang'} <span className="text-[10px] text-amber-500 font-bold">{language === 'hi' ? 'बीटा' : 'Beta'}</span>
                 </Link>
               </li>
               <li>
@@ -42,7 +49,7 @@ export default function Footer() {
                   href="/muhurta"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  Shubh Muhurta (शुभ मुहूर्त) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
+                  {language === 'hi' ? 'शुभ मुहूर्त' : 'Shubh Muhurta'} <span className="text-[10px] text-amber-500 font-bold">{language === 'hi' ? 'बीटा' : 'Beta'}</span>
                 </Link>
               </li>
               <li>
@@ -50,7 +57,7 @@ export default function Footer() {
                   href="/festivals"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  Festivals Timeline (त्योहार) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
+                  {language === 'hi' ? 'व्रत एवं त्योहार' : 'Festivals Timeline'} <span className="text-[10px] text-amber-500 font-bold">{language === 'hi' ? 'बीटा' : 'Beta'}</span>
                 </Link>
               </li>
               <li>
@@ -58,7 +65,7 @@ export default function Footer() {
                   href="/devatas"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  Devi Devatas (देवी-देवता) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
+                  {language === 'hi' ? 'देवी-देवता' : 'Devi Devatas'} <span className="text-[10px] text-amber-500 font-bold">{language === 'hi' ? 'बीटा' : 'Beta'}</span>
                 </Link>
               </li>
               <li>
@@ -66,7 +73,7 @@ export default function Footer() {
                   href="/temples"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  Temples &amp; Tirthas (तीर्थ-मन्दिर) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
+                  {language === 'hi' ? 'तीर्थ एवं मन्दिर' : 'Temples & Tirthas'} <span className="text-[10px] text-amber-500 font-bold">{language === 'hi' ? 'बीटा' : 'Beta'}</span>
                 </Link>
               </li>
             </ul>
@@ -75,7 +82,7 @@ export default function Footer() {
           {/* About & Contact */}
           <div className="space-y-2.5">
             <h4 className="font-serif text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-200">
-              Organization
+              {language === 'hi' ? 'संस्था' : 'Organization'}
             </h4>
             <ul className="space-y-1.5 text-xs">
               <li>
@@ -83,7 +90,7 @@ export default function Footer() {
                   href="/about"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  About Us
+                  {language === 'hi' ? 'परिचय' : 'About Us'}
                 </Link>
               </li>
               <li>
@@ -91,7 +98,7 @@ export default function Footer() {
                   href="/contact"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  Contact &amp; Support
+                  {language === 'hi' ? 'सम्पर्क एवं सहायता' : 'Contact & Support'}
                 </Link>
               </li>
               <li>
@@ -99,7 +106,7 @@ export default function Footer() {
                   href="/terms"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  Terms of Service
+                  {language === 'hi' ? 'सेवा की शर्तें' : 'Terms of Service'}
                 </Link>
               </li>
               <li>
@@ -107,7 +114,7 @@ export default function Footer() {
                   href="/privacy"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  Privacy Policy
+                  {language === 'hi' ? 'गोपनीयता नीति' : 'Privacy Policy'}
                 </Link>
               </li>
             </ul>
@@ -116,7 +123,7 @@ export default function Footer() {
           {/* Machine & Agent Interfaces */}
           <div className="space-y-2.5">
             <h4 className="font-serif text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-200">
-              Agent &amp; Open Standards
+              {language === 'hi' ? 'ओपन स्टैंडर्ड्स' : 'Agent & Open Standards'}
             </h4>
             <ul className="space-y-1.5 text-xs">
               <li>
@@ -126,7 +133,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400 font-mono text-[11px]"
                 >
-                  /llms.txt (LLM Context)
+                  /llms.txt ({language === 'hi' ? 'LLM संदर्भ' : 'LLM Context'})
                 </a>
               </li>
               <li>
@@ -156,7 +163,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  GitHub Source Code ↗
+                  {language === 'hi' ? 'GitHub स्रोत कोड ↗' : 'GitHub Source Code ↗'}
                 </a>
               </li>
             </ul>
@@ -165,14 +172,16 @@ export default function Footer() {
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-zinc-200/60 pt-6 text-[11px] text-zinc-500 sm:flex-row dark:border-zinc-800/60 dark:text-zinc-400">
           <div>
-            © 2026 sanatan.cc • Open source for Vedic preservation.
+            {language === 'hi'
+              ? '© 2026 sanatan.cc • वैदिक धरोहर के संरक्षण हेतु खुला स्रोत।'
+              : '© 2026 sanatan.cc • Open source for Vedic preservation.'}
           </div>
           <div className="flex items-center gap-4">
             <a
               href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Inquiry"
               className="hover:text-amber-600 dark:hover:text-amber-400"
             >
-              Feedback: mail@sanatan.cc
+              {language === 'hi' ? 'प्रतिक्रिया:' : 'Feedback:'} mail@sanatan.cc
             </a>
             <span>•</span>
             <span className="font-mono text-[10px]">Content-Signal: search=yes, ai-train=no</span>

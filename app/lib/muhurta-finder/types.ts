@@ -43,11 +43,17 @@ export interface MuhurtaDayEvaluation {
   avoidWindows: { label: string; startTime: Date; endTime: Date }[];
   panchangSummary: {
     tithiName: string;
+    tithiNameDevanagari?: string;
     tithiPaksha: string;
+    tithiPakshaDevanagari?: string;
     nakshatraName: string;
+    nakshatraNameDevanagari?: string;
     yogaName: string;
+    yogaNameDevanagari?: string;
     karanaName: string;
+    karanaNameDevanagari?: string;
     varaName: string;
+    varaNameDevanagari?: string;
     sunrise: Date;
     sunset: Date;
   };

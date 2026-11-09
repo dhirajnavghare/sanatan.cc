@@ -2,6 +2,14 @@
 
 import Link from 'next/link';
 import { MuhurtaDayEvaluation } from '@/app/lib/muhurta-finder/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import {
+  cleanBilingualTitle,
+  cleanPanchakaName,
+  formatMuhurtaReason,
+  formatMuhurtaPrecaution,
+  cleanPaksha,
+} from '@/app/lib/i18n/formatters';
 import { formatCivilDateLong, formatPanchangTime } from '../panchang/PanchangHero';
 
 interface MuhurtaResultCardProps {
@@ -10,6 +18,9 @@ interface MuhurtaResultCardProps {
 }
 
 export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResultCardProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const {
     isoDate,
     suitability,
@@ -28,25 +39,25 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
     Optimal: {
       badge: 'border-green-500/30 bg-green-50 text-green-700 dark:border-green-500/30 dark:bg-green-950/40 dark:text-green-300',
       dot: 'bg-green-500',
-      label: 'Optimal Muhurta',
+      label: isHi ? 'सर्वोत्तम मुहूर्त' : 'Optimal Muhurta',
       border: 'hover:border-green-400/50 dark:hover:border-green-500/30',
     },
     Good: {
       badge: 'border-emerald-500/30 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-950/40 dark:text-emerald-300',
       dot: 'bg-emerald-500',
-      label: 'Good Muhurta',
+      label: isHi ? 'उत्तम मुहूर्त' : 'Good Muhurta',
       border: 'hover:border-emerald-400/50 dark:hover:border-emerald-500/30',
     },
     Average: {
       badge: 'border-amber-500/30 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-300',
       dot: 'bg-amber-500',
-      label: 'Average (Conditional)',
+      label: isHi ? 'मध्यम (सशर्त)' : 'Average (Conditional)',
       border: 'hover:border-amber-400/50 dark:hover:border-amber-500/30',
     },
     Inauspicious: {
       badge: 'border-rose-500/30 bg-rose-50 text-rose-700 dark:border-rose-500/30 dark:bg-rose-950/40 dark:text-rose-300',
       dot: 'bg-rose-500',
-      label: 'Not Recommended',
+      label: isHi ? 'अशुभ / त्याज्य' : 'Not Recommended',
       border: 'hover:border-rose-400/50 dark:hover:border-rose-500/30',
     },
   }[suitability];
@@ -64,11 +75,16 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
                 className="font-serif text-lg font-bold text-zinc-900 sm:text-xl dark:text-zinc-100"
                 suppressHydrationWarning
               >
-                {formatCivilDateLong(isoDate)}
+                {formatCivilDateLong(isoDate, language)}
               </h4>
             </div>
             <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-              Vara: <strong className="text-zinc-800 dark:text-zinc-200">{panchangSummary.varaName}</strong>
+              {isHi ? 'वार:' : 'Vara:'}{' '}
+              <strong className="text-zinc-800 dark:text-zinc-200">
+                {isHi
+                  ? (panchangSummary.varaNameDevanagari || panchangSummary.varaName)
+                  : panchangSummary.varaName}
+              </strong>
             </p>
           </div>
 
@@ -90,12 +106,12 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
                 key={idx}
                 className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-300"
               >
-                ✨ {yoga}
+                ✨ {cleanBilingualTitle(yoga, isHi)}
               </span>
             ))}
             {panchakaType && panchakaType !== 'None' && (
               <span className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-zinc-100 px-2.5 py-0.5 text-[11px] font-medium text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                ⚠️ {panchakaType} Panchaka
+                ⚠️ {cleanPanchakaName(panchakaType, isHi)} {isHi ? 'पञ्चक' : 'Panchaka'}
               </span>
             )}
           </div>
@@ -105,40 +121,42 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
         <div className="grid grid-cols-2 gap-2 rounded-2xl bg-zinc-50 p-3 text-xs sm:grid-cols-4 dark:bg-zinc-800/50">
           <div>
             <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-              Tithi
+              {isHi ? 'तिथि' : 'Tithi'}
             </div>
             <div className="font-semibold text-zinc-800 dark:text-zinc-200">
-              {panchangSummary.tithiName}
+              {isHi ? (panchangSummary.tithiNameDevanagari || panchangSummary.tithiName) : panchangSummary.tithiName}
             </div>
             <div className="text-[10px] text-zinc-500 dark:text-zinc-400">
-              {panchangSummary.tithiPaksha}
+              {isHi
+                ? `${panchangSummary.tithiPakshaDevanagari || cleanPaksha(panchangSummary.tithiPaksha, true)} पक्ष`
+                : `${cleanPaksha(panchangSummary.tithiPaksha, false)} Paksha`}
             </div>
           </div>
 
           <div>
             <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-              Nakshatra
+              {isHi ? 'नक्षत्र' : 'Nakshatra'}
             </div>
             <div className="font-semibold text-zinc-800 dark:text-zinc-200">
-              {panchangSummary.nakshatraName}
+              {isHi ? (panchangSummary.nakshatraNameDevanagari || panchangSummary.nakshatraName) : panchangSummary.nakshatraName}
             </div>
           </div>
 
           <div>
             <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-              Yoga
+              {isHi ? 'योग' : 'Yoga'}
             </div>
             <div className="font-semibold text-zinc-800 dark:text-zinc-200">
-              {panchangSummary.yogaName}
+              {isHi ? (panchangSummary.yogaNameDevanagari || panchangSummary.yogaName) : panchangSummary.yogaName}
             </div>
           </div>
 
           <div>
             <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-              Karana
+              {isHi ? 'करण' : 'Karana'}
             </div>
             <div className="font-semibold text-zinc-800 dark:text-zinc-200">
-              {panchangSummary.karanaName}
+              {isHi ? (panchangSummary.karanaNameDevanagari || panchangSummary.karanaName) : panchangSummary.karanaName}
             </div>
           </div>
         </div>
@@ -147,13 +165,13 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
         {reasons.length > 0 && (
           <div className="space-y-1.5">
             <div className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
-              Auspicious Astrological Factors:
+              {isHi ? 'शास्त्रसम्मत शुभ कारक:' : 'Auspicious Astrological Factors:'}
             </div>
             <ul className="space-y-1 text-xs text-zinc-600 dark:text-zinc-300">
               {reasons.map((r, i) => (
                 <li key={i} className="flex items-start gap-1.5">
                   <span className="text-emerald-500 font-bold">✓</span>
-                  <span>{r}</span>
+                  <span>{formatMuhurtaReason(r, isHi)}</span>
                 </li>
               ))}
             </ul>
@@ -164,7 +182,7 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
         {windows.length > 0 && (
           <div className="space-y-2">
             <div className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
-              Recommended Muhurta Windows (Best Timings):
+              {isHi ? 'अनुशंसित शुभ मुहूर्त समय (सर्वोत्तम लग्न):' : 'Recommended Muhurta Windows (Best Timings):'}
             </div>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {windows.map((win, idx) => (
@@ -174,10 +192,10 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
                 >
                   <div className="space-y-0.5">
                     <div className="font-bold text-amber-900 dark:text-amber-200">
-                      {win.label}
+                      {cleanBilingualTitle(win.label, isHi)}
                     </div>
                     <div className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                      {win.description}
+                      {cleanBilingualTitle(win.description, isHi)}
                     </div>
                   </div>
                   <div
@@ -197,7 +215,7 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
         {(avoidWindows.length > 0 || precautions.length > 0) && (
           <div className="space-y-1.5 rounded-xl border border-rose-500/10 bg-rose-50/40 p-3 text-xs text-rose-900 dark:border-rose-500/20 dark:bg-rose-950/20 dark:text-rose-200">
             <div className="font-bold flex items-center gap-1 text-[11px] uppercase tracking-wider text-rose-700 dark:text-rose-400">
-              <span>⛔ Inauspicious Windows To Avoid:</span>
+              <span>{isHi ? '⛔ वर्जित अशुभ काल:' : '⛔ Inauspicious Windows To Avoid:'}</span>
             </div>
             {avoidWindows.length > 0 && (
               <div className="flex flex-wrap gap-2 text-xs">
@@ -207,7 +225,7 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
                     className="inline-flex items-center gap-1 rounded bg-rose-100/70 px-2 py-0.5 font-mono text-[11px] dark:bg-rose-900/50"
                     suppressHydrationWarning
                   >
-                    <strong>{avoid.label}:</strong>{' '}
+                    <strong>{cleanBilingualTitle(avoid.label, isHi)}:</strong>{' '}
                     {formatPanchangTime(avoid.startTime, timezone)} -{' '}
                     {formatPanchangTime(avoid.endTime, timezone)}
                   </span>
@@ -216,7 +234,7 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
             )}
             {precautions.map((p, i) => (
               <p key={i} className="text-[11px] text-rose-800 dark:text-rose-300">
-                • {p}
+                • {formatMuhurtaPrecaution(p, isHi)}
               </p>
             ))}
           </div>
@@ -229,7 +247,7 @@ export default function MuhurtaResultCard({ evaluation, timezone }: MuhurtaResul
           href={`/panchang?date=${isoDate}`}
           className="cursor-pointer inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-2 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         >
-          <span>View Full Panchang for this Day</span>
+          <span>{isHi ? 'इस दिवस का सम्पूर्ण पञ्चाङ्ग देखें' : 'View Full Panchang for this Day'}</span>
           <span>→</span>
         </Link>
       </div>

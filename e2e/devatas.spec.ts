@@ -2,6 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Hindu Devi Devatas End-to-End Suite', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      try {
+        localStorage.clear();
+      } catch {}
+    });
     await page.goto('/devatas');
     await page.waitForLoadState('domcontentloaded');
   });
@@ -19,10 +24,10 @@ test.describe('Hindu Devi Devatas End-to-End Suite', () => {
     await expect(redundantTabSwitcher).toHaveCount(0);
 
     // Verify Hero title and Sanskrit invocation
-    const heroTitle = page.locator('h1:has-text("सनातन देवी-देवता दर्शन")');
+    const heroTitle = page.locator('h1:has-text("Sanatan Devi Devatas"), h1:has-text("सनातन देवी-देवता दर्शन")');
     await expect(heroTitle).toBeVisible();
 
-    const shantiSloka = page.locator('div:has-text("त्वमेव माता च पिता त्वमेव")').last();
+    const shantiSloka = page.locator('div:has-text("त्वमेव माता च पिता त्वमेव"), div:has-text("You alone are Mother")').last();
     await expect(shantiSloka).toBeVisible();
 
     // Verify all 12 deity cards are rendered
