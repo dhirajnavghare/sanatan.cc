@@ -512,7 +512,29 @@ export function getMoonAltitude(
 }
 
 /**
- * Moonrise and Moonset calculation by root-finding across the 24-hour day
+ * Helper to determine timezone offset in minutes for any IANA timezone identifier
+ */
+export function getTimezoneOffsetMinutes(date: Date, timezone: string): number {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      timeZoneName: 'longOffset',
+    }).formatToParts(date);
+    const tzPart = parts.find((p) => p.type === 'timeZoneName')?.value;
+    if (!tzPart || tzPart === 'GMT') return 0;
+    const match = tzPart.match(/GMT([+-])(\d{1,2}):?(\d{2})?/);
+    if (!match) return 0;
+    const sign = match[1] === '+' ? 1 : -1;
+    const hours = parseInt(match[2], 10);
+    const mins = match[3] ? parseInt(match[3], 10) : 0;
+    return sign * (hours * 60 + mins);
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * Moonrise and Moonset calculation by root-finding across the local 24-hour civil day
  */
 export function calculateMoonTimes(
   year: number,
@@ -521,9 +543,12 @@ export function calculateMoonTimes(
   latDeg: number,
   lonDeg: number,
   altitudeMeters: number = 0,
-  useElevationDip: boolean = false
+  useElevationDip: boolean = false,
+  timezone: string = 'UTC'
 ): { moonrise: Date | null; moonset: Date | null } {
-  const baseMidnightMs = Date.UTC(year, month - 1, day);
+  const approxNoon = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+  const offsetMin = getTimezoneOffsetMinutes(approxNoon, timezone);
+  const baseMidnightMs = Date.UTC(year, month - 1, day) - offsetMin * 60000;
   const effectiveAlt = useElevationDip ? altitudeMeters : 0;
   const dipDeg = getHorizonDipDeg(effectiveAlt);
   const targetAlt = -0.5667 - dipDeg;

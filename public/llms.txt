@@ -13,7 +13,7 @@ Calculations are computed locally from first principles using VSOP87 planetary p
 
 - [About sanatan.cc](https://sanatan.cc/about): Mission, open-source principles, astronomical algorithms, and privacy architecture.
 - [Contact & Feedback](https://sanatan.cc/contact): Inquiries, validation reports, and maintainer correspondence (mail@sanatan.cc).
-- [Terms of Service](https://sanatan.cc/terms): Open-source MIT license and educational/spiritual usage disclaimers.
+- [Terms of Service](https://sanatan.cc/terms): CC0 1.0 Universal Public Domain Dedication and educational/spiritual usage disclaimers.
 - [Privacy Policy](https://sanatan.cc/privacy): Zero analytics, zero tracking, and local device-only coordinate storage.
 
 ## Agent & Machine Interfaces

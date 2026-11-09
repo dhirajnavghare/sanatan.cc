@@ -73,11 +73,13 @@ export function formatCivilDateLong(isoDate: string): string {
 }
 
 export function formatPanchangTime(
-  date: Date | null,
+  date: Date | string | null,
   timezone: string,
   options?: { showDate?: boolean; short?: boolean }
 ): string {
   if (!date) return '—';
+  const d = typeof date === 'string' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '—';
   try {
     const formatter = new Intl.DateTimeFormat('en-US', {
       timeZone: timezone,
@@ -86,9 +88,9 @@ export function formatPanchangTime(
       hour12: true,
       ...(options?.showDate ? { month: 'short', day: 'numeric' } : {}),
     });
-    return formatter.format(date).replace(/[\u202F\u00A0]/g, ' ').toUpperCase();
+    return formatter.format(d).replace(/[\u202F\u00A0]/g, ' ').toUpperCase();
   } catch {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 }
 

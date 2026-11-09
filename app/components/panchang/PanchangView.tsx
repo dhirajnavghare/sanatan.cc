@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { calculatePanchang, GeoLocation, PRESET_CITIES } from '@/app/lib/panchang';
+import { useState, useMemo, useEffect, useTransition } from 'react';
+import { GeoLocation, PanchangData } from '@/app/lib/panchang/types';
+import { PRESET_CITIES } from '@/app/lib/panchang/constants';
 import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
 import PanchangHero, { formatCivilDateShort } from './PanchangHero';
 import PanchaAngaCards from './PanchaAngaCards';
@@ -11,11 +12,12 @@ import CalendarDetails from './CalendarDetails';
 import FestivalsSection from './FestivalsSection';
 import AstroParameters from './AstroParameters';
 import LocationModal from './LocationModal';
+import PanchangSkeleton from './PanchangSkeleton';
 
-function getTodayIso(tz: string): string {
+function getTodayIso(tz?: string): string {
   try {
     return new Intl.DateTimeFormat('en-CA', {
-      timeZone: tz,
+      timeZone: tz || 'Asia/Kolkata',
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -25,23 +27,27 @@ function getTodayIso(tz: string): string {
   }
 }
 
+function parseJsonWithDates(text: string): PanchangData {
+  return JSON.parse(text, (_key, value) => {
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
+      return new Date(value);
+    }
+    return value;
+  });
+}
+
 export default function PanchangView() {
-  // Default to Ujjain (the prime meridian of ancient Indian astronomy)
   const [location, setLocation] = useState<GeoLocation>(PRESET_CITIES[0]);
   const [ayanamsa, setAyanamsa] = useState<AyanamsaSystem>('Lahiri');
-  // Stable anchor ISO civil date string
-  const [selectedDateStr, setSelectedDateStr] = useState<string>('2026-10-31');
-  const [currentTime, setCurrentTime] = useState<Date | undefined>(undefined);
+  const [selectedDateStr, setSelectedDateStr] = useState<string>(() => getTodayIso());
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [panchangData, setPanchangData] = useState<PanchangData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPending, startTransition] = useTransition();
 
-  // Load user saved location, ayanamsa, and current date on client mount
+  // 1. Sync saved location/ayanamsa/date from localStorage and URL after mount
   useEffect(() => {
     const timer = setTimeout(() => {
-      setMounted(true);
-      const now = new Date();
-      setCurrentTime(now);
-
       let activeLoc = PRESET_CITIES[0];
       try {
         const savedLoc = localStorage.getItem('panchang_custom_location');
@@ -62,53 +68,106 @@ export default function PanchangView() {
         }
       } catch {}
 
-      // Initialize selected date: check URL query parameter ?date=YYYY-MM-DD first
       try {
         const params = new URLSearchParams(window.location.search);
         const queryDate = params.get('date');
         if (queryDate && /^\d{4}-\d{2}-\d{2}$/.test(queryDate)) {
           setSelectedDateStr(queryDate);
         } else {
-          setSelectedDateStr(getTodayIso(activeLoc.timezone || 'Asia/Kolkata'));
+          setSelectedDateStr(getTodayIso(activeLoc.timezone));
         }
-      } catch {
-        setSelectedDateStr(getTodayIso(activeLoc.timezone || 'Asia/Kolkata'));
-      }
+      } catch {}
     }, 0);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Compute Panchang data in real-time
-  const panchangData = useMemo(() => {
-    return calculatePanchang(selectedDateStr, location, ayanamsa, currentTime);
-  }, [selectedDateStr, location, ayanamsa, currentTime]);
+  // 2. Fetch computed Panchang from high-speed backend API
+  useEffect(() => {
+    let isCancelled = false;
+
+    const fetchPanchang = async () => {
+      try {
+        const query = new URLSearchParams({
+          date: selectedDateStr,
+          lat: String(location.latitude),
+          lon: String(location.longitude),
+          alt: String(location.altitude ?? 0),
+          tz: location.timezone,
+          ayanamsa,
+          dip: String(!!location.useElevationDip),
+          name: location.name,
+        });
+
+        const res = await fetch(`/api/panchang?${query.toString()}`);
+        if (!res.ok) throw new Error('Failed to load Panchang from backend');
+        const text = await res.text();
+        const data = parseJsonWithDates(text);
+
+        if (!isCancelled) {
+          startTransition(() => {
+            setPanchangData(data);
+            setIsLoading(false);
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchPanchang();
+    return () => {
+      isCancelled = true;
+    };
+  }, [selectedDateStr, location, ayanamsa]);
+
 
   const displayDateFormatted = useMemo(() => {
     return formatCivilDateShort(selectedDateStr);
   }, [selectedDateStr]);
 
+  const updateSelectedDate = (newDateStr: string) => {
+    setSelectedDateStr(newDateStr);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('date', newDateStr);
+      window.history.replaceState(null, '', url.pathname + url.search);
+    } catch {}
+  };
+
   const shiftDay = (days: number) => {
     const [y, m, d] = selectedDateStr.split('-').map(Number);
     if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
       const nextDate = new Date(Date.UTC(y, m - 1, d + days, 12, 0, 0));
-      setSelectedDateStr(nextDate.toISOString().slice(0, 10));
+      updateSelectedDate(nextDate.toISOString().slice(0, 10));
     }
   };
 
   const handleDateChange = (isoString: string) => {
     if (!isoString) return;
     if (/^\d{4}-\d{2}-\d{2}$/.test(isoString)) {
-      setSelectedDateStr(isoString);
+      updateSelectedDate(isoString);
     }
   };
 
   const handleToday = () => {
-    setSelectedDateStr(getTodayIso(location.timezone || 'Asia/Kolkata'));
+    updateSelectedDate(getTodayIso(location.timezone));
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6 pb-16">
+    <div className="relative mx-auto w-full max-w-5xl space-y-6 pb-16">
+      {/* Top Transition Progress Bar */}
+      {isPending && (
+        <div
+          role="progressbar"
+          aria-label="Updating calculation..."
+          className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-600 animate-pulse"
+        />
+      )}
+
       {/* Top Controls: Location & Date Bar */}
       <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/90 bg-white p-3.5 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800 dark:bg-zinc-900">
         {/* Location selector trigger */}
@@ -153,7 +212,7 @@ export default function PanchangView() {
             type="date"
             aria-label="Date Picker"
             data-testid="date-picker-input"
-            value={mounted ? selectedDateStr : '2026-10-31'}
+            value={selectedDateStr}
             onChange={(e) => handleDateChange(e.target.value)}
             className="min-w-[135px] rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 py-2 text-center text-xs font-semibold text-zinc-800 focus:border-amber-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           />
@@ -180,35 +239,42 @@ export default function PanchangView() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <PanchangHero
-        data={panchangData}
-        onOpenLocationModal={() => setIsLocationModalOpen(true)}
-      />
+      {/* Main View or Skeleton Loader */}
+      {isLoading || !panchangData ? (
+        <PanchangSkeleton />
+      ) : (
+        <div className={`space-y-6 transition-opacity duration-200 ${isPending ? 'opacity-60' : 'opacity-100'}`}>
+          {/* Hero Section */}
+          <PanchangHero
+            data={panchangData}
+            onOpenLocationModal={() => setIsLocationModalOpen(true)}
+          />
 
-      {/* 5 Limbs: Pancha-Anga Cards */}
-      <PanchaAngaCards data={panchangData} />
+          {/* 5 Limbs: Pancha-Anga Cards */}
+          <PanchaAngaCards data={panchangData} />
 
-      {/* Muhurta Section: Auspicious & Inauspicious Periods */}
-      <MuhurtaSection data={panchangData} />
+          {/* Muhurta Section: Auspicious & Inauspicious Periods */}
+          <MuhurtaSection data={panchangData} />
 
-      {/* Choghadiya Section */}
-      <ChoghadiyaSection data={panchangData} />
+          {/* Choghadiya Section */}
+          <ChoghadiyaSection data={panchangData} />
 
-      {/* Calendar & Samvat Details */}
-      <CalendarDetails data={panchangData} />
+          {/* Calendar & Samvat Details */}
+          <CalendarDetails data={panchangData} />
 
-      {/* Festivals & Vrats */}
-      <FestivalsSection
-        data={panchangData}
-        onSelectDate={(iso) => setSelectedDateStr(iso)}
-      />
+          {/* Festivals & Vrats */}
+          <FestivalsSection
+            data={panchangData}
+            onSelectDate={(iso) => updateSelectedDate(iso)}
+          />
 
-      {/* Mathematical & Astronomy Transparency */}
-      <AstroParameters
-        astronomy={panchangData.astronomy}
-        location={location}
-      />
+          {/* Mathematical & Astronomy Transparency */}
+          <AstroParameters
+            astronomy={panchangData.astronomy}
+            location={location}
+          />
+        </div>
+      )}
 
       {/* Rigorous Calculation Disclaimer & Public Beta Notice */}
       <div className="rounded-2xl border border-amber-200/60 bg-amber-50/40 p-4 text-[11px] leading-relaxed text-zinc-600 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-zinc-400">
@@ -232,7 +298,7 @@ export default function PanchangView() {
           </a>
         </div>
         <p className="mt-2.5">
-          This Panchang uses pure trigonometric ephemeris calculations (VSOP87 Solar &amp; Chapront ELP-2000 Lunar perturbation models with Lahiri Chitra Paksha ayanamsa) without tabular hardcoding. Planetary positions, sunrise/sunset, solar noon, and horizon crossings are computed locally for your exact latitude, longitude, and elevation with topocentric atmospheric refraction. Transitions represent the exact astronomical second when solilunar elongation or sidereal longitudes cross limb demarcations. We actively cross-validate against verified ephemerides (Drik Panchang, Positional Astronomy Centre NCAC, Astrosage, Date Panchang). We invite your observations and validation reports via <a href="mailto:mail@sanatan.cc" className="font-semibold text-amber-700 underline dark:text-amber-300">mail@sanatan.cc</a>.
+          This Panchang uses pure trigonometric ephemeris calculations (VSOP87 Solar &amp; Chapront ELP-2000 Lunar perturbation models with Lahiri Chitra Paksha ayanamsa) without tabular hardcoding. Planetary positions, sunrise/sunset, solar noon, and horizon crossings are computed on our high-performance backend for your exact latitude, longitude, and elevation with topocentric atmospheric refraction. Transitions represent the exact astronomical second when solilunar elongation or sidereal longitudes cross limb demarcations. We actively cross-validate against verified ephemerides (Drik Panchang, Positional Astronomy Centre NCAC, Astrosage, Date Panchang). We invite your observations and validation reports via <a href="mailto:mail@sanatan.cc" className="font-semibold text-amber-700 underline dark:text-amber-300">mail@sanatan.cc</a>.
         </p>
       </div>
 

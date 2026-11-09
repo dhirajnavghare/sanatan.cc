@@ -81,7 +81,8 @@ export function calculatePanchang(
     location.latitude,
     location.longitude,
     location.altitude,
-    useDip
+    useDip,
+    location.timezone
   );
 
   const sunriseJd = toJulianDay(sunTimesRaw.sunrise);

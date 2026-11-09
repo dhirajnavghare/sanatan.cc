@@ -32,7 +32,7 @@ export default function TermsPage() {
               1. Nature of Service &amp; Open Source License
             </h2>
             <p>
-              sanatan.cc provides educational, astronomical, and cultural software tools designed to compute Hindu calendar systems (Panchangam) and auspicious time windows (Shubh Muhurtas). The codebase is distributed under the open-source <strong>MIT License</strong>. You are free to inspect, fork, and use the source code in accordance with the license terms.
+              sanatan.cc provides educational, astronomical, and cultural software tools designed to compute Hindu calendar systems (Panchangam) and auspicious time windows (Shubh Muhurtas). The codebase is dedicated to the public domain under the <strong>Creative Commons CC0 1.0 Universal Public Domain Dedication</strong>. You are free to inspect, fork, modify, and build upon the work for any purpose without restriction.
             </p>
           </section>
 

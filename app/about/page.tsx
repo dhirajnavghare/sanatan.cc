@@ -85,7 +85,7 @@ export default function AboutPage() {
             Open Source &amp; Community Validation
           </h3>
           <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-            This repository is open-source under the MIT License. We actively invite astronomers, Jyotish scholars, and developers to audit our mathematical algorithms and report discrepancies against verified observatories.
+            This repository is open-source under the Creative Commons CC0 1.0 Universal Public Domain Dedication. We actively invite astronomers, Jyotish scholars, and developers to audit our mathematical algorithms and report discrepancies against verified observatories.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <a

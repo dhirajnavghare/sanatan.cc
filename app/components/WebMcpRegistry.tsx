@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { calculatePanchang, PRESET_CITIES } from '@/app/lib/panchang';
-import { findMuhurtas } from '@/app/lib/muhurta-finder';
+import { PRESET_CITIES } from '@/app/lib/panchang/constants';
 import { MuhurtaCategoryId } from '@/app/lib/muhurta-finder/types';
 import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
 
@@ -59,51 +58,57 @@ export default function WebMcpRegistry() {
           },
           execute: async (args: Record<string, unknown>) => {
             const dateStr = String(args.date || new Date().toISOString().slice(0, 10));
-            const lat = Number(args.latitude);
-            const lon = Number(args.longitude);
+            const lat = Number(args.latitude ?? PRESET_CITIES[0].latitude);
+            const lon = Number(args.longitude ?? PRESET_CITIES[0].longitude);
             const tz = String(args.timezone || 'Asia/Kolkata');
             const ayan = (args.ayanamsa as AyanamsaSystem) || 'Lahiri';
 
-            const loc = {
-              name: `Observer (${lat.toFixed(2)}°, ${lon.toFixed(2)}°)`,
-              latitude: lat,
-              longitude: lon,
-              altitude: 0,
-              timezone: tz,
-            };
+            const safeLat = isNaN(lat) ? PRESET_CITIES[0].latitude : lat;
+            const safeLon = isNaN(lon) ? PRESET_CITIES[0].longitude : lon;
 
-            const result = calculatePanchang(dateStr, loc, ayan);
+            const query = new URLSearchParams({
+              date: dateStr,
+              lat: String(safeLat),
+              lon: String(safeLon),
+              tz,
+              ayanamsa: ayan,
+            });
+
+            const res = await fetch(`/api/panchang?${query.toString()}`);
+            if (!res.ok) throw new Error('Failed to fetch panchang data');
+            const result = await res.json();
+
             return {
               date: result.isoDate,
-              location: loc.name,
-              sunrise: result.sunTimes.sunrise.toISOString(),
-              sunset: result.sunTimes.sunset.toISOString(),
+              location: result.location?.name || `Observer (${safeLat.toFixed(2)}°, ${safeLon.toFixed(2)}°)`,
+              sunrise: result.sunTimes.sunrise,
+              sunset: result.sunTimes.sunset,
               tithi: {
                 name: result.tithi.current.name,
                 paksha: result.tithi.current.paksha,
-                endTime: result.tithi.endTime.toISOString(),
+                endTime: result.tithi.endTime,
               },
               nakshatra: {
                 name: result.nakshatra.current.name,
-                endTime: result.nakshatra.endTime.toISOString(),
+                endTime: result.nakshatra.endTime,
               },
               yoga: {
                 name: result.yoga.current.name,
-                endTime: result.yoga.endTime.toISOString(),
+                endTime: result.yoga.endTime,
               },
               karana: {
                 name: result.karana.current.name,
-                endTime: result.karana.endTime.toISOString(),
+                endTime: result.karana.endTime,
               },
               vara: result.vara.name,
               rahuKaal: {
-                start: result.muhurtas.rahuKaal.startTime.toISOString(),
-                end: result.muhurtas.rahuKaal.endTime.toISOString(),
+                start: result.muhurtas.rahuKaal.startTime,
+                end: result.muhurtas.rahuKaal.endTime,
               },
               abhijitMuhurta: result.muhurtas.abhijitMuhurta
                 ? {
-                    start: result.muhurtas.abhijitMuhurta.startTime.toISOString(),
-                    end: result.muhurtas.abhijitMuhurta.endTime.toISOString(),
+                    start: result.muhurtas.abhijitMuhurta.startTime,
+                    end: result.muhurtas.abhijitMuhurta.endTime,
                   }
                 : null,
             };
@@ -146,25 +151,45 @@ export default function WebMcpRegistry() {
                 type: 'number',
                 description: 'Longitude in decimal degrees (e.g. 75.78 for Ujjain)',
               },
+              timezone: {
+                type: 'string',
+                default: 'Asia/Kolkata',
+                description: 'IANA timezone identifier (default: Asia/Kolkata)',
+              },
             },
             required: ['category', 'latitude', 'longitude'],
           },
           execute: async (args: Record<string, unknown>) => {
             const category = args.category as MuhurtaCategoryId;
             const daysCount = (Number(args.daysCount) || 30) as 30 | 60 | 90 | 180;
-            const lat = Number(args.latitude);
-            const lon = Number(args.longitude);
+            const lat = Number(args.latitude ?? PRESET_CITIES[0].latitude);
+            const lon = Number(args.longitude ?? PRESET_CITIES[0].longitude);
+            const tz = String(args.timezone || 'Asia/Kolkata');
 
-            const loc = {
-              name: `Observer (${lat.toFixed(2)}°, ${lon.toFixed(2)}°)`,
-              latitude: lat,
-              longitude: lon,
-              altitude: 0,
-              timezone: 'Asia/Kolkata',
-            };
+            const safeLat = isNaN(lat) ? PRESET_CITIES[0].latitude : lat;
+            const safeLon = isNaN(lon) ? PRESET_CITIES[0].longitude : lon;
 
-            const muhurtas = findMuhurtas({ category, daysCount }, loc);
-            return muhurtas
+            const query = new URLSearchParams({
+              category: category || 'griha_pravesh',
+              days: String(daysCount),
+              lat: String(safeLat),
+              lon: String(safeLon),
+              tz,
+              min: 'Good',
+            });
+
+            const res = await fetch(`/api/muhurta?${query.toString()}`);
+            if (!res.ok) throw new Error('Failed to fetch muhurta data');
+            const muhurtas = await res.json();
+
+            return (muhurtas as Array<{
+              isoDate: string;
+              suitability: string;
+              score: number;
+              specialYogas: string[];
+              panchangSummary: { tithiName: string; nakshatraName: string };
+              windows: Array<{ label: string; startTime: string; endTime: string }>;
+            }>)
               .filter((m) => m.suitability === 'Optimal' || m.suitability === 'Good')
               .slice(0, 15)
               .map((m) => ({
@@ -176,8 +201,8 @@ export default function WebMcpRegistry() {
                 specialYogas: m.specialYogas,
                 recommendedWindows: m.windows.map((w) => ({
                   label: w.label,
-                  start: w.startTime.toISOString(),
-                  end: w.endTime.toISOString(),
+                  start: typeof w.startTime === 'string' ? w.startTime : new Date(w.startTime).toISOString(),
+                  end: typeof w.endTime === 'string' ? w.endTime : new Date(w.endTime).toISOString(),
                 })),
               }));
           },

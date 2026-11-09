@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Privacy Policy — sanatan.cc',
   description:
-    'Privacy Policy for sanatan.cc — Client-side astronomical computing, zero trackers, and complete data privacy.',
+    'Privacy Policy for sanatan.cc — Zero trackers, zero advertising, and complete data privacy.',
   alternates: {
     canonical: '/privacy',
   },
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
               2. Geographical Coordinates &amp; Local Storage
             </h2>
             <p>
-              When you select a city or enter custom Latitude and Longitude coordinates, those coordinates are processed locally in your browser. Any custom location preferences are saved exclusively in your browser’s local storage (`localStorage`) so your preferences persist between visits. Your coordinates are never transmitted or stored on remote servers.
+              When you select a city or enter custom Latitude and Longitude coordinates, those coordinates are processed for real-time ephemeris calculations without logging or persistent storage. Any custom location preferences are saved exclusively in your browser’s local storage (`localStorage`) so your preferences persist between visits. Your personal coordinates are never stored in databases or shared with third parties.
             </p>
           </section>
 

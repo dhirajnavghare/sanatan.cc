@@ -105,7 +105,7 @@ test.describe('Panchang Astronomical Form & Location Verification Suite', () => 
     const nameInput = page.getByTestId('input-location-name');
 
     // Select second preset (e.g. Varanasi / index 1)
-    await presetSelect.selectOption({ index: 1 });
+    await presetSelect.selectOption({ value: '1' });
 
     const updatedLat = await latInput.inputValue();
     const updatedLon = await lonInput.inputValue();

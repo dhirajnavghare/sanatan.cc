@@ -1,6 +1,6 @@
 'use client';
 
-import { MUHURTA_CATEGORIES } from '@/app/lib/muhurta-finder';
+import { MUHURTA_CATEGORIES } from '@/app/lib/muhurta-finder/categories';
 import { MuhurtaCategoryId } from '@/app/lib/muhurta-finder/types';
 
 interface MuhurtaCategorySelectorProps {

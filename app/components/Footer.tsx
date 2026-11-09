@@ -19,7 +19,7 @@ export default function Footer() {
               Open-source digital initiative dedicated to authentic Hindu Dharma spiritual texts, high-precision mathematical astrology, and Vedic astronomical ephemeris.
             </p>
             <div className="text-[11px] text-zinc-400">
-              MIT License • Zero trackers
+              CC0 1.0 Universal • Zero trackers
             </div>
           </div>
 

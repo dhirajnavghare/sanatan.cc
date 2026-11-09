@@ -176,7 +176,7 @@ function getRawFestivals(
   const hitKeys = new Set<string>();
 
   for (const rule of FESTIVAL_RULES) {
-    const cp = tithiAtCheckpoints[rule.timeOfDay];
+    let cp = tithiAtCheckpoints[rule.timeOfDay];
     let isMatch = cp.paksha === rule.paksha && cp.tithi === rule.tithi;
 
     // Secondary vyapti rule: if festival is sunrise-based, but tithi begins slightly after sunrise and covers midday
@@ -185,6 +185,7 @@ function getRawFestivals(
       if (middayCp.paksha === rule.paksha && middayCp.tithi === rule.tithi) {
         // Tithi covers midday
         isMatch = true;
+        cp = middayCp;
       }
     }
 
