@@ -4,14 +4,15 @@
  */
 
 // Sarvartha Siddhi Weekday -> Nakshatras 0..26 (Ashwini = 0)
+// Classical source: Muhurta Chintamani, Subhashubha Prakarana, Shlokas 28-29
 const SARVARTHA_SIDDHI_MAP: Record<number, number[]> = {
   0: [12, 18, 11, 20, 25, 0, 7], // Sunday: Hasta, Mula, Uttara Phalguni, Uttara Ashadha, Uttara Bhadrapada, Ashwini, Pushya
   1: [21, 3, 4, 7, 16],          // Monday: Shravana, Rohini, Mrigashira, Pushya, Anuradha
-  2: [0, 2],                     // Tuesday: Ashwini, Krittika
+  2: [0, 25, 2, 8],              // Tuesday: Ashwini, Uttara Bhadrapada, Krittika, Ashlesha
   3: [3, 16, 12, 2, 4],          // Wednesday: Rohini, Anuradha, Hasta, Krittika, Mrigashira
-  4: [6, 7, 16, 0],              // Thursday: Punarvasu, Pushya, Anuradha, Ashwini
-  5: [26, 16, 0, 6],             // Friday: Revati, Anuradha, Ashwini, Punarvasu
-  6: [3, 14, 21],                // Saturday: Rohini, Swati, Shravana
+  4: [26, 16, 0, 6, 7],          // Thursday: Revati, Anuradha, Ashwini, Punarvasu, Pushya
+  5: [26, 16, 0, 6, 21],         // Friday: Revati, Anuradha, Ashwini, Punarvasu, Shravana
+  6: [21, 3, 14],                // Saturday: Shravana, Rohini, Swati
 };
 
 // Amrita Siddhi Weekday -> Nakshatra 0..26
@@ -71,11 +72,13 @@ export function detectSpecialYogas(
 }
 
 /**
- * Calculates Panchaka Dosha type if Moon is transiting the last 5 nakshatras.
+ * Calculates Panchaka Dosha type if Moon is transiting the last 5 nakshatras (Dhanishta-Panchak).
+ * Evaluates canonical remainder modulo 9 based on Tithi, 1-indexed Vaara, and Nakshatra:
+ * 1 = Mrityu, 2 = Agni, 4 = Raj, 6 = Chora, 8 = Rog.
  */
 export function getPanchakaType(
   tithiIdx1: number,
-  dayOfWeek: number,
+  dayOfWeek: number, // 0 = Sunday
   nakshatraIdx0: number
 ): 'Rog' | 'Agni' | 'Raj' | 'Chora' | 'Mrityu' | 'None' {
   // Panchaka is active during Dhanishta (latter half), Shatabhisha, Purva Bhadra, Uttara Bhadra, Revati
@@ -83,7 +86,9 @@ export function getPanchakaType(
     return 'None';
   }
 
-  const remainder = (tithiIdx1 + dayOfWeek + (nakshatraIdx0 + 1)) % 9;
+  // Canonical Vaara index: Sunday = 1, Monday = 2, ..., Saturday = 7
+  const vaara = dayOfWeek === 0 ? 1 : dayOfWeek + 1;
+  const remainder = (tithiIdx1 + vaara + (nakshatraIdx0 + 1)) % 9;
   if (remainder === 1) return 'Mrityu';
   if (remainder === 2) return 'Agni';
   if (remainder === 4) return 'Raj';
