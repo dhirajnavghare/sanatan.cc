@@ -39,6 +39,7 @@ export interface TempleRecord {
     | 'Maha Kshetra'
     | 'International';
   circuitCategory: TempleCircuit;
+  secondaryCircuits?: TempleCircuit[];
   tradition: 'Shaiva' | 'Vaishnava' | 'Shakta' | 'Smarta' | 'Kaumara' | 'Saura';
   deityId: string; // e.g. 'shiva', 'vishnu', 'durga'
   primaryDeity: string;

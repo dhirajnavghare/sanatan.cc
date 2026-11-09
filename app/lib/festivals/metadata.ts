@@ -447,6 +447,39 @@ export const FESTIVAL_METADATA_MAP: Record<string, FestivalMetaRecord> = {
       'Meditation on non-duality and humility.',
     ],
   },
+  'Pausha Putrada Ekadashi': {
+    nameDevanagari: 'पौष पुत्रदा एकादशी',
+    deity: 'Lord Narayana (भगवान नारायण)',
+    pujaMuhurta: 'Pratah Kaal / Morning Puja',
+    significance: 'Auspicious fast dedicated to Lord Vishnu for blessings of righteous progeny, intellect, and spiritual upliftment.',
+    rituals: [
+      'Strict fasting and offering yellow flowers, basil (Tulsi), and fruits to Lord Vishnu.',
+      'Recitation of Vishnu Sahasranama and fasting katha.',
+      'Donation of warm clothes and food to the needy in Hemanta ritu.',
+    ],
+  },
+  'Paush Purnima / Shakambhari Jayanti': {
+    nameDevanagari: 'पौष पूर्णिमा / शाकम्भरी जयंती',
+    deity: 'Maa Shakambhari & Surya Dev (माँ शाकम्भरी एवं सूर्य देव)',
+    pujaMuhurta: 'Pradosha & Moonrise Arghya',
+    significance: 'Concludes Shakambhari Navratri celebrating the Divine Mother who manifested to nourish creation with vegetation during a catastrophic drought. Marks the sacred Kalpavas bath at Prayagraj Triveni Sangam.',
+    rituals: [
+      'Holy snana in sacred rivers (Ganga, Yamuna, Godavari).',
+      'Worship of Mother Earth and offering fresh vegetables and greens to Maa Shakambhari.',
+      'Chanting Sri Suktam and evening Arghya to the Full Moon.',
+    ],
+  },
+  'Pausha Amavasya': {
+    nameDevanagari: 'पौष अमावस्या',
+    deity: 'Pitris & Surya Dev (पितृगण एवं सूर्य देव)',
+    pujaMuhurta: 'Madhyahna / Aparahna Kaal',
+    significance: 'Sacred Amavasya in the auspicious month of Pausha, dedicated to Pitru Tarpana, ancestral peace, and removal of Pitru Dosha.',
+    rituals: [
+      'Tarpana with black sesame seeds, kusha grass, and water.',
+      'Feeding cows, crows, and dogs.',
+      'Lighting lamps with mustard oil under the Peepal tree.',
+    ],
+  },
 };
 
 export const RITU_DATA: Record<number, { name: string; nameDevanagari: string }> = {

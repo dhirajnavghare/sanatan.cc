@@ -264,11 +264,157 @@ export const TEMPLES_DATABASE: TempleRecord[] = [
     },
   },
   {
+    id: 'bhimashankar',
+    name: 'Bhimashankar Jyotirlinga',
+    nameDevanagari: 'श्री भीमाशंकर ज्योतिर्लिंग',
+    circuit: 'Jyotirlinga',
+    circuitCategory: 'jyotirlinga',
+    tradition: 'Shaiva',
+    deityId: 'shiva',
+    primaryDeity: 'Lord Bhimashankar (Mahadeva)',
+    primaryDeityDevanagari: 'भगवान भीमाशंकर',
+    location: {
+      city: 'Khed (near Pune)',
+      state: 'Maharashtra',
+      country: 'India',
+      latitude: 19.0722,
+      longitude: 73.5358,
+      elevationMeters: 1005,
+    },
+    sacredRiver: 'Bhima River (भीमा नदी उद्गम)',
+    era: 'Puranic (Spire patronized by Nana Phadnavis in 18th Century CE)',
+    architecturalStyle: 'Hemadpanthi & Nagara Architecture with intricately carved basalt stone',
+    significance:
+      'The 6th sacred Jyotirlinga nestled deep in the lush Sahyadri Western Ghats where the sacred Bhima river originates. Consecrated on the exact spot Lord Shiva vanquished the demon Bhima, son of Kumbhakarna, to protect his devotee King Priyadharman.',
+    puranicLore:
+      'The demon Bhima terrorized the three worlds and imprisoned King Priyadharman, a devoted Shiva bhakta. When the demon raised his sword to strike the sacred Shiva Lingam, Mahadeva manifested in fiery splendor from the Lingam as Bhimashankar and incinerated the demon with His divine gaze.',
+    darshanTimings: '04:30 AM – 09:30 PM (Maha Abhishek: 04:30 AM; Sandhya Aarti: 07:30 PM)',
+    dressCode: 'Traditional modest attire (Dhoti mandatory for sanctum garbhagriha abhishekam)',
+    majorFestivals: ['Maha Shivaratri', 'Shravan Somvar', 'Tripuri Purnima', 'Kartik Deepotsav'],
+    presidingTithi: 'Chaturdashi (Krishna Paksha) & Pradosha',
+    colorTheme: {
+      badgeBg: 'bg-emerald-500/10 dark:bg-emerald-400/10',
+      badgeText: 'text-emerald-800 dark:text-emerald-300',
+      border: 'border-emerald-500/30',
+      accentGlow: 'from-emerald-600 to-teal-800',
+    },
+  },
+  {
+    id: 'baidyanath-deoghar',
+    name: 'Baba Baidyanath Jyotirlinga',
+    nameDevanagari: 'श्री बाबा बैद्यनाथ ज्योतिर्लिंग (देवघर)',
+    circuit: 'Jyotirlinga',
+    circuitCategory: 'jyotirlinga',
+    secondaryCircuits: ['shakti_peetha'],
+    tradition: 'Shaiva',
+    deityId: 'shiva',
+    primaryDeity: 'Lord Baidyanath (Kamada Lingam)',
+    primaryDeityDevanagari: 'भगवान बैद्यनाथ (कामदा लिंग)',
+    consortDeity: 'Maa Parvati (Connected by sacred red alliance ribbons to Shiva temple)',
+    location: {
+      city: 'Deoghar',
+      state: 'Jharkhand',
+      country: 'India',
+      latitude: 24.4925,
+      longitude: 86.7001,
+      elevationMeters: 254,
+    },
+    sacredRiver: 'Shivaganga Sarovar (शिवगंगा तीर्थ)',
+    era: 'Treta Yuga Puranic Sanctuary (Present sanctum restored by Raja Puran Mal in 1596 CE)',
+    architecturalStyle: 'Classical Nagara Stone Architecture with iconic Panchashula (Five-Pronged Brass Trident)',
+    significance:
+      'One of the most revered Jyotirlingas, famously known as Chitabhoomi and Kamada Lingam (fulfiller of all pure desires). Unique sanctuary where Shiva and Shakti shrines are tied together with sacred red silk ribbons (Gathbandhan). Renowned for the annual 105-km barefoot Kanwar Yatra from Sultanganj.',
+    puranicLore:
+      'Demon King Ravana performed intense penance in the Himalayas, severing nine of his heads into sacrificial fire. Pleased, Lord Shiva appeared as a Divine Physician (Vaidya), healed his wounds, and bestowed this Jyotirlinga to take to Lanka on the condition it must never touch the ground.',
+    darshanTimings: '04:00 AM – 09:00 PM (Sarkari Pooja: 04:00 AM; Shringaar Aarti: 07:30 PM)',
+    dressCode: 'Traditional modest attire (Saffron/Gerua during Shravan Kanwar Yatra)',
+    majorFestivals: ['Shravani Mela (World largest pilgrimage gathering)', 'Maha Shivaratri', 'Bhadrapada Mela'],
+    presidingTithi: 'Chaturdashi (Krishna Paksha) & Shravan Somvar',
+    colorTheme: {
+      badgeBg: 'bg-amber-500/10 dark:bg-amber-400/10',
+      badgeText: 'text-amber-800 dark:text-amber-300',
+      border: 'border-amber-500/30',
+      accentGlow: 'from-amber-600 to-yellow-700',
+    },
+  },
+  {
+    id: 'nageshwar-dwarka',
+    name: 'Nageshwar Jyotirlinga',
+    nameDevanagari: 'श्री नागेश्वर ज्योतिर्लिंग (दारुकावन)',
+    circuit: 'Jyotirlinga',
+    circuitCategory: 'jyotirlinga',
+    tradition: 'Shaiva',
+    deityId: 'shiva',
+    primaryDeity: 'Lord Nageshwar (Protector from Poisons)',
+    primaryDeityDevanagari: 'भगवान नागेश्वर (नागेश महादेव)',
+    location: {
+      city: 'Daarukavanam (near Dwarka)',
+      state: 'Gujarat',
+      country: 'India',
+      latitude: 22.3353,
+      longitude: 69.0543,
+      elevationMeters: 18,
+    },
+    era: 'Puranic (Mentioned in Shiva Purana; renovated in 20th Century CE)',
+    architecturalStyle: 'Western Indian Nagara Architecture with a monumental 85-foot seated Lord Shiva statue',
+    significance:
+      'The premier Jyotirlinga symbolizing total victory over terrestrial and psychological poisons (Vishapahaari). Situated on the sacred western coastline between Gomti Dwarka and Bet Dwarka in the ancient Darukavana forest.',
+    puranicLore:
+      'A demon named Daaruka terrorized the Darukavana forest and imprisoned a pious merchant named Supriya, a fervent Shiva devotee. When Supriya continued his Shiva japa in prison, the demon attempted to murder him. Lord Shiva manifested in blazing splendor, vanquished the demons with His Pashupatastra, and established this self-born Nageshwar Lingam.',
+    darshanTimings: '06:00 AM – 09:30 PM (Mangala Aarti: 06:00 AM; Sandhya Aarti: 07:00 PM)',
+    dressCode: 'Modest traditional attire (Men in Dhoti/Pancha for sanctum Jalabhishekam)',
+    majorFestivals: ['Maha Shivaratri', 'Shravana Maas', 'Nag Panchami'],
+    presidingTithi: 'Panchami & Chaturdashi',
+    colorTheme: {
+      badgeBg: 'bg-teal-500/10 dark:bg-teal-400/10',
+      badgeText: 'text-teal-800 dark:text-teal-300',
+      border: 'border-teal-500/30',
+      accentGlow: 'from-teal-600 to-cyan-800',
+    },
+  },
+  {
+    id: 'grishneshwar-verul',
+    name: 'Grishneshwar Jyotirlinga',
+    nameDevanagari: 'श्री घृष्णेश्वर ज्योतिर्लिंग (वेरूल)',
+    circuit: 'Jyotirlinga',
+    circuitCategory: 'jyotirlinga',
+    tradition: 'Shaiva',
+    deityId: 'shiva',
+    primaryDeity: 'Lord Grishneshwar (Kusumeshwar)',
+    primaryDeityDevanagari: 'भगवान घृष्णेश्वर (कुसुमेश्वर)',
+    location: {
+      city: 'Verul (Ellora)',
+      state: 'Maharashtra',
+      country: 'India',
+      latitude: 20.0249,
+      longitude: 75.1714,
+      elevationMeters: 585,
+    },
+    sacredRiver: 'Shivalaya Sarovar (शिवालय तीर्थ)',
+    era: 'Puranic (Rebuilt by Maloji Raje Bhosale in 16th Century CE and Ahilyabai Holkar in 18th Century CE)',
+    architecturalStyle: 'South-Central Nagara Style carved from red basalt stone with exquisite five-tier shikhara',
+    significance:
+      'The 12th and ultimate Jyotirlinga immortalized in the Dwadasha Jyotirlinga Stotram. Located adjacent to the UNESCO World Heritage Ellora Caves, celebrated for the pure maternal devotion of Grushma whose deceased son was resurrected by Mahadeva.',
+    puranicLore:
+      'A devout woman named Kusuma (Grushma) made 101 earthen lingams daily, worshipped them, and immersed them in a sacred lake. Jealous of her devotion and happy life, her sister murdered Grushma\'s son. Undeterred, Grushma continued her daily Shiva worship and immersion; Lord Shiva manifested, resurrected her son, and granted her boon to abide there eternally as Grishneshwar.',
+    darshanTimings: '05:30 AM – 09:30 PM (During Shravan: 03:00 AM – 11:00 PM)',
+    dressCode: 'Men must remove upper garments to enter the sacred garbhagriha; modest Indian attire',
+    majorFestivals: ['Maha Shivaratri', 'Shravan Somvar', 'Vaikuntha Chaturdashi'],
+    presidingTithi: 'Chaturdashi (Krishna Paksha)',
+    colorTheme: {
+      badgeBg: 'bg-rose-500/10 dark:bg-rose-400/10',
+      badgeText: 'text-rose-800 dark:text-rose-300',
+      border: 'border-rose-500/30',
+      accentGlow: 'from-rose-600 to-orange-700',
+    },
+  },
+  {
     id: 'ramanathaswamy',
     name: 'Ramanathaswamy Temple',
     nameDevanagari: 'श्री रामनाथस्वामी मन्दिर (रामेश्वरम)',
     circuit: 'Char Dham',
     circuitCategory: 'char_dham',
+    secondaryCircuits: ['jyotirlinga'],
     tradition: 'Shaiva',
     deityId: 'shiva',
     primaryDeity: 'Lord Ramanathaswamy (Lingam consecrated by Sri Rama)',
@@ -486,6 +632,117 @@ export const TEMPLES_DATABASE: TempleRecord[] = [
       badgeText: 'text-red-800 dark:text-red-300',
       border: 'border-red-500/30',
       accentGlow: 'from-red-600 to-orange-700',
+    },
+  },
+  {
+    id: 'kalahasti-vayu',
+    name: 'Srikalahasteeswara Temple',
+    nameDevanagari: 'श्री कालहस्तीश्वर मन्दिर (वायु लिंगम)',
+    circuit: 'Pancha Bhoota',
+    circuitCategory: 'pancha_bhoota',
+    tradition: 'Shaiva',
+    deityId: 'shiva',
+    primaryDeity: 'Lord Srikalahasteeswara (Vayu Lingam / Air Element)',
+    primaryDeityDevanagari: 'भगवान कालहस्तीश्वर (वायु तत्त्व)',
+    consortDeity: 'Gnanaprasunambika Devi (ज्ञानप्रसूनम्बिका)',
+    location: {
+      city: 'Srikalahasti',
+      state: 'Andhra Pradesh',
+      country: 'India',
+      latitude: 13.7498,
+      longitude: 79.6984,
+      elevationMeters: 68,
+    },
+    sacredRiver: 'Swarnamukhi River (स्वर्णमुखी नदी)',
+    era: 'Pre-Pallava 5th Century CE (Substantially expanded by Chola and Vijayanagara Kings, including Krishnadevaraya in 1516 CE)',
+    architecturalStyle: 'Dravidian Monolithic Cave & Towering 120-foot Rajagopuram Architecture',
+    significance:
+      'The sacred Vayu Kshetra representing the Air (Vayu) element among the Pancha Bhoota Sthalas. Even in the completely closed inner sanctum with zero air vents, the lamp flames continuously flicker, manifesting the eternal presence of the Wind element. Famous worldwide for Rahu-Ketu Sarpa Dosha Nivarana puja.',
+    puranicLore:
+      'Named after three supreme devotees: Sri (Spider), Kala (Serpent), and Hasti (Elephant) who each worshipped the Shiva Lingam through their natural instincts and attained Moksha. Also the sanctuary where Hunter-Saint Kannappa Nayanar offered his own eyes to stop the Lingam’s bleeding eye.',
+    darshanTimings: '06:00 AM – 09:00 PM (Rahu Ketu Puja: 06:00 AM – 06:00 PM)',
+    dressCode: 'Strict South Indian traditional attire (Dhoti/Pancha for men; Saree/Salwar for women)',
+    majorFestivals: ['Maha Shivaratri Brahmotsavam (10 days)', 'Kanku Abhishekam', 'Pradosha'],
+    presidingTithi: 'Chaturdashi (Krishna Paksha) & Ardra Nakshatra',
+    colorTheme: {
+      badgeBg: 'bg-sky-500/10 dark:bg-sky-400/10',
+      badgeText: 'text-sky-800 dark:text-sky-300',
+      border: 'border-sky-500/30',
+      accentGlow: 'from-sky-500 to-indigo-600',
+    },
+  },
+  {
+    id: 'ekambareswarar-prithvi',
+    name: 'Ekambareswarar Temple',
+    nameDevanagari: 'श्री एकाम्बरेश्वर मन्दिर (पृथ्वी लिंगम)',
+    circuit: 'Pancha Bhoota',
+    circuitCategory: 'pancha_bhoota',
+    tradition: 'Shaiva',
+    deityId: 'shiva',
+    primaryDeity: 'Lord Ekambareswarar (Prithvi Lingam / Earth Element)',
+    primaryDeityDevanagari: 'भगवान एकाम्बरेश्वर (पृथ्वी तत्त्व)',
+    consortDeity: 'Maa Kamakshi (माँ कामाक्षी)',
+    location: {
+      city: 'Kanchipuram',
+      state: 'Tamil Nadu',
+      country: 'India',
+      latitude: 12.8475,
+      longitude: 79.6994,
+      elevationMeters: 83,
+    },
+    sacredRiver: 'Vegavathi River (वेगवती नदी)',
+    era: '6th Century CE Pallava Dynasty (Expanded by Cholas and Krishnadevaraya in 1509 CE)',
+    architecturalStyle: 'Grand Dravidian Temple Complex across 25 acres with soaring 59-meter Southern Rajagopuram',
+    significance:
+      'The supreme Prithvi Kshetra representing the Earth element among the Pancha Bhoota Sthalas. The sanctum Lingam is made of sacred sand (Prithvi) hand-sculpted by Mother Parvati, hence water abhishekams are never performed directly on the earthen Lingam.',
+    puranicLore:
+      'Mother Parvati performed tapas under a single mango tree (Eka-Amra) and molded a Lingam out of river sand. Lord Shiva caused the Vegavathi river to overflow to test Her devotion. Parvati embraced the earthen Lingam with all Her love to protect it from the surging waters, and Shiva manifested touched by Her boundless surrender.',
+    darshanTimings: '06:00 AM – 12:30 PM, 04:00 PM – 08:30 PM',
+    dressCode: 'Traditional Indian attire (Dhoti/Kurta for men; Sarees for women)',
+    majorFestivals: ['Panguni Uthiram (Divine Wedding of Shiva-Parvati)', 'Maha Shivaratri', 'Ani Tirumanjanam'],
+    presidingTithi: 'Uttara Phalguni (Panguni) & Pradosha',
+    colorTheme: {
+      badgeBg: 'bg-emerald-500/10 dark:bg-emerald-400/10',
+      badgeText: 'text-emerald-800 dark:text-emerald-300',
+      border: 'border-emerald-500/30',
+      accentGlow: 'from-emerald-600 to-green-800',
+    },
+  },
+  {
+    id: 'jambukeswarar-jala',
+    name: 'Jambukeswarar Temple',
+    nameDevanagari: 'श्री जम्बुकेश्वर मन्दिर (अप्पु/जल लिंगम)',
+    circuit: 'Pancha Bhoota',
+    circuitCategory: 'pancha_bhoota',
+    tradition: 'Shaiva',
+    deityId: 'shiva',
+    primaryDeity: 'Lord Jambukeswarar (Appu Lingam / Water Element)',
+    primaryDeityDevanagari: 'भगवान जम्बुकेश्वर (जल तत्त्व)',
+    consortDeity: 'Maa Akhilandeshwari (अखिलान्डेश्वरी)',
+    location: {
+      city: 'Tiruvanaikaval (Trichy)',
+      state: 'Tamil Nadu',
+      country: 'India',
+      latitude: 10.8534,
+      longitude: 78.7054,
+      elevationMeters: 85,
+    },
+    sacredRiver: 'Kaveri River (कावेरी नदी)',
+    era: 'Early Chola 1st-2nd Century CE by Kocengannan (Expanded through Pandya and Hoysala eras)',
+    architecturalStyle: 'Classical Dravidian Architecture with 5 concentric prakaras (courtyards) and massive stone ramparts',
+    significance:
+      'The sacred Jala Kshetra representing the Water element among the Pancha Bhoota Sthalas. An underground natural subterranean spring continuously wells up beneath the sanctum sanctorum, submerging the base of the Shiva Lingam in fresh water year-round.',
+    puranicLore:
+      'Sage Jambu performed deep tapas here and offered a Jambu (rose-apple) fruit to Lord Shiva. Shiva swallowed the seed, which sprouted from the sage\'s head into a holy Jambu tree. A spider and an elephant both worshipped the Lingam under the tree: the spider spun a web to shield it from fallen leaves, while the elephant brought river water to bathe it.',
+    darshanTimings: '06:00 AM – 01:00 PM, 04:00 PM – 09:00 PM',
+    dressCode: 'Traditional modest attire (Dhoti/Kurta for men; Saree for women)',
+    majorFestivals: ['Panguni Brahmotsavam', 'Aadi Pooram', 'Maha Shivaratri', 'Navratri'],
+    presidingTithi: 'Pooram Nakshatra & Pradosha',
+    colorTheme: {
+      badgeBg: 'bg-cyan-500/10 dark:bg-cyan-400/10',
+      badgeText: 'text-cyan-800 dark:text-cyan-300',
+      border: 'border-cyan-500/30',
+      accentGlow: 'from-cyan-500 to-blue-700',
     },
   },
 
@@ -927,7 +1184,9 @@ export function getTemples(options: TemplesFilterOptions = {}): TemplesApiRespon
       totalCount: single ? 1 : 0,
       circuits: CIRCUITS_CONFIG.map((c) => ({
         ...c,
-        count: TEMPLES_DATABASE.filter((t) => (c.id === 'all' ? true : t.circuitCategory === c.id)).length,
+        count: TEMPLES_DATABASE.filter((t) =>
+          c.id === 'all' ? true : t.circuitCategory === c.id || t.secondaryCircuits?.includes(c.id)
+        ).length,
       })),
       temples: single ? [single] : [],
     };
@@ -936,7 +1195,9 @@ export function getTemples(options: TemplesFilterOptions = {}): TemplesApiRespon
   let filtered = [...TEMPLES_DATABASE];
 
   if (circuit && circuit !== 'all') {
-    filtered = filtered.filter((t) => t.circuitCategory === circuit);
+    filtered = filtered.filter(
+      (t) => t.circuitCategory === circuit || t.secondaryCircuits?.includes(circuit)
+    );
   }
 
   if (tradition && tradition !== 'all') {
@@ -982,7 +1243,9 @@ export function getTemples(options: TemplesFilterOptions = {}): TemplesApiRespon
 
   const circuitCounts = CIRCUITS_CONFIG.map((c) => ({
     ...c,
-    count: TEMPLES_DATABASE.filter((t) => (c.id === 'all' ? true : t.circuitCategory === c.id)).length,
+    count: TEMPLES_DATABASE.filter((t) =>
+      c.id === 'all' ? true : t.circuitCategory === c.id || t.secondaryCircuits?.includes(c.id)
+    ).length,
   }));
 
   return {

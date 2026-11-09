@@ -81,6 +81,11 @@ export const FESTIVAL_RULES: RawFestivalRule[] = [
   { monthIdx: 8, paksha: 'S', tithi: 11, timeOfDay: 's', name: 'Mokshada Ekadashi / Gita Jayanti', category: 'Festival', isMajor: true },
   { monthIdx: 8, paksha: 'S', tithi: 15, timeOfDay: 'm', name: 'Dattatreya Jayanti', category: 'Jayanti', isMajor: true },
 
+  // Pausha (Month 9)
+  { monthIdx: 9, paksha: 'S', tithi: 11, timeOfDay: 's', name: 'Pausha Putrada Ekadashi', category: 'Vrat', isMajor: true },
+  { monthIdx: 9, paksha: 'S', tithi: 15, timeOfDay: 'p', name: 'Paush Purnima / Shakambhari Jayanti', category: 'Festival', isMajor: true },
+  { monthIdx: 9, paksha: 'K', tithi: 15, timeOfDay: 's', name: 'Pausha Amavasya', category: 'Parva', isMajor: false },
+
   // Magha (Month 10)
   { monthIdx: 10, paksha: 'S', tithi: 5, timeOfDay: 's', name: 'Vasant Panchami (Saraswati Puja)', category: 'Festival', isMajor: true },
   { monthIdx: 10, paksha: 'S', tithi: 7, timeOfDay: 's', name: 'Ratha Saptami', category: 'Festival', isMajor: true },
@@ -202,6 +207,22 @@ function getRawFestivals(
       } else if (sunriseCp.paksha === rule.paksha && sunriseCp.tithi === rule.tithi) {
         isMatch = true;
         cp = sunriseCp;
+      }
+    } else if (!isMatch && rule.timeOfDay === 'r') {
+      // Moonrise fallback: If tithi does not cover late moonrise due to tithi transition,
+      // fallback to the day having pradosha (evening), afternoon, or midday vyapti.
+      const pradoshaCp = tithiAtCheckpoints.p;
+      const afternoonCp = tithiAtCheckpoints.a;
+      const middayCp = tithiAtCheckpoints.m;
+      if (pradoshaCp.paksha === rule.paksha && pradoshaCp.tithi === rule.tithi) {
+        isMatch = true;
+        cp = pradoshaCp;
+      } else if (afternoonCp.paksha === rule.paksha && afternoonCp.tithi === rule.tithi) {
+        isMatch = true;
+        cp = afternoonCp;
+      } else if (middayCp.paksha === rule.paksha && middayCp.tithi === rule.tithi) {
+        isMatch = true;
+        cp = middayCp;
       }
     }
 
