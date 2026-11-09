@@ -13,6 +13,7 @@ import FestivalsSection from './FestivalsSection';
 import AstroParameters from './AstroParameters';
 import LocationModal from './LocationModal';
 import PanchangSkeleton from './PanchangSkeleton';
+import AppTabSwitcher from '../common/AppTabSwitcher';
 
 function getTodayIso(tz?: string): string {
   try {
@@ -167,6 +168,9 @@ export default function PanchangView() {
           className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-600 animate-pulse"
         />
       )}
+
+      {/* Top Application Tab Switcher */}
+      <AppTabSwitcher />
 
       {/* Top Controls: Location & Date Bar */}
       <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/90 bg-white p-3.5 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800 dark:bg-zinc-900">

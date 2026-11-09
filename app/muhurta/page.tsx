@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function MuhurtaPage() {
   return (
     <div className="flex-1 bg-zinc-50/50 px-4 py-6 dark:bg-black sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-5xl">
         <Suspense
           fallback={
             <div className="mx-auto max-w-5xl py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">

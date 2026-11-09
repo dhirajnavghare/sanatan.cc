@@ -15,6 +15,7 @@ import MuhurtaFilterBar from './MuhurtaFilterBar';
 import MuhurtaResultCard from './MuhurtaResultCard';
 import MuhurtaSkeleton from './MuhurtaSkeleton';
 import LocationModal from '../panchang/LocationModal';
+import AppTabSwitcher from '../common/AppTabSwitcher';
 
 function getTodayIso(tz?: string): string {
   try {
@@ -166,7 +167,7 @@ export default function MuhurtaFinderView() {
   }, [selectedCategory]);
 
   return (
-    <div className="relative space-y-6">
+    <div className="relative mx-auto w-full max-w-5xl space-y-6 pb-16">
       {/* Top Transition Progress Bar */}
       {isPending && (
         <div
@@ -175,6 +176,57 @@ export default function MuhurtaFinderView() {
           className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-600 animate-pulse"
         />
       )}
+
+      {/* Top Application Tab Switcher */}
+      <AppTabSwitcher />
+
+      {/* Top Controls: Location & Search Horizon Anchor */}
+      <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/90 bg-white p-3.5 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800 dark:bg-zinc-900">
+        {/* Location selector trigger */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            data-testid="location-modal-trigger"
+            onClick={() => setIsLocationModalOpen(true)}
+            className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-100 hover:border-amber-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            title="Configure exact Latitude, Longitude, Altitude, Timezone & Ayanamsa"
+          >
+            <span className="text-amber-500">📍</span>
+            <span className="max-w-[180px] truncate sm:max-w-[240px]">{location.name}</span>
+            <span className="rounded bg-zinc-200 px-1.5 py-0.5 text-[10px] font-mono dark:bg-zinc-700">
+              {location.latitude.toFixed(2)}°, {location.longitude.toFixed(2)}°
+            </span>
+            <span className="text-zinc-400">✏️</span>
+          </button>
+        </div>
+
+        {/* Start Anchor Date Navigator */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
+          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            Search from:
+          </span>
+
+          <input
+            type="date"
+            aria-label="Start Date"
+            value={startDateStr}
+            onChange={(e) => {
+              if (e.target.value && /^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) {
+                setStartDateStr(e.target.value);
+              }
+            }}
+            className="min-w-[135px] rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 py-2 text-center text-xs font-semibold text-zinc-800 focus:border-amber-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          />
+
+          <button
+            type="button"
+            onClick={() => setStartDateStr(getTodayIso(location.timezone))}
+            className="rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none"
+          >
+            Today
+          </button>
+        </div>
+      </div>
 
       {/* Hero Header */}
       <MuhurtaHero
