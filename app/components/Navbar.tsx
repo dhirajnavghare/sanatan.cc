@@ -2,17 +2,19 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { language, setLanguage } = useLanguage();
 
   const navLinks = [
-    { name: 'Home', href: '/', icon: '🏠', beta: false },
-    { name: 'Panchang', href: '/panchang', devanagari: 'पञ्चाङ्ग', icon: '🗓', beta: true },
-    { name: 'Muhurta', href: '/muhurta', devanagari: 'शुभ मुहूर्त', icon: '✨', beta: true },
-    { name: 'Festivals', href: '/festivals', devanagari: 'व्रत-त्योहार', icon: '🪔', beta: true },
-    { name: 'Deities', href: '/devatas', devanagari: 'देवी-देवता', icon: '🕉️', beta: true },
-    { name: 'Temples', href: '/temples', devanagari: 'मन्दिर', icon: '🛕', beta: true },
+    { name: 'Home', devanagari: 'मुखपृष्ठ', href: '/', icon: '🏠', beta: false },
+    { name: 'Panchang', devanagari: 'पञ्चाङ्ग', href: '/panchang', icon: '🗓', beta: true },
+    { name: 'Muhurta', devanagari: 'शुभ मुहूर्त', href: '/muhurta', icon: '✨', beta: true },
+    { name: 'Festivals', devanagari: 'व्रत-त्योहार', href: '/festivals', icon: '🪔', beta: true },
+    { name: 'Deities', devanagari: 'देवी-देवता', href: '/devatas', icon: '🕉️', beta: true },
+    { name: 'Temples', devanagari: 'तीर्थ-मन्दिर', href: '/temples', icon: '🛕', beta: true },
   ];
 
   return (
@@ -29,7 +31,7 @@ export default function Navbar() {
               sanatan.cc
             </span>
             <span className="text-[10px] font-semibold tracking-wider text-amber-700 dark:text-amber-400">
-              वैदिक ज्ञान एवं अनुप्रयोग
+              {language === 'hi' ? 'वैदिक ज्ञान एवं अनुप्रयोग' : 'Vedic Wisdom & Ephemeris'}
             </span>
           </div>
         </Link>
@@ -42,6 +44,7 @@ export default function Navbar() {
         >
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+            const displayName = language === 'hi' ? link.devanagari : link.name;
             return (
               <Link
                 key={link.href}
@@ -55,7 +58,7 @@ export default function Navbar() {
                 }`}
               >
                 <span>{link.icon}</span>
-                <span>{link.name}</span>
+                <span>{displayName}</span>
                 {link.beta && (
                   <span
                     className={`rounded-full px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider ${
@@ -64,7 +67,7 @@ export default function Navbar() {
                         : 'bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
                     }`}
                   >
-                    Beta
+                    {language === 'hi' ? 'बीटा' : 'Beta'}
                   </span>
                 )}
               </Link>
@@ -74,13 +77,41 @@ export default function Navbar() {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
+          {/* Language Switcher */}
+          <div className="flex items-center rounded-xl border border-zinc-200/80 bg-zinc-100/80 p-0.5 dark:border-zinc-800 dark:bg-zinc-900/80">
+            <button
+              type="button"
+              onClick={() => setLanguage('hi')}
+              aria-label="हिन्दी भाषा चुनें"
+              className={`rounded-lg px-2 py-1 text-[11px] font-bold transition cursor-pointer ${
+                language === 'hi'
+                  ? 'bg-amber-500 text-white shadow-xs'
+                  : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
+              }`}
+            >
+              हिन्दी
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage('en')}
+              aria-label="Choose English Language"
+              className={`rounded-lg px-2 py-1 text-[11px] font-bold transition cursor-pointer ${
+                language === 'en'
+                  ? 'bg-amber-500 text-white shadow-xs'
+                  : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
+              }`}
+            >
+              EN
+            </button>
+          </div>
+
           <a
             href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Beta%20Feedback"
             className="hidden items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 shadow-sm transition hover:bg-zinc-100 hover:text-zinc-900 md:inline-flex dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
             title="Send calculation feedback or observations to mail@sanatan.cc"
           >
             <span>✉️</span>
-            <span>Feedback</span>
+            <span>{language === 'hi' ? 'प्रतिक्रिया' : 'Feedback'}</span>
           </a>
 
           <a
@@ -120,7 +151,7 @@ export default function Navbar() {
                 }`}
               >
                 <span>{link.icon}</span>
-                <span>{link.devanagari || link.name}</span>
+                <span>{language === 'hi' ? link.devanagari : link.name}</span>
               </Link>
             );
           })}

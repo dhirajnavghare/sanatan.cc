@@ -3,13 +3,41 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { TempleRecord } from '@/app/lib/temples/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import {
+  cleanBilingualTitle,
+  cleanFestivalName,
+  cleanIndianLocation,
+  cleanDarshanTimings,
+  cleanDressCode,
+  cleanEra,
+} from '@/app/lib/i18n/formatters';
 
 interface TempleModalProps {
   temple: TempleRecord | null;
   onClose: () => void;
 }
 
+const CIRCUIT_HI: Record<string, string> = {
+  '12 Jyotirlingas': 'द्वादश ज्योतिर्लिंग',
+  'Char Dham': 'चार धाम',
+  'Shakti Peethas': 'शक्तिपीठ',
+  'Pancha Bhoota': 'पंचभूत स्थल',
+  'Global Heritage': 'वैश्विक तीर्थ',
+};
+
+const TEMPLE_TRADITION_HI: Record<string, string> = {
+  Shaiva: 'शैव',
+  Vaishnava: 'वैष्णव',
+  Shakta: 'शाक्त',
+  Smarta: 'स्मार्त',
+  Kaumara: 'कौमार',
+};
+
 export default function TempleModal({ temple, onClose }: TempleModalProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   // Close on ESC key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -57,29 +85,26 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
               <span
                 className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${temple.colorTheme.badgeBg} ${temple.colorTheme.badgeText} ${temple.colorTheme.border}`}
               >
-                {temple.circuit}
+                {isHi ? (CIRCUIT_HI[temple.circuit] || temple.circuit) : temple.circuit}
               </span>
               <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-[11px] font-bold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                {temple.tradition}
+                {isHi ? (TEMPLE_TRADITION_HI[temple.tradition] || temple.tradition) : temple.tradition}
               </span>
               <span className="text-xs text-zinc-400">
-                📍 {temple.location.city}, {temple.location.state}
+                📍 {isHi ? cleanIndianLocation(`${temple.location.city}, ${temple.location.state}`, true) : `${temple.location.city}, ${temple.location.state}`}
               </span>
             </div>
 
             <h2 id="temple-modal-title" className="font-serif text-2xl font-black text-zinc-900 dark:text-zinc-50 sm:text-3xl">
-              {temple.name}
+              {isHi ? temple.nameDevanagari : temple.name}
             </h2>
-            <div className="font-serif text-lg font-bold text-amber-700 dark:text-amber-400">
-              {temple.nameDevanagari}
-            </div>
           </div>
 
           <button
             type="button"
             onClick={onClose}
             className="rounded-2xl border border-zinc-200 bg-zinc-50 p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-100 cursor-pointer"
-            title="Close dialog (Esc)"
+            title={isHi ? 'संवाद बन्द करें (Esc)' : 'Close dialog (Esc)'}
           >
             <span className="sr-only">Close</span>
             ✕
@@ -91,23 +116,41 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
           {/* Key Attributes Grid */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
-              <span className="text-[10px] uppercase font-bold text-zinc-400">Primary Deity</span>
-              <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">{temple.primaryDeity}</p>
+              <span className="text-[10px] uppercase font-bold text-zinc-400">
+                {isHi ? 'प्रधान आराध्य' : 'Primary Deity'}
+              </span>
+              <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">
+                {isHi
+                  ? (temple.primaryDeityDevanagari || temple.primaryDeity)
+                  : temple.primaryDeity.replace(/\s*\([^)]*\)/g, '').trim()}
+              </p>
             </div>
             {temple.sacredRiver && (
               <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
-                <span className="text-[10px] uppercase font-bold text-zinc-400">Sacred River / Sangam</span>
-                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">{temple.sacredRiver}</p>
+                <span className="text-[10px] uppercase font-bold text-zinc-400">
+                  {isHi ? 'पवित्र नदी / संगम' : 'Sacred River / Sangam'}
+                </span>
+                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">
+                  {cleanBilingualTitle(temple.sacredRiver, isHi)}
+                </p>
               </div>
             )}
             <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
-              <span className="text-[10px] uppercase font-bold text-zinc-400">Architectural Style</span>
-              <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">{temple.architecturalStyle.split('(')[0]}</p>
+              <span className="text-[10px] uppercase font-bold text-zinc-400">
+                {isHi ? 'स्थापत्य शैली' : 'Architectural Style'}
+              </span>
+              <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">
+                {cleanArchitecturalStyle(temple.architecturalStyle, isHi)}
+              </p>
             </div>
             <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
-              <span className="text-[10px] uppercase font-bold text-zinc-400">Elevation</span>
+              <span className="text-[10px] uppercase font-bold text-zinc-400">
+                {isHi ? 'समुद्र तल से ऊँचाई' : 'Elevation'}
+              </span>
               <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-100">
-                {temple.location.elevationMeters ? `${temple.location.elevationMeters} m above sea level` : 'Plains'}
+                {temple.location.elevationMeters
+                  ? `${temple.location.elevationMeters} ${isHi ? 'मीटर' : 'm'}`
+                  : (isHi ? 'समतल भूमि' : 'Plains')}
               </p>
             </div>
           </div>
@@ -116,19 +159,19 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 dark:border-amber-500/15 dark:bg-amber-950/20">
               <span className="text-[10px] uppercase font-bold text-amber-800 dark:text-amber-300">
-                ⏰ Darshan &amp; Aarti Timings
+                {isHi ? '⏰ दर्शन एवं आरती समय' : '⏰ Darshan & Aarti Timings'}
               </span>
               <p className="mt-1.5 leading-relaxed font-medium text-zinc-800 dark:text-zinc-200">
-                {temple.darshanTimings}
+                {cleanDarshanTimings(temple.darshanTimings, isHi)}
               </p>
             </div>
             {temple.dressCode && (
               <div className="rounded-2xl border border-zinc-200 bg-zinc-50/60 p-4 dark:border-zinc-800 dark:bg-zinc-950/60">
                 <span className="text-[10px] uppercase font-bold text-zinc-400">
-                  👔 Traditional Dress Code &amp; Conduct
+                  {isHi ? '👔 पारम्परिक वेषभूषा एवं नियम' : '👔 Traditional Dress Code & Conduct'}
                 </span>
                 <p className="mt-1.5 leading-relaxed text-zinc-700 dark:text-zinc-300">
-                  {temple.dressCode}
+                  {cleanDressCode(temple.dressCode, isHi)}
                 </p>
               </div>
             )}
@@ -138,7 +181,7 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
           <div className="space-y-1.5 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 dark:border-amber-500/15 dark:bg-amber-950/20">
             <h3 className="font-serif text-sm font-bold text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
               <span>🛕</span>
-              <span>Spiritual Significance (तीर्थ महिमा)</span>
+              <span>{isHi ? 'तीर्थ महिमा एवं आध्यात्मिक महत्त्व' : 'Spiritual Significance'}</span>
             </h3>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
               {temple.significance}
@@ -149,20 +192,20 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
           <div className="space-y-1.5 rounded-2xl border border-zinc-200 bg-zinc-50/60 p-4 dark:border-zinc-800 dark:bg-zinc-950/60">
             <h3 className="font-serif text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
               <span>📜</span>
-              <span>Puranic Lore &amp; Ancient History (पौराणिक कथा)</span>
+              <span>{isHi ? 'पौराणिक कथा एवं इतिहास' : 'Puranic Lore & Ancient History'}</span>
             </h3>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
               {temple.puranicLore}
             </p>
             <div className="pt-2 text-[11px] text-zinc-500 dark:text-zinc-400">
-              <strong>Historical Era:</strong> {temple.era}
+              <strong>{isHi ? 'ऐतिहासिक काल:' : 'Historical Era:'}</strong> {cleanEra(temple.era, isHi)}
             </div>
           </div>
 
           {/* Major Festivals */}
           <div className="space-y-2">
             <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-              Major Festivals Celebrated
+              {isHi ? 'मनाए जाने वाले प्रमुख उत्सव' : 'Major Festivals Celebrated'}
             </span>
             <div className="flex flex-wrap gap-1.5">
               {temple.majorFestivals.map((festival) => (
@@ -171,7 +214,7 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
                   href={`/festivals?q=${encodeURIComponent(festival.split('(')[0].trim())}`}
                   className="rounded-xl border border-orange-500/20 bg-orange-500/10 px-2.5 py-1 text-xs font-semibold text-orange-800 transition hover:bg-orange-500/20 dark:text-orange-300"
                 >
-                  🪔 {festival} &rarr;
+                  🪔 {cleanFestivalName(festival, isHi)} &rarr;
                 </Link>
               ))}
             </div>
@@ -185,7 +228,9 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
                 href={`/devatas?id=${encodeURIComponent(temple.deityId)}`}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-800 transition hover:bg-amber-500/20 dark:text-amber-300"
               >
-                <span>🕉️ Presiding Deity Lore ({temple.primaryDeity.split('(')[0].trim()})</span>
+                <span>
+                  {isHi ? '🕉️ प्रधान आराध्य दर्शन' : `🕉️ Presiding Deity Lore (${temple.primaryDeity.split('(')[0].trim()})`}
+                </span>
                 <span>&rarr;</span>
               </Link>
 
@@ -194,7 +239,9 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
                 href={`/panchang?lat=${temple.location.latitude}&lon=${temple.location.longitude}`}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-100 px-3 py-1.5 text-xs font-bold text-zinc-700 transition hover:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
               >
-                <span>🗓 Calculate Panchang at Temple Coordinates</span>
+                <span>
+                  {isHi ? '🗓 तीर्थ निर्देशांक पर पञ्चाङ्ग गणना' : '🗓 Calculate Panchang at Temple Coordinates'}
+                </span>
                 <span>&rarr;</span>
               </Link>
 
@@ -205,7 +252,7 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 rounded-xl border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
               >
-                <span>📍 Open Map</span>
+                <span>{isHi ? '📍 मानचित्र देखें' : '📍 Open Map'}</span>
               </a>
             </div>
 
@@ -214,7 +261,7 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
               onClick={onClose}
               className="rounded-xl bg-zinc-900 px-4 py-1.5 text-xs font-bold text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 cursor-pointer"
             >
-              Close
+              {isHi ? 'बन्द करें' : 'Close'}
             </button>
           </div>
         </div>
@@ -222,3 +269,22 @@ export default function TempleModal({ temple, onClose }: TempleModalProps) {
     </div>
   );
 }
+
+function cleanArchitecturalStyle(style: string | undefined, isHi: boolean): string {
+  if (!style) return '';
+  if (!isHi) return style.replace(/\s*\([^)]*\)/g, '').trim();
+  const s = style.toLowerCase();
+  if (s.includes('nagara')) return 'नागर स्थापत्य शैली';
+  if (s.includes('dravidian')) return 'द्रविड़ स्थापत्य शैली';
+  if (s.includes('vesara')) return 'वेसर स्थापत्य शैली';
+  if (s.includes('kalinga')) return 'कलिंग स्थापत्य शैली';
+  if (s.includes('hemadpanthi')) return 'हेमाडपंथी स्थापत्य';
+  if (s.includes('bhumija') || s.includes('maratha')) return 'भूमिज एवं मराठा स्थापत्य शैली';
+  if (s.includes('chalukya') || s.includes('solanki')) return 'चालुक्य / सोलंकी स्थापत्य';
+  if (s.includes('katyuri') || s.includes('himalayan')) return 'पारम्परिक हिमालयी कत्यूरी शैली';
+  if (s.includes('pagoda')) return 'नेपाली पैगोडा शैली';
+  if (s.includes('cave')) return 'प्राकृतिक गुफा तीर्थ';
+  if (s.includes('bengal') || s.includes('chala')) return 'बंगाल चाला स्थापत्य शैली';
+  return style.replace(/\s*\([^)]*\)/g, '').trim();
+}
+

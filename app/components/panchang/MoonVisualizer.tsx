@@ -1,5 +1,7 @@
 'use client';
 
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+
 interface MoonVisualizerProps {
   phaseAngleDeg: number;
   illuminationFraction: number;
@@ -7,12 +9,26 @@ interface MoonVisualizerProps {
   size?: number;
 }
 
+const PHASE_NAMES_HI: Record<string, string> = {
+  'New Moon': 'अमावास्या',
+  'Waxing Crescent': 'शुक्ल पक्ष बालचन्द्र',
+  'First Quarter': 'शुक्ल पक्ष अष्टमी',
+  'Waxing Gibbous': 'शुक्ल पक्ष वर्धमान',
+  'Full Moon': 'पूर्णिमा',
+  'Waning Gibbous': 'कृष्ण पक्ष क्षयमान',
+  'Last Quarter': 'कृष्ण पक्ष अष्टमी',
+  'Waning Crescent': 'कृष्ण पक्ष क्षीणचन्द्र',
+};
+
 export default function MoonVisualizer({
   phaseAngleDeg,
   illuminationFraction,
   phaseName,
   size = 88,
 }: MoonVisualizerProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const normAngle = ((phaseAngleDeg % 360) + 360) % 360;
   const isWaning = normAngle > 180;
   const angleFromNew = isWaning ? 360 - normAngle : normAngle;
@@ -21,15 +37,20 @@ export default function MoonVisualizer({
   const sweep = k > 0 ? 0 : 1;
   const percent = Math.round(illuminationFraction * 100);
 
+  const displayPhaseName = isHi ? (PHASE_NAMES_HI[phaseName] || phaseName) : phaseName;
+
   return (
-    <div className="flex flex-col items-center justify-center gap-1.5" title={`${phaseName} (${percent}% illuminated)`}>
+    <div
+      className="flex flex-col items-center justify-center gap-1.5"
+      title={`${displayPhaseName} (${percent}% ${isHi ? 'प्रकाशित' : 'illuminated'})`}
+    >
       <div className="relative">
         <svg
           viewBox="0 0 64 64"
           width={size}
           height={size}
           role="img"
-          aria-label={`Moon phase: ${phaseName}, ${percent}% illuminated`}
+          aria-label={`Moon phase: ${displayPhaseName}, ${percent}% illuminated`}
           className="drop-shadow-[0_0_12px_rgba(245,208,135,0.25)]"
         >
           <defs>
@@ -71,7 +92,7 @@ export default function MoonVisualizer({
           {percent}%
         </span>
         <span className="block text-[11px] text-zinc-300">
-          {phaseName}
+          {displayPhaseName}
         </span>
       </div>
     </div>

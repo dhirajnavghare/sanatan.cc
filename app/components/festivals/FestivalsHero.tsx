@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { GeoLocation } from '@/app/lib/panchang/types';
 import { FestivalTimelineItem } from '@/app/lib/festivals/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 interface FestivalsHeroProps {
   year: number;
@@ -25,6 +26,9 @@ export default function FestivalsHero({
   totalCount,
   majorCount,
 }: FestivalsHeroProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   return (
     <div className="space-y-5">
       {/* Hero Banner Container */}
@@ -34,29 +38,35 @@ export default function FestivalsHero({
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-700 dark:border-amber-400/30 dark:text-amber-300">
                 <span>🪔</span>
-                <span>Hindu Festival Calendar &amp; Timeline</span>
+                <span>{isHi ? 'हिन्दू पर्व एवं व्रत पञ्चिका' : 'Hindu Festival Calendar & Timeline'}</span>
               </span>
               <span className="rounded-full bg-zinc-200/80 px-2.5 py-0.5 text-[10px] font-bold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                Year {year}
+                {isHi ? `वर्ष ${year}` : `Year ${year}`}
               </span>
             </div>
 
             <h1 className="font-serif text-2xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
-              सनातन उत्सव एवं व्रत पञ्चाङ्ग
+              {isHi ? 'सनातन उत्सव एवं व्रत पञ्चाङ्ग' : 'Sanatan Festivals & Vrat Calendar'}
             </h1>
 
             <p className="max-w-2xl text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-sm">
-              Explore the sacred annual timeline of Hindu festivals, Ekadashi vrats, Jayantis, and solar transits. Mathematically computed using classical Drik Panchang, Dharmasindhu, and Nirnayasindhu astronomical rules for any location on Earth.
+              {isHi
+                ? 'हिन्दू सनातन धर्म के समस्त प्रमुख पावन उत्सवों, एकादशी व्रतों, जयन्तियों एवं सूर्य संक्रान्तियों की वार्षिक पञ्चिका। दृक सिद्धान्त, निर्णयसिन्धु एवं धर्मसिन्धु के शास्त्रसम्मत खगोलीय नियमों पर आधारित।'
+                : 'Explore the sacred annual timeline of Hindu festivals, Ekadashi vrats, Jayantis, and solar transits. Mathematically computed using classical Drik Panchang, Dharmasindhu, and Nirnayasindhu astronomical rules for any location on Earth.'}
             </p>
 
             {/* Quick Metrics Bar */}
             <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-zinc-600 dark:text-zinc-400">
               <div className="flex items-center gap-1.5 font-semibold">
                 <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-                <span>{majorCount} Major Festivals</span>
+                <span>
+                  {majorCount} {isHi ? 'प्रमुख पर्व' : 'Major Festivals'}
+                </span>
               </div>
               <div className="text-zinc-300 dark:text-zinc-700">•</div>
-              <div className="font-semibold">{totalCount} Total Observances</div>
+              <div className="font-semibold">
+                {totalCount} {isHi ? 'कुल व्रत एवं उत्सव' : 'Total Observances'}
+              </div>
               <div className="text-zinc-300 dark:text-zinc-700">•</div>
               <div className="flex items-center gap-1 font-semibold text-amber-700 dark:text-amber-400">
                 <span>📍</span>
@@ -90,9 +100,9 @@ export default function FestivalsHero({
               type="button"
               onClick={onOpenLocationModal}
               className="inline-flex items-center gap-2 rounded-2xl border border-zinc-200/90 bg-white/90 px-4 py-2 text-xs font-semibold text-zinc-700 shadow-sm transition hover:bg-zinc-100 hover:text-zinc-900 cursor-pointer dark:border-zinc-800 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-              title="Change Observer Location"
+              title={isHi ? 'नगर या अक्षांश बदलें' : 'Change Observer Location'}
             >
-              <span>🌍 Change City:</span>
+              <span>{isHi ? '🌍 नगर बदलें:' : '🌍 Change City:'}</span>
               <span className="font-bold text-amber-600 dark:text-amber-400 truncate max-w-[150px]">
                 {location.name}
               </span>
@@ -112,24 +122,29 @@ export default function FestivalsHero({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-700 dark:text-amber-400">
-                      Next Upcoming Major Festival
+                      {isHi ? 'आगामी प्रमुख पर्व' : 'Next Upcoming Major Festival'}
                     </span>
                     <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-300">
                       {nextUpcoming.daysRemaining === 0
-                        ? 'Today!'
+                        ? (isHi ? 'आज!' : 'Today!')
                         : nextUpcoming.daysRemaining === 1
-                        ? 'Tomorrow'
-                        : `In ${nextUpcoming.daysRemaining} days`}
+                        ? (isHi ? 'कल' : 'Tomorrow')
+                        : (isHi ? `${nextUpcoming.daysRemaining} दिन शेष` : `In ${nextUpcoming.daysRemaining} days`)}
                     </span>
                   </div>
                   <h3 className="font-serif text-base font-bold text-zinc-900 dark:text-zinc-50">
-                    {nextUpcoming.name}
-                    <span className="ml-2 font-normal text-xs text-zinc-500 dark:text-zinc-400">
-                      ({nextUpcoming.nameDevanagari})
-                    </span>
+                    {isHi ? nextUpcoming.nameDevanagari : nextUpcoming.name}
                   </h3>
                   <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                    📅 {nextUpcoming.formattedDate} • 🕉️ {nextUpcoming.masaName} {nextUpcoming.paksha} {nextUpcoming.tithiName}
+                    {isHi ? (
+                      <>
+                        📅 {nextUpcoming.formattedDateDevanagari || nextUpcoming.formattedDate} • 🕉️ {nextUpcoming.masaNameDevanagari || nextUpcoming.masaName} {nextUpcoming.paksha === 'Shukla' ? 'शुक्ल' : 'कृष्ण'} {nextUpcoming.tithiNameDevanagari || nextUpcoming.tithiName}
+                      </>
+                    ) : (
+                      <>
+                        📅 {nextUpcoming.formattedDate} • 🕉️ {nextUpcoming.masaName} {nextUpcoming.paksha} {nextUpcoming.tithiName}
+                      </>
+                    )}
                   </p>
                 </div>
               </div>
@@ -138,7 +153,7 @@ export default function FestivalsHero({
                 href={nextUpcoming.panchangUrl}
                 className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-amber-700 cursor-pointer sm:flex-shrink-0"
               >
-                <span>View Day Panchang</span>
+                <span>{isHi ? 'दैनिक पञ्चाङ्ग देखें' : 'View Day Panchang'}</span>
                 <span>&rarr;</span>
               </Link>
             </div>

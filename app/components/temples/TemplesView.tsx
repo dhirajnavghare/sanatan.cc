@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { TempleRecord, TempleCircuit, TempleTradition } from '@/app/lib/temples/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 import TemplesHero from './TemplesHero';
 import TemplesFilterBar from './TemplesFilterBar';
 import TempleCard from './TempleCard';
@@ -19,6 +20,8 @@ interface TemplesViewProps {
 
 export default function TemplesView({ initialTemples, circuits }: TemplesViewProps) {
   const searchParams = useSearchParams();
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
 
   // Initialize directly from URL search parameters
   const initialCircuit = (searchParams.get('circuit') as TempleCircuit) || 'all';
@@ -144,10 +147,12 @@ export default function TemplesView({ initialTemples, circuits }: TemplesViewPro
         <div className="rounded-3xl border border-zinc-200 bg-white p-12 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <span className="text-4xl">🛕</span>
           <h3 className="mt-3 font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100">
-            No temples found matching your search
+            {isHi ? 'आपकी खोज के अनुसार कोई तीर्थ अथवा मन्दिर नहीं मिला' : 'No temples found matching your search'}
           </h3>
           <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Try adjusting your search keywords or clearing the circuit filter.
+            {isHi
+              ? 'कृपया अन्य शब्द से खोजें अथवा परिक्रमा फिल्टर रीसेट करें।'
+              : 'Try adjusting your search keywords or clearing the circuit filter.'}
           </p>
           <button
             type="button"
@@ -158,7 +163,7 @@ export default function TemplesView({ initialTemples, circuits }: TemplesViewPro
             }}
             className="mt-4 rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white shadow-md transition hover:bg-amber-700 cursor-pointer"
           >
-            Reset Filters
+            {isHi ? 'रीसेट करें' : 'Reset Filters'}
           </button>
         </div>
       )}

@@ -3,13 +3,26 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FestivalTimelineItem } from '@/app/lib/festivals/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import { cleanBilingualTitle, cleanPujaMuhurta } from '@/app/lib/i18n/formatters';
 
 interface FestivalTimelineCardProps {
   festival: FestivalTimelineItem;
   isLast?: boolean;
 }
 
+const CATEGORY_NAMES_HI: Record<string, string> = {
+  Festival: 'प्रमुख पर्व',
+  Vrat: 'व्रत',
+  Jayanti: 'जयन्ती',
+  Sankranti: 'संक्रान्ति',
+  Parva: 'पावन पर्व',
+};
+
 export default function FestivalTimelineCard({ festival, isLast = false }: FestivalTimelineCardProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const [showRituals, setShowRituals] = useState(false);
 
   const isMajor = festival.isMajor;
@@ -45,7 +58,7 @@ export default function FestivalTimelineCard({ festival, isLast = false }: Festi
               ? 'bg-gradient-to-br from-amber-500 to-amber-600 text-white ring-2 ring-amber-400/40'
               : 'bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'
           }`}
-          title={`${festival.name} - ${festival.category}`}
+          title={`${isHi ? festival.nameDevanagari : festival.name} - ${isHi ? (CATEGORY_NAMES_HI[festival.category] || festival.category) : festival.category}`}
         >
           <span>{categoryIcon}</span>
         </div>
@@ -69,11 +82,11 @@ export default function FestivalTimelineCard({ festival, isLast = false }: Festi
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-100 pb-3 dark:border-zinc-800/60">
             <div className="flex flex-wrap items-center gap-2">
               <span className="font-serif text-xs font-bold text-zinc-900 dark:text-zinc-100 sm:text-sm">
-                📅 {festival.formattedDate}
+                📅 {isHi ? (festival.formattedDateDevanagari || festival.formattedDate) : festival.formattedDate}
               </span>
               <span className="text-zinc-300 dark:text-zinc-700">•</span>
               <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                {festival.dayOfWeekDevanagari}
+                {isHi ? festival.dayOfWeekDevanagari : festival.dayOfWeek}
               </span>
             </div>
 
@@ -83,47 +96,52 @@ export default function FestivalTimelineCard({ festival, isLast = false }: Festi
                 className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${categoryBadgeColors}`}
               >
                 <span>{categoryIcon}</span>
-                <span>{festival.category}</span>
+                <span>{isHi ? (CATEGORY_NAMES_HI[festival.category] || festival.category) : festival.category}</span>
               </span>
 
               {/* Countdown Pill */}
               {isToday && (
                 <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-[11px] font-extrabold text-white animate-pulse">
-                  Today (आज)
+                  {isHi ? 'आज' : 'Today'}
                 </span>
               )}
               {isUpcoming && (
                 <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                  {festival.daysRemaining === 1 ? 'Tomorrow' : `In ${festival.daysRemaining} days`}
+                  {festival.daysRemaining === 1
+                    ? (isHi ? 'कल' : 'Tomorrow')
+                    : (isHi ? `${festival.daysRemaining} दिन शेष` : `In ${festival.daysRemaining} days`)}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Festival Titles: English and Devanagari */}
+          {/* Festival Title */}
           <div className="space-y-1">
             <h3 className="font-serif text-lg font-bold text-zinc-900 dark:text-zinc-50 sm:text-xl">
-              {festival.name}
+              {isHi ? festival.nameDevanagari : festival.name}
             </h3>
-            <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 sm:text-sm">
-              {festival.nameDevanagari}
-            </p>
           </div>
 
           {/* Astrological & Hindu Calendar Context Pills */}
           <div className="flex flex-wrap gap-1.5 py-1 text-xs">
             <span className="rounded-xl border border-zinc-200/80 bg-zinc-50 px-2.5 py-1 text-[11px] font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300">
-              🌙 <strong>Masa:</strong> {festival.masaName} ({festival.masaNameDevanagari})
+              🌙 <strong>{isHi ? 'मास:' : 'Masa:'}</strong>{' '}
+              {isHi ? (festival.masaNameDevanagari || festival.masaName) : festival.masaName}
             </span>
             <span className="rounded-xl border border-zinc-200/80 bg-zinc-50 px-2.5 py-1 text-[11px] font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300">
-              🌓 <strong>Tithi:</strong> {festival.paksha} {festival.tithiName} ({festival.tithiNameDevanagari})
+              🌓 <strong>{isHi ? 'तिथि:' : 'Tithi:'}</strong>{' '}
+              {isHi
+                ? `${festival.paksha === 'Shukla' ? 'शुक्ल' : 'कृष्ण'} ${festival.tithiNameDevanagari || festival.tithiName}`
+                : `${festival.paksha} ${festival.tithiName}`}
             </span>
             <span className="rounded-xl border border-zinc-200/80 bg-zinc-50 px-2.5 py-1 text-[11px] font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300">
-              🌿 <strong>Ritu:</strong> {festival.ritu}
+              🌿 <strong>{isHi ? 'ऋतु:' : 'Ritu:'}</strong>{' '}
+              {isHi ? (festival.rituDevanagari || festival.ritu) : festival.ritu}
             </span>
             {festival.deity && (
               <span className="rounded-xl border border-amber-500/20 bg-amber-50/50 px-2.5 py-1 text-[11px] font-medium text-amber-800 dark:border-amber-400/20 dark:bg-amber-950/30 dark:text-amber-300">
-                🙏 <strong>Deity:</strong> {festival.deity}
+                🙏 <strong>{isHi ? 'आराध्य देवता:' : 'Deity:'}</strong>{' '}
+                {cleanBilingualTitle(festival.deity, isHi)}
               </span>
             )}
           </div>
@@ -133,8 +151,10 @@ export default function FestivalTimelineCard({ festival, isLast = false }: Festi
             <div className="flex items-center gap-2 rounded-2xl border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-xs text-zinc-700 dark:border-amber-500/10 dark:text-zinc-300">
               <span className="text-amber-600 dark:text-amber-400">⏰</span>
               <div>
-                <strong className="text-amber-900 dark:text-amber-300">Puja Muhurta &amp; Timing:</strong>{' '}
-                <span>{festival.pujaMuhurta}</span>
+                <strong className="text-amber-900 dark:text-amber-300">
+                  {isHi ? 'पूजा मुहूर्त एवं समय:' : 'Puja Muhurta & Timing:'}
+                </strong>{' '}
+                <span>{cleanPujaMuhurta(festival.pujaMuhurta, isHi)}</span>
               </div>
             </div>
           )}
@@ -153,7 +173,7 @@ export default function FestivalTimelineCard({ festival, isLast = false }: Festi
                 className="flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 cursor-pointer"
               >
                 <span>{showRituals ? '▼' : '▶'}</span>
-                <span>Traditional Rituals &amp; Puja Vidhi (पर्व विधि एवं अनुष्ठान)</span>
+                <span>{isHi ? 'पर्व विधि एवं अनुष्ठान' : 'Traditional Rituals & Puja Vidhi'}</span>
               </button>
 
               {showRituals && (
@@ -173,14 +193,14 @@ export default function FestivalTimelineCard({ festival, isLast = false }: Festi
           {/* Action Row */}
           <div className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-zinc-800/60">
             <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
-              Drik Panchang Ephemeris
+              {isHi ? 'दृक सिद्धान्त पञ्चाङ्ग' : 'Drik Panchang Ephemeris'}
             </span>
 
             <Link
               href={festival.panchangUrl}
               className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-xs font-bold text-amber-700 transition hover:bg-amber-500 hover:text-white cursor-pointer dark:border-amber-400/30 dark:text-amber-300 dark:hover:bg-amber-600 dark:hover:text-white"
             >
-              <span>View Day Panchang</span>
+              <span>{isHi ? 'दैनिक पञ्चाङ्ग देखें' : 'View Day Panchang'}</span>
               <span>&rarr;</span>
             </Link>
           </div>

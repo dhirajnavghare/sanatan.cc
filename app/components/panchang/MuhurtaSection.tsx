@@ -1,6 +1,7 @@
 'use client';
 
 import { PanchangData, MuhurtaPeriod } from '@/app/lib/panchang/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 import { formatPanchangTime } from './PanchangHero';
 
 interface MuhurtaSectionProps {
@@ -8,6 +9,9 @@ interface MuhurtaSectionProps {
 }
 
 export default function MuhurtaSection({ data }: MuhurtaSectionProps) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const { muhurtas, location, vara } = data;
   const tz = location.timezone;
 
@@ -25,7 +29,7 @@ export default function MuhurtaSection({ data }: MuhurtaSectionProps) {
           />
           <div>
             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-              {period.name} {period.nameDevanagari && <span className="font-normal text-zinc-400">({period.nameDevanagari})</span>}
+              {isHi ? period.nameDevanagari || period.name : period.name}
             </div>
             {period.description && (
               <div className="text-[11px] text-zinc-500 dark:text-zinc-400">
@@ -51,10 +55,10 @@ export default function MuhurtaSection({ data }: MuhurtaSectionProps) {
           <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500/10 text-xs font-bold text-emerald-600 dark:bg-emerald-400/10 dark:text-emerald-400">
             ✓
           </span>
-          <span>Auspicious & Inauspicious Muhurtas (शुभ एवं अशुभ समय)</span>
+          <span>{isHi ? 'शुभ एवं अशुभ समय' : 'Auspicious & Inauspicious Muhurtas'}</span>
         </h2>
         <span className="text-xs text-zinc-500 dark:text-zinc-400">
-          Exact local daylight & nighttime divisions
+          {isHi ? 'स्थानीय दिनमान एवं रात्रिमान के सूक्ष्म विभाजन' : 'Exact local daylight & nighttime divisions'}
         </span>
       </div>
 
@@ -65,11 +69,11 @@ export default function MuhurtaSection({ data }: MuhurtaSectionProps) {
             <div className="flex items-center gap-2">
               <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
               <h3 className="font-serif text-base font-bold text-emerald-900 dark:text-emerald-200">
-                Auspicious Timings (शुभ मुहूर्त)
+                {isHi ? 'शुभ मुहूर्त' : 'Auspicious Timings'}
               </h3>
             </div>
             <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300">
-              Optimal for Beginnings
+              {isHi ? 'नूतन आरम्भ हेतु प्रशस्त' : 'Optimal for Beginnings'}
             </span>
           </div>
 
@@ -82,9 +86,13 @@ export default function MuhurtaSection({ data }: MuhurtaSectionProps) {
               <div className="flex items-center justify-between py-3 text-xs text-zinc-400">
                 <div className="flex items-center gap-2.5">
                   <span className="h-2.5 w-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-                  <span>Abhijit Muhurta</span>
+                  <span>{isHi ? 'अभिजित मुहूर्त' : 'Abhijit Muhurta'}</span>
                 </div>
-                <span>Skipped on {vara.englishName}s (Budhavara dosha)</span>
+                <span>
+                  {isHi
+                    ? 'बुधवार दोष के कारण अभिजित मुहूर्त का परिहार'
+                    : `Skipped on ${vara.englishName}s due to astrological prohibition`}
+                </span>
               </div>
             )}
             {muhurtas.amritKaal && renderMuhurtaRow(muhurtas.amritKaal)}
@@ -101,11 +109,11 @@ export default function MuhurtaSection({ data }: MuhurtaSectionProps) {
             <div className="flex items-center gap-2">
               <span className="flex h-2.5 w-2.5 rounded-full bg-rose-500" />
               <h3 className="font-serif text-base font-bold text-rose-900 dark:text-rose-200">
-                Inauspicious Kaal (अशुभ काल)
+                {isHi ? 'अशुभ काल' : 'Inauspicious Kaal'}
               </h3>
             </div>
             <span className="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-700 dark:bg-rose-950/70 dark:text-rose-300">
-              Avoid Major Undertakings
+              {isHi ? 'प्रमुख कार्यों में वर्जित' : 'Avoid Major Undertakings'}
             </span>
           </div>
 

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import WebMcpRegistry from './components/WebMcpRegistry';
+import { LanguageProvider } from './lib/i18n/LanguageContext';
 import './globals.css';
 
 const geistSans = Geist({
@@ -133,10 +134,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-50">
-        <WebMcpRegistry />
-        <Navbar />
-        <main className="flex-1 flex flex-col">{children}</main>
-        <Footer />
+        <LanguageProvider>
+          <WebMcpRegistry />
+          <Navbar />
+          <main className="flex-1 flex flex-col">{children}</main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

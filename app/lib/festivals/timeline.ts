@@ -48,7 +48,9 @@ function computeYearFestivals(year: number, location: GeoLocation): FestivalTime
       const dayInfo = DAY_OF_WEEK_MAP[dayOfWeekNum] || { english: 'Day', hindi: 'दिन' };
 
       const monthName = MONTH_NAMES_MAP[m - 1]?.monthName || 'Month';
+      const monthNameHindi = MONTH_NAMES_MAP[m - 1]?.monthNameHindi || 'माह';
       const formattedDate = `${dayInfo.english}, ${monthName} ${dayNum}, ${y}`;
+      const formattedDateDevanagari = `${dayInfo.hindi}, ${dayNum} ${monthNameHindi} ${y}`;
 
       const jd = toJulianDay(dateObj);
       const masaInfo = getMasaAtJd(jd);
@@ -99,6 +101,7 @@ function computeYearFestivals(year: number, location: GeoLocation): FestivalTime
           isMajor: f.isMajor,
           date: iso,
           formattedDate,
+          formattedDateDevanagari,
           dayOfWeek: dayInfo.english,
           dayOfWeekDevanagari: dayInfo.hindi,
           daysRemaining: 0,

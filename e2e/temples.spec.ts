@@ -2,6 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Hindu Temples & Tirthas End-to-End Suite', () => {
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      try {
+        localStorage.clear();
+      } catch {}
+    });
     await page.goto('/temples');
     await page.waitForLoadState('domcontentloaded');
   });
@@ -19,10 +24,10 @@ test.describe('Hindu Temples & Tirthas End-to-End Suite', () => {
     await expect(redundantTabSwitcher).toHaveCount(0);
 
     // Verify Hero title and Tirtha Vandana sloka
-    const heroTitle = page.locator('h1:has-text("सनातन तीर्थ एवं दिव्य मन्दिर")');
+    const heroTitle = page.locator('h1:has-text("Temples"), h1:has-text("सनातन तीर्थ एवं दिव्य मन्दिर")');
     await expect(heroTitle).toBeVisible();
 
-    const tirthaSloka = page.locator('div:has-text("गङ्गे च यमुने चैव गोदावरि सरस्वति")').last();
+    const tirthaSloka = page.locator('div:has-text("गङ्गे च यमुने चैव गोदावरि सरस्वति"), div:has-text("O holy waters of Ganga")').last();
     await expect(tirthaSloka).toBeVisible();
 
     // Verify iconic temple cards are rendered

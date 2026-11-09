@@ -13,6 +13,7 @@ import FestivalsHero from './FestivalsHero';
 import FestivalsFilterBar from './FestivalsFilterBar';
 import FestivalTimelineCard from './FestivalTimelineCard';
 import LocationModal from '@/app/components/panchang/LocationModal';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 const DEFAULT_LOCATION: GeoLocation = {
   name: 'Ujjain, India (Standard Meridian)',
@@ -26,6 +27,8 @@ const DEFAULT_LOCATION: GeoLocation = {
 export default function FestivalsView() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
 
   // URL state synchronization
   const initialYear = parseInt(searchParams.get('year') || '2026', 10);
@@ -242,7 +245,7 @@ export default function FestivalsView() {
           <div className="rounded-3xl border border-rose-500/30 bg-rose-500/10 p-8 text-center backdrop-blur-md">
             <span className="text-3xl">⚠️</span>
             <h3 className="mt-2 font-serif text-lg font-bold text-rose-700 dark:text-rose-400">
-              Calculation Error
+              {isHi ? 'गणना त्रुटि' : 'Calculation Error'}
             </h3>
             <p className="mt-1 text-xs text-rose-600 dark:text-rose-300">{error}</p>
             <button
@@ -250,7 +253,7 @@ export default function FestivalsView() {
               onClick={() => handleYearChange(year)}
               className="mt-4 rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-rose-700 cursor-pointer"
             >
-              Retry Calculations
+              {isHi ? 'पुनः प्रयास करें' : 'Retry Calculations'}
             </button>
           </div>
         ) : data?.festivals.length === 0 ? (
@@ -258,49 +261,56 @@ export default function FestivalsView() {
           <div className="rounded-3xl border border-zinc-200/90 bg-white p-12 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
             <span className="text-4xl">🪔</span>
             <h3 className="mt-3 font-serif text-lg font-bold text-zinc-900 dark:text-zinc-50">
-              No Festivals Found
+              {isHi ? 'कोई पर्व अथवा व्रत नहीं मिला' : 'No Festivals Found'}
             </h3>
             <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-              No sacred observances matched your search or category filters for year {year}.
+              {isHi
+                ? `वर्ष ${year} के लिए आपकी खोज अथवा श्रेणी के अनुसार कोई पर्व नहीं मिला।`
+                : `No sacred observances matched your search or category filters for year ${year}.`}
             </p>
             <button
               type="button"
               onClick={handleResetFilters}
               className="mt-4 rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-amber-700 cursor-pointer"
             >
-              Reset All Filters
+              {isHi ? 'सभी फिल्टर रीसेट करें' : 'Reset All Filters'}
             </button>
           </div>
         ) : (
           /* Timeline Groups by Month */
           <div className="space-y-8">
-            {groupedFestivals.map((group) => (
-              <div key={group.monthKey} className="space-y-4">
-                {/* Month Separator Ribbon */}
-                <div className="sticky top-16 z-30 flex items-center justify-between rounded-2xl border border-zinc-200/90 bg-white/90 px-4 py-2 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/90">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">🗓️</span>
-                    <h2 className="font-serif text-sm font-bold text-zinc-900 dark:text-zinc-50 sm:text-base">
-                      {group.monthName} {year}
-                    </h2>
-                  </div>
-                  <span className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-400">
-                    {group.festivals.length} Celebrations
-                  </span>
-                </div>
+            {groupedFestivals.map((group) => {
+              const monthObj = data?.months.find((m) => m.monthNumber === group.monthNumber);
+              const displayName = isHi ? (monthObj?.monthNameHindi || group.monthName) : group.monthName;
 
-                {/* Vertical Timeline Cards */}
-                <div className="pl-1 sm:pl-2">
-                  {group.festivals.map((fest, idx) => (
-                    <FestivalTimelineCard
-                      key={fest.id}
-                      festival={fest}
-                      isLast={idx === group.festivals.length - 1}
-                    />
-                  ))}
+              return (
+                <div key={group.monthKey} className="space-y-4">
+                  {/* Month Separator Ribbon */}
+                  <div className="sticky top-16 z-30 flex items-center justify-between rounded-2xl border border-zinc-200/90 bg-white/90 px-4 py-2 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/90">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">🗓️</span>
+                      <h2 className="font-serif text-sm font-bold text-zinc-900 dark:text-zinc-50 sm:text-base">
+                        {displayName} {year}
+                      </h2>
+                    </div>
+                    <span className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-400">
+                      {group.festivals.length} {isHi ? 'पर्व / उत्सव' : 'Celebrations'}
+                    </span>
+                  </div>
+
+                  {/* Vertical Timeline Cards */}
+                  <div className="pl-1 sm:pl-2">
+                    {group.festivals.map((fest, idx) => (
+                      <FestivalTimelineCard
+                        key={fest.id}
+                        festival={fest}
+                        isLast={idx === group.festivals.length - 1}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

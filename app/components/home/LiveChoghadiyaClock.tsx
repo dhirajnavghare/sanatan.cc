@@ -3,45 +3,89 @@
 import { useState, useMemo } from 'react';
 import { GeoLocation, ChoghadiyaPeriod } from '@/app/lib/panchang/types';
 import { calculatePanchang } from '@/app/lib/panchang';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
 interface LiveChoghadiyaClockProps {
   location: GeoLocation;
 }
 
-const CHOGHADIYA_EXPLAINER: Record<string, { desc: string; suitable: string; badge: string }> = {
+const QUAL_HI: Record<string, string> = {
+  Amrit: 'अमृत',
+  Shubh: 'शुभ',
+  Labh: 'लाभ',
+  Char: 'चल',
+  Rog: 'रोग',
+  Kaal: 'काल',
+  Udveg: 'उद्वेग',
+};
+
+const RULER_HI: Record<string, string> = {
+  Sun: 'सूर्य',
+  Moon: 'चन्द्र',
+  Mars: 'मंगल',
+  Mercury: 'बुध',
+  Jupiter: 'बृहस्पति',
+  Venus: 'शुक्र',
+  Saturn: 'शनि',
+};
+
+const CHOGHADIYA_EXPLAINER: Record<
+  string,
+  {
+    desc: string;
+    descHi: string;
+    suitable: string;
+    suitableHi: string;
+    badge: string;
+  }
+> = {
   Amrit: {
     desc: 'Ruled by Moon / Mercury. Pure nectar; universally auspicious for all actions.',
+    descHi: 'चन्द्र/बुध द्वारा शासित। अमृत के समान परम शुभ, सभी कार्यों के लिए कल्याणकारी।',
     suitable: 'Spiritual initiation, investments, ceremonies, travel, and business launch.',
+    suitableHi: 'दीक्षा, पूजन, यात्रा, गृह प्रवेश एवं नवीन व्यापार का शुभारम्भ।',
     badge: 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/30',
   },
   Shubh: {
     desc: 'Ruled by Jupiter. Highly auspicious and divine blessing window.',
+    descHi: 'बृहस्पति देव द्वारा शासित। धर्म, ज्ञान और मांगलिक कार्यों हेतु सर्वश्रेष्ठ।',
     suitable: 'Marriage rituals, religious rites, purchases, learning, and agreements.',
+    suitableHi: 'विवाह, धार्मिक अनुष्ठान, विद्यारम्भ, आभूषण क्रय और अनुबंध।',
     badge: 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/30',
   },
   Labh: {
     desc: 'Ruled by Mercury. Highly beneficial for wealth accumulation and commerce.',
+    descHi: 'बुध ग्रह द्वारा शासित। धनोपार्जन, व्यापार और आर्थिक लाभ हेतु अति उत्तम।',
     suitable: 'Starting commercial trade, signing contracts, buying assets, education.',
+    suitableHi: 'दुकान या व्यापार आरम्भ, बहीखाता, शेयर व संपदा निवेश।',
     badge: 'bg-teal-500/20 text-teal-800 dark:text-teal-300 border-teal-500/30',
   },
   Char: {
     desc: 'Ruled by Venus. Mobile and dynamic energy.',
+    descHi: 'शुक्र ग्रह द्वारा शासित। गतिशीलता और यात्रा हेतु अनुकूल मुहूर्त।',
     suitable: 'Travel, vehicle driving, journey start, sports, and fast-moving tasks.',
+    suitableHi: 'यात्रा, वाहन क्रय व चालन, खेलकूद तथा गत्यात्मक कार्य।',
     badge: 'bg-blue-500/20 text-blue-800 dark:text-blue-300 border-blue-500/30',
   },
   Rog: {
     desc: 'Ruled by Mars. Negative energy; indicates strife, disputes, or illness.',
+    descHi: 'मंगल देव द्वारा शासित। कलह, रोग व विवाद का कारक; शुभ कार्य वर्जित।',
     suitable: 'Medical consultations or warfare; strictly avoid auspicious beginnings.',
+    suitableHi: 'रोगोपचार, वाद-विवाद निवारण; शुभ कार्य प्रारम्भ न करें।',
     badge: 'bg-red-500/20 text-red-800 dark:text-red-300 border-red-500/30',
   },
   Kaal: {
     desc: 'Ruled by Saturn. Heavy karmic pressure; indicates delay or loss.',
+    descHi: 'शनि देव द्वारा शासित। हानि, विलम्ब और विघ्न कारक; शुभ कार्य न करें।',
     suitable: 'Demolition or debt clearance; avoid launching new ventures or travel.',
+    suitableHi: 'ऋण मुक्ति, पुराना ढांचा हटाना; नया कार्य व यात्रा वर्जित।',
     badge: 'bg-rose-500/20 text-rose-800 dark:text-rose-300 border-rose-500/30',
   },
   Udveg: {
     desc: 'Ruled by Sun. Creates mental anxiety, restlessness, and sudden turbulence.',
+    descHi: 'सूर्य देव द्वारा शासित। उद्विग्नता व अशांति कारक; शांतिपूर्वक कार्य करें।',
     suitable: 'Government tax compliance or state duties; avoid celebrations.',
+    suitableHi: 'राजकार्य, कर भुगतान; मांगलिक उत्सव व नवीन कार्य टालें।',
     badge: 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/30',
   },
 };
@@ -49,6 +93,7 @@ const CHOGHADIYA_EXPLAINER: Record<string, { desc: string; suitable: string; bad
 export default function LiveChoghadiyaClock({ location }: LiveChoghadiyaClockProps) {
   const [tab, setTab] = useState<'day' | 'night'>('day');
   const [selectedPeriod, setSelectedPeriod] = useState<ChoghadiyaPeriod | null>(null);
+  const { language, t } = useLanguage();
 
   const now = useMemo(() => new Date(), []);
   const panchang = useMemo(() => {
@@ -75,13 +120,13 @@ export default function LiveChoghadiyaClock({ location }: LiveChoghadiyaClockPro
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
             <span>⌛</span>
-            <span>चोघड़िया समय चक्र • Vedic Muhurta Segments</span>
+            <span>{language === 'hi' ? 'चौघड़िया समय चक्र' : 'Vedic Muhurta Segments'}</span>
           </div>
           <h2 className="mt-1 font-serif text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            Live Choghadiya Dial
+            {t('choghadiyaTitle')}
           </h2>
           <p className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
-            The traditional 16-period daily Vedic clock divided into Day (Din-Māna) and Night (Rātri-Māna)
+            {t('choghadiyaSubtitle')}
           </p>
         </div>
 
@@ -100,7 +145,7 @@ export default function LiveChoghadiyaClock({ location }: LiveChoghadiyaClockPro
             }`}
           >
             <span>☀️</span>
-            <span>Daytime (8)</span>
+            <span>{t('daytime')}</span>
           </button>
           <button
             type="button"
@@ -115,7 +160,7 @@ export default function LiveChoghadiyaClock({ location }: LiveChoghadiyaClockPro
             }`}
           >
             <span>🌙</span>
-            <span>Nighttime (8)</span>
+            <span>{t('nighttime')}</span>
           </button>
         </div>
       </div>
@@ -146,7 +191,7 @@ export default function LiveChoghadiyaClock({ location }: LiveChoghadiyaClockPro
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2 py-0.2 text-[9px] font-bold text-white uppercase shadow-sm">
                     <span className="h-1.5 w-1.5 animate-ping rounded-full bg-white" />
-                    Now
+                    {language === 'hi' ? 'सक्रिय' : 'Now'}
                   </span>
                 </div>
               )}
@@ -163,16 +208,13 @@ export default function LiveChoghadiyaClock({ location }: LiveChoghadiyaClockPro
                         : 'bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300'
                     }`}
                   >
-                    {period.quality}
+                    {language === 'hi' ? (QUAL_HI[period.quality] || period.quality) : period.quality}
                   </span>
                 </div>
 
                 <h3 className="mt-1.5 font-serif text-sm font-bold text-zinc-900 dark:text-zinc-100">
-                  {period.name}
+                  {language === 'hi' ? period.nameDevanagari : period.name}
                 </h3>
-                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                  {period.nameDevanagari}
-                </p>
               </div>
 
               <div className="mt-3 border-t border-zinc-200/60 pt-2 text-[10px] dark:border-zinc-800">
@@ -180,7 +222,10 @@ export default function LiveChoghadiyaClock({ location }: LiveChoghadiyaClockPro
                   {formatHourMinute(period.startTime, location.timezone)} - {formatHourMinute(period.endTime, location.timezone)}
                 </p>
                 <p className="mt-0.5 text-zinc-500 dark:text-zinc-400">
-                  Lord: <span className="font-semibold text-zinc-700 dark:text-zinc-200">{period.ruler}</span>
+                  {language === 'hi' ? 'स्वामी:' : 'Lord:'}{' '}
+                  <span className="font-semibold text-zinc-700 dark:text-zinc-200">
+                    {language === 'hi' ? (RULER_HI[period.ruler] || period.ruler) : period.ruler}
+                  </span>
                 </p>
               </div>
             </div>
@@ -198,39 +243,70 @@ export default function LiveChoghadiyaClock({ location }: LiveChoghadiyaClockPro
             <div>
               <div className="flex items-center gap-2">
                 <h4 className="font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                  {activeInspection.name} Choghadiya ({activeInspection.nameDevanagari})
+                  {language === 'hi'
+                    ? `${activeInspection.nameDevanagari} चौघड़िया`
+                    : `${activeInspection.name} Choghadiya`}
                 </h4>
                 <span className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${explainer.badge}`}>
-                  {activeInspection.quality} Tier
+                  {language === 'hi'
+                    ? `${QUAL_HI[activeInspection.quality] || activeInspection.quality} श्रेणी`
+                    : `${activeInspection.quality} Tier`}
                 </span>
                 {activeInspection.isCurrent && (
                   <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
-                    Active Right Now
+                    {language === 'hi' ? 'अभी सक्रिय' : 'Active Right Now'}
                   </span>
                 )}
               </div>
               <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                Timing: <strong className="font-mono text-zinc-900 dark:text-zinc-100">{formatHourMinute(activeInspection.startTime, location.timezone)} to {formatHourMinute(activeInspection.endTime, location.timezone)}</strong> • Ruling Graha: <strong>{activeInspection.ruler}</strong>
+                {language === 'hi' ? (
+                  <>
+                    समय:{' '}
+                    <strong className="font-mono text-zinc-900 dark:text-zinc-100">
+                      {formatHourMinute(activeInspection.startTime, location.timezone)} से{' '}
+                      {formatHourMinute(activeInspection.endTime, location.timezone)}
+                    </strong>{' '}
+                    • स्वामी ग्रह:{' '}
+                    <strong>{RULER_HI[activeInspection.ruler] || activeInspection.ruler}</strong>
+                  </>
+                ) : (
+                  <>
+                    Timing:{' '}
+                    <strong className="font-mono text-zinc-900 dark:text-zinc-100">
+                      {formatHourMinute(activeInspection.startTime, location.timezone)} to{' '}
+                      {formatHourMinute(activeInspection.endTime, location.timezone)}
+                    </strong>{' '}
+                    • Ruling Planet: <strong>{activeInspection.ruler}</strong>
+                  </>
+                )}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">Tap any segment above to inspect</span>
+            <span className="text-xs text-zinc-500">
+              {language === 'hi'
+                ? 'विवरण देखने के लिए किसी भी चौघड़िया पर क्लिक करें'
+                : 'Tap any segment above to inspect'}
+            </span>
           </div>
         </div>
 
         <div className="mt-3 grid grid-cols-1 gap-3 border-t border-zinc-200/60 pt-3 text-xs sm:grid-cols-2 dark:border-zinc-800">
           <div>
-            <span className="font-semibold text-zinc-700 dark:text-zinc-300">Shastra Significance:</span>
+            <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+              {language === 'hi' ? 'शास्त्र महत्व:' : 'Shastra Significance:'}
+            </span>
             <p className="mt-0.5 text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              {explainer.desc}
+              {language === 'hi' ? explainer.descHi : explainer.desc}
             </p>
           </div>
           <div>
-            <span className="font-semibold text-zinc-700 dark:text-zinc-300">Recommended Activities:</span>
+            <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+              {language === 'hi' ? 'शुभ कार्य निर्देश:' : 'Recommended Activities:'}
+            </span>
             <p className="mt-0.5 text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              {explainer.suitable}
+              {language === 'hi' ? explainer.suitableHi : explainer.suitable}
             </p>
           </div>
         </div>

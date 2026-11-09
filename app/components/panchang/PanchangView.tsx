@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useTransition } from 'react';
 import { GeoLocation, PanchangData } from '@/app/lib/panchang/types';
 import { PRESET_CITIES } from '@/app/lib/panchang/constants';
 import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 import PanchangHero, { formatCivilDateShort } from './PanchangHero';
 import PanchaAngaCards from './PanchaAngaCards';
 import MuhurtaSection from './MuhurtaSection';
@@ -37,6 +38,9 @@ function parseJsonWithDates(text: string): PanchangData {
 }
 
 export default function PanchangView() {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const [location, setLocation] = useState<GeoLocation>(PRESET_CITIES[0]);
   const [ayanamsa, setAyanamsa] = useState<AyanamsaSystem>('Lahiri');
   const [selectedDateStr, setSelectedDateStr] = useState<string>(() => getTodayIso());
@@ -124,10 +128,9 @@ export default function PanchangView() {
     };
   }, [selectedDateStr, location, ayanamsa]);
 
-
   const displayDateFormatted = useMemo(() => {
-    return formatCivilDateShort(selectedDateStr);
-  }, [selectedDateStr]);
+    return formatCivilDateShort(selectedDateStr, language);
+  }, [selectedDateStr, language]);
 
   const updateSelectedDate = (newDateStr: string) => {
     setSelectedDateStr(newDateStr);
@@ -163,7 +166,7 @@ export default function PanchangView() {
       {isPending && (
         <div
           role="progressbar"
-          aria-label="Updating calculation..."
+          aria-label={isHi ? 'गणना अद्यतन हो रही है...' : 'Updating calculation...'}
           className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-600 animate-pulse"
         />
       )}
@@ -176,8 +179,8 @@ export default function PanchangView() {
             type="button"
             data-testid="location-modal-trigger"
             onClick={() => setIsLocationModalOpen(true)}
-            className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-100 hover:border-amber-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-            title="Configure exact Latitude, Longitude, Altitude, Timezone & Ayanamsa"
+            className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-100 hover:border-amber-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 cursor-pointer"
+            title={isHi ? 'अक्षांश, रेखांश, ऊँचाई, समय क्षेत्र एवं अयनांश निर्धारित करें' : 'Configure exact Latitude, Longitude, Altitude, Timezone & Ayanamsa'}
           >
             <span className="text-amber-500">📍</span>
             <span className="max-w-[180px] truncate sm:max-w-[240px]">{location.name}</span>
@@ -201,16 +204,16 @@ export default function PanchangView() {
             type="button"
             data-testid="prev-day-button"
             onClick={() => shiftDay(-1)}
-            aria-label="Previous Day"
-            className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-bold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-            title="Previous Day"
+            aria-label={isHi ? 'पिछला दिन' : 'Previous Day'}
+            className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-bold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 cursor-pointer"
+            title={isHi ? 'पिछला दिन' : 'Previous Day'}
           >
             ‹
           </button>
 
           <input
             type="date"
-            aria-label="Date Picker"
+            aria-label={isHi ? 'दिनांक चुनें' : 'Date Picker'}
             data-testid="date-picker-input"
             value={selectedDateStr}
             onChange={(e) => handleDateChange(e.target.value)}
@@ -221,9 +224,9 @@ export default function PanchangView() {
             type="button"
             data-testid="next-day-button"
             onClick={() => shiftDay(1)}
-            aria-label="Next Day"
-            className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-bold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-            title="Next Day"
+            aria-label={isHi ? 'अगला दिन' : 'Next Day'}
+            className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-bold text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 cursor-pointer"
+            title={isHi ? 'अगला दिन' : 'Next Day'}
           >
             ›
           </button>
@@ -232,9 +235,9 @@ export default function PanchangView() {
             type="button"
             data-testid="today-button"
             onClick={handleToday}
-            className="rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none"
+            className="rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none cursor-pointer"
           >
-            Today
+            {isHi ? 'आज' : 'Today'}
           </button>
         </div>
       </div>
@@ -281,24 +284,28 @@ export default function PanchangView() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-              Public Beta
+              {isHi ? 'सार्वजनिक बीटा' : 'Public Beta'}
             </span>
             <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-              Open for Community &amp; Astronomical Validation
+              {isHi
+                ? 'समुदाय एवं खगोलीय सत्यापन हेतु उपलब्ध'
+                : 'Open for Community & Astronomical Validation'}
             </span>
           </div>
 
           <a
             href={`mailto:mail@sanatan.cc?subject=Panchang%20Beta%20Feedback%20%26%20Validation&body=Hi%20Sanatan.cc%20Team%2C%0A%0AI%20am%20testing%20the%20Panchang%20Beta%20calculator.%20Here%20is%20my%20feedback%20%2F%20observation%3A%0A%0A-%20Location%3A%20${encodeURIComponent(location.name)}%20(${location.latitude.toFixed(4)}%2C%20${location.longitude.toFixed(4)})%0A-%20Date%20Checked%3A%20${encodeURIComponent(selectedDateStr)}%0A-%20Observation%20%2F%20Discrepancy%3A%0A%0AThanks!`}
             className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none"
-            title="Send calculation feedback or observations to mail@sanatan.cc"
+            title={isHi ? 'गणना सत्यापन या प्रतिक्रिया mail@sanatan.cc पर भेजें' : 'Send calculation feedback or observations to mail@sanatan.cc'}
           >
             <span>✉️</span>
-            <span>Send Feedback (mail@sanatan.cc)</span>
+            <span>{isHi ? 'प्रतिक्रिया भेजें (mail@sanatan.cc)' : 'Send Feedback (mail@sanatan.cc)'}</span>
           </a>
         </div>
         <p className="mt-2.5">
-          This Panchang uses pure trigonometric ephemeris calculations (VSOP87 Solar &amp; Chapront ELP-2000 Lunar perturbation models with Lahiri Chitra Paksha ayanamsa) without tabular hardcoding. Planetary positions, sunrise/sunset, solar noon, and horizon crossings are computed on our high-performance backend for your exact latitude, longitude, and elevation with topocentric atmospheric refraction. Transitions represent the exact astronomical second when solilunar elongation or sidereal longitudes cross limb demarcations. We actively cross-validate against verified ephemerides (Drik Panchang, Positional Astronomy Centre NCAC, Astrosage, Date Panchang). We invite your observations and validation reports via <a href="mailto:mail@sanatan.cc" className="font-semibold text-amber-700 underline dark:text-amber-300">mail@sanatan.cc</a>.
+          {isHi
+            ? 'यह पञ्चाङ्ग शुद्ध त्रिकोणमितीय दृक गणना (VSOP87 सौर एवं Chapront ELP-2000 चन्द्र क्षोभ सिद्धान्त तथा लाहिरी चित्रा पक्ष अयनांश) पर आधारित है, जिसमें किसी भी प्रकार की सारिणी का हार्डकोडिंग नहीं किया गया है। ग्रहों की सूक्ष्म स्थिति, सूर्योदय, सूर्यास्त, मध्याह्न तथा क्षितिज संक्रमण आपके सटीक अक्षांश, रेखांश एवं तुंगता के अनुसार वायुमण्डलीय अपवर्तन को समाहित करते हुए गणना किए जाते हैं। अंग परिवर्तन उस यथार्थ सेकंड को दर्शाते हैं जब कोणीय अन्तर अथवा निरयण भोगांश अंग सीमा को पार करते हैं। हम राष्ट्रीय पञ्चाङ्ग (PAC), दृक पञ्चाङ्ग, दाते पञ्चाङ्ग आदि से सतत् सत्यापन करते हैं। आपकी प्रतिक्रिया एवं प्रेक्षण mail@sanatan.cc पर सादर आमन्त्रित हैं।'
+            : 'This Panchang uses pure trigonometric ephemeris calculations (VSOP87 Solar & Chapront ELP-2000 Lunar perturbation models with Lahiri Chitra Paksha ayanamsa) without tabular hardcoding. Planetary positions, sunrise/sunset, solar noon, and horizon crossings are computed on our high-performance backend for your exact latitude, longitude, and elevation with topocentric atmospheric refraction. Transitions represent the exact astronomical second when solilunar elongation or sidereal longitudes cross limb demarcations. We actively cross-validate against verified ephemerides (Drik Panchang, Positional Astronomy Centre NCAC, Astrosage, Date Panchang). We invite your observations and validation reports via mail@sanatan.cc.'}
         </p>
       </div>
 

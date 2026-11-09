@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { GeoLocation } from '@/app/lib/panchang/types';
 import { getFestivalTimeline } from '@/app/lib/festivals/timeline';
 import { FestivalTimelineItem } from '@/app/lib/festivals/types';
+import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import { cleanBilingualTitle, cleanPujaMuhurta } from '@/app/lib/i18n/formatters';
 
 interface UpcomingFestivalsStripProps {
   location: GeoLocation;
@@ -13,6 +15,7 @@ interface UpcomingFestivalsStripProps {
 export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsStripProps) {
   const [filter, setFilter] = useState<'all' | 'major' | 'vrat' | 'jayanti'>('major');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const { language, t } = useLanguage();
 
   const currentYear = useMemo(() => new Date().getFullYear(), []);
 
@@ -49,22 +52,22 @@ export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsSt
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-orange-600 dark:text-orange-400">
             <span>🪔</span>
-            <span>आगामी व्रत एवं उत्सव • Upcoming Celebrations</span>
+            <span>{language === 'hi' ? 'आगामी व्रत एवं उत्सव' : 'Upcoming Celebrations'}</span>
           </div>
           <h2 className="mt-1 font-serif text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            Sacred Hindu Festivals
+            {t('upcomingFestivalsTitle')}
           </h2>
           <p className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
-            Astronomically calculated celebration dates and fasting windows with presiding deities
+            {t('upcomingFestivalsSubtitle')}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
           {[
-            { id: 'major', label: 'Major Utsavs' },
-            { id: 'all', label: 'All Celebrations' },
-            { id: 'vrat', label: 'Ekadashi & Vrats' },
-            { id: 'jayanti', label: 'Jayantis' },
+            { id: 'major', label: t('majorFestivals') },
+            { id: 'all', label: t('allFestivals') },
+            { id: 'vrat', label: t('ekadashiVrats') },
+            { id: 'jayanti', label: t('jayantis') },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -109,28 +112,36 @@ export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsSt
                         : 'bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'
                     }`}
                   >
-                    {isToday ? 'Today' : isTomorrow ? 'Tomorrow' : `In ${fest.daysRemaining} days`}
+                    {isToday
+                      ? (language === 'hi' ? 'आज' : 'Today')
+                      : isTomorrow
+                      ? (language === 'hi' ? 'कल' : 'Tomorrow')
+                      : (language === 'hi' ? `${fest.daysRemaining} दिनों में` : `In ${fest.daysRemaining} days`)}
                   </span>
 
                   <span className="text-[11px] font-medium text-orange-700 dark:text-orange-400">
-                    {fest.masaName} ({fest.paksha})
+                    {language === 'hi'
+                      ? `${fest.masaNameDevanagari || fest.masaName} (${fest.paksha === 'Shukla' ? 'शुक्ल' : 'कृष्ण'})`
+                      : `${fest.masaName} (${fest.paksha})`}
                   </span>
                 </div>
 
                 <h3 className="mt-2 font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                  {fest.name}
+                  {language === 'hi' ? fest.nameDevanagari : fest.name}
                 </h3>
-                <p className="text-xs text-orange-700 dark:text-orange-400">
-                  {fest.nameDevanagari}
-                </p>
 
                 <p className="mt-1 text-xs font-semibold text-zinc-600 dark:text-zinc-400">
-                  {fest.formattedDate}
+                  {language === 'hi'
+                    ? (fest.formattedDateDevanagari || fest.formattedDate)
+                    : fest.formattedDate}
                 </p>
 
                 {fest.deity && (
                   <p className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
-                    Deity: <span className="font-semibold text-zinc-700 dark:text-zinc-300">{fest.deity}</span>
+                    {language === 'hi' ? 'देवता:' : 'Deity:'}{' '}
+                    <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+                      {cleanBilingualTitle(fest.deity, language === 'hi')}
+                    </span>
                   </p>
                 )}
               </div>
@@ -139,11 +150,17 @@ export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsSt
               {isExpanded && (
                 <div className="mt-3 border-t border-orange-200/60 pt-3 text-xs dark:border-orange-900/60">
                   <div>
-                    <span className="font-bold text-orange-800 dark:text-orange-300">Puja Muhurta:</span>
-                    <p className="text-zinc-700 dark:text-zinc-300">{fest.pujaMuhurta}</p>
+                    <span className="font-bold text-orange-800 dark:text-orange-300">
+                      {language === 'hi' ? 'पूजा मुहूर्त:' : 'Puja Muhurta:'}
+                    </span>
+                    <p className="text-zinc-700 dark:text-zinc-300">
+                      {cleanPujaMuhurta(fest.pujaMuhurta, language === 'hi')}
+                    </p>
                   </div>
                   <div className="mt-2">
-                    <span className="font-bold text-orange-800 dark:text-orange-300">Significance:</span>
+                    <span className="font-bold text-orange-800 dark:text-orange-300">
+                      {language === 'hi' ? 'धार्मिक महत्व:' : 'Significance:'}
+                    </span>
                     <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed line-clamp-3">
                       {fest.significance}
                     </p>
@@ -157,14 +174,16 @@ export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsSt
                   onClick={() => setExpandedId(isExpanded ? null : fest.id)}
                   className="font-semibold text-orange-600 hover:text-orange-700 dark:text-orange-400 cursor-pointer"
                 >
-                  {isExpanded ? 'Show Less' : 'Puja Details & Lore'}
+                  {isExpanded
+                    ? (language === 'hi' ? 'संक्षिप्त करें' : 'Show Less')
+                    : (language === 'hi' ? 'पूजा विधि व कथा' : 'Puja Details & Lore')}
                 </button>
 
                 <Link
                   href={fest.panchangUrl}
                   className="inline-flex items-center gap-1 font-semibold text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
                 >
-                  <span>Panchang</span>
+                  <span>{language === 'hi' ? 'पञ्चाङ्ग' : 'Panchang'}</span>
                   <span>&rarr;</span>
                 </Link>
               </div>
@@ -176,13 +195,15 @@ export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsSt
       {/* Footer Link */}
       <div className="flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-800 text-xs">
         <span className="text-zinc-500">
-          Over 150+ canonical Hindu festivals calculated using Dharmasindhu vyapti rules
+          {language === 'hi'
+            ? 'धर्मसिन्धु एवं निर्णयसिन्धु नियमों पर आधारित १५०+ शास्त्रीय हिन्दू पर्व'
+            : 'Over 150+ canonical Hindu festivals calculated using Dharmasindhu vyapti rules'}
         </span>
         <Link
           href="/festivals"
           className="font-bold text-orange-600 hover:text-orange-700 dark:text-orange-400"
         >
-          View Full Annual Timeline &rarr;
+          {language === 'hi' ? 'सम्पूर्ण वार्षिक व्रत तालिका देखें →' : 'View Full Annual Timeline →'}
         </Link>
       </div>
     </div>
