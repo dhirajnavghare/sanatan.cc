@@ -126,7 +126,7 @@ export const FESTIVAL_RULES: RawFestivalRule[] = [
 /**
  * Returns lunar month index and adhika flag for a given JD timestamp
  */
-function getMasaAtJd(jd: number): { amantaIndex: number; isAdhika: boolean } {
+export function getMasaAtJd(jd: number): { amantaIndex: number; isAdhika: boolean } {
   const nm1 = findNewMoon(jd, 'prev');
   const nm2 = findNewMoon(nm1 + 5, 'next');
   const sunRashi1 = Math.floor(getSunSiderealLongitude(nm1 + 0.01) / 30);

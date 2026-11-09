@@ -45,6 +45,14 @@ export default function Footer() {
                   Shubh Muhurta (शुभ मुहूर्त) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/festivals"
+                  className="transition hover:text-amber-600 dark:hover:text-amber-400"
+                >
+                  Festivals Timeline (त्योहार) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
