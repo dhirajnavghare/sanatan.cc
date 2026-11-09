@@ -9,8 +9,8 @@ test.describe('Festivals Timeline End-to-End Suite', () => {
   test('should render hero, festival timeline, and load initial celebrations', async ({ page }) => {
     await expect(page).toHaveTitle(/Hindu Festival Timeline/i);
 
-    // Verify Tab Switcher shows Festivals as active
-    const festivalsTab = page.locator('a[role="tab"]:has-text("Festivals Timeline")');
+    // Verify Header Navbar shows Festivals tab as active
+    const festivalsTab = page.locator('header a[role="tab"]:has-text("Festivals")').first();
     await expect(festivalsTab).toBeVisible();
     await expect(festivalsTab).toHaveAttribute('aria-selected', 'true');
 

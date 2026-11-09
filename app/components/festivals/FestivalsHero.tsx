@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import AppTabSwitcher from '@/app/components/common/AppTabSwitcher';
 import { GeoLocation } from '@/app/lib/panchang/types';
 import { FestivalTimelineItem } from '@/app/lib/festivals/types';
 
@@ -28,9 +27,6 @@ export default function FestivalsHero({
 }: FestivalsHeroProps) {
   return (
     <div className="space-y-5">
-      {/* Central Tab Switcher: Daily Panchang | Shubh Muhurta Finder | Festivals */}
-      <AppTabSwitcher />
-
       {/* Hero Banner Container */}
       <div className="relative overflow-hidden rounded-3xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent p-6 shadow-sm backdrop-blur-xl dark:border-amber-500/15 dark:from-amber-950/30 dark:via-orange-950/15 sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
