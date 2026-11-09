@@ -187,6 +187,22 @@ function getRawFestivals(
         isMatch = true;
         cp = middayCp;
       }
+    } else if (!isMatch && rule.timeOfDay === 'n') {
+      // Dharmasindhu rule: If Nishita (midnight) does not have the tithi due to night kshaya,
+      // fallback to the day having maximum daytime / pradosha vyapti.
+      const pradoshaCp = tithiAtCheckpoints.p;
+      const middayCp = tithiAtCheckpoints.m;
+      const sunriseCp = tithiAtCheckpoints.s;
+      if (pradoshaCp.paksha === rule.paksha && pradoshaCp.tithi === rule.tithi) {
+        isMatch = true;
+        cp = pradoshaCp;
+      } else if (middayCp.paksha === rule.paksha && middayCp.tithi === rule.tithi) {
+        isMatch = true;
+        cp = middayCp;
+      } else if (sunriseCp.paksha === rule.paksha && sunriseCp.tithi === rule.tithi) {
+        isMatch = true;
+        cp = sunriseCp;
+      }
     }
 
     if (!isMatch) continue;
