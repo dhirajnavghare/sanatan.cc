@@ -11,6 +11,7 @@ export default function Navbar() {
     { name: 'Panchang', href: '/panchang', devanagari: 'पञ्चाङ्ग', icon: '🗓', beta: true },
     { name: 'Muhurta', href: '/muhurta', devanagari: 'शुभ मुहूर्त', icon: '✨', beta: true },
     { name: 'Festivals', href: '/festivals', devanagari: 'व्रत-त्योहार', icon: '🪔', beta: true },
+    { name: 'Deities', href: '/devatas', devanagari: 'देवी-देवता', icon: '🕉️', beta: true },
   ];
 
   return (
@@ -102,7 +103,7 @@ export default function Navbar() {
 
       {/* Mobile Sub-Navigation Bar */}
       <div className="flex border-t border-zinc-200/60 bg-zinc-50/70 p-1.5 sm:hidden dark:border-zinc-800/60 dark:bg-zinc-900/70">
-        <div role="tablist" aria-label="Mobile Navigation Tabs" className="grid w-full grid-cols-4 gap-1">
+        <div role="tablist" aria-label="Mobile Navigation Tabs" className="grid w-full grid-cols-5 gap-1">
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
             return (

@@ -53,6 +53,14 @@ export default function Footer() {
                   Festivals Timeline (त्योहार) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/devatas"
+                  className="transition hover:text-amber-600 dark:hover:text-amber-400"
+                >
+                  Devi Devatas (देवी-देवता) <span className="text-[10px] text-amber-500 font-bold">Beta</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
