@@ -1,24 +1,26 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { PRESET_CITIES, GeoLocation } from '@/app/lib/panchang';
+import { useState, useMemo, useEffect, useTransition } from 'react';
+import { GeoLocation } from '@/app/lib/panchang/types';
+import { PRESET_CITIES } from '@/app/lib/panchang/constants';
 import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
 import {
-  findMuhurtas,
   getMuhurtaCategoryMeta,
   MUHURTA_CATEGORIES,
-} from '@/app/lib/muhurta-finder';
-import { MuhurtaCategoryId } from '@/app/lib/muhurta-finder/types';
+} from '@/app/lib/muhurta-finder/categories';
+import { MuhurtaCategoryId, MuhurtaDayEvaluation } from '@/app/lib/muhurta-finder/types';
 import MuhurtaHero from './MuhurtaHero';
 import MuhurtaCategorySelector from './MuhurtaCategorySelector';
 import MuhurtaFilterBar from './MuhurtaFilterBar';
 import MuhurtaResultCard from './MuhurtaResultCard';
+import MuhurtaSkeleton from './MuhurtaSkeleton';
 import LocationModal from '../panchang/LocationModal';
+import AppTabSwitcher from '../common/AppTabSwitcher';
 
-function getTodayIso(tz: string): string {
+function getTodayIso(tz?: string): string {
   try {
     return new Intl.DateTimeFormat('en-CA', {
-      timeZone: tz,
+      timeZone: tz || 'Asia/Kolkata',
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -26,6 +28,15 @@ function getTodayIso(tz: string): string {
   } catch {
     return new Date().toISOString().slice(0, 10);
   }
+}
+
+function parseJsonWithDates(text: string): MuhurtaDayEvaluation[] {
+  return JSON.parse(text, (_key, value) => {
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
+      return new Date(value);
+    }
+    return value;
+  });
 }
 
 export default function MuhurtaFinderView() {
@@ -36,25 +47,28 @@ export default function MuhurtaFinderView() {
   // Location and date state
   const [location, setLocation] = useState<GeoLocation>(PRESET_CITIES[0]);
   const [ayanamsa, setAyanamsa] = useState<AyanamsaSystem>('Lahiri');
-  const [startDateStr, setStartDateStr] = useState<string>('2026-10-31');
+  const [startDateStr, setStartDateStr] = useState<string>(() => getTodayIso());
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-  const [, setMounted] = useState(false);
 
-  // Sync category from URL & saved location from localStorage on mount
+  // Data fetching & loading transition state
+  const [rawEvaluations, setRawEvaluations] = useState<MuhurtaDayEvaluation[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPending, startTransition] = useTransition();
+
+  // 1. Sync category from URL & saved location from localStorage on mount
   useEffect(() => {
     const timer = setTimeout(() => {
-      setMounted(true);
       let activeLoc = PRESET_CITIES[0];
 
       try {
-        // 1. Sync category from URL query param if present
+        // Sync category from URL query param if present
         const params = new URLSearchParams(window.location.search);
         const queryCategory = params.get('category') as MuhurtaCategoryId | null;
         if (queryCategory && MUHURTA_CATEGORIES.some((c) => c.id === queryCategory)) {
           setSelectedCategory(queryCategory);
         }
 
-        // 2. Sync location
+        // Sync location
         const savedLoc = localStorage.getItem('panchang_custom_location');
         if (savedLoc) {
           const parsed = JSON.parse(savedLoc);
@@ -68,7 +82,7 @@ export default function MuhurtaFinderView() {
           }
         }
 
-        // 3. Sync Ayanamsa
+        // Sync Ayanamsa
         const savedAyan = localStorage.getItem('panchang_ayanamsa');
         if (savedAyan) {
           setAyanamsa(savedAyan as AyanamsaSystem);
@@ -76,13 +90,55 @@ export default function MuhurtaFinderView() {
       } catch {}
 
       // Set today's anchor in observer's timezone
-      setStartDateStr(getTodayIso(activeLoc.timezone || 'Asia/Kolkata'));
+      setStartDateStr(getTodayIso(activeLoc.timezone));
     }, 0);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Instant zero-lag category change (no server re-renders, no Suspense freeze)
+  // 2. Fetch computed Muhurtas from high-performance backend API
+  useEffect(() => {
+    let isCancelled = false;
+
+    const fetchMuhurtas = async () => {
+      try {
+        const query = new URLSearchParams({
+          category: selectedCategory,
+          days: String(daysCount),
+          date: startDateStr,
+          lat: String(location.latitude),
+          lon: String(location.longitude),
+          tz: location.timezone,
+          ayanamsa,
+          min: 'All', // Fetch all candidates to allow instantaneous client-side filter switching
+        });
+
+        const res = await fetch(`/api/muhurta?${query.toString()}`);
+        if (!res.ok) throw new Error('Failed to load Muhurtas from backend');
+        const text = await res.text();
+        const data = parseJsonWithDates(text);
+
+        if (!isCancelled) {
+          startTransition(() => {
+            setRawEvaluations(data);
+            setIsLoading(false);
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchMuhurtas();
+    return () => {
+      isCancelled = true;
+    };
+  }, [selectedCategory, daysCount, startDateStr, location, ayanamsa]);
+
+  // Instant category change
   const handleCategoryChange = (catId: MuhurtaCategoryId) => {
     setSelectedCategory(catId);
     try {
@@ -92,21 +148,9 @@ export default function MuhurtaFinderView() {
     } catch {}
   };
 
-  // Run the Shastra calculation engine (cached, 0.2ms after first run)
-  const rawEvaluations = useMemo(() => {
-    return findMuhurtas(
-      {
-        category: selectedCategory,
-        daysCount,
-      },
-      location,
-      startDateStr,
-      ayanamsa
-    );
-  }, [selectedCategory, startDateStr, daysCount, location, ayanamsa]);
-
-  // Filter evaluations based on user selection
+  // Instant client-side filtering without refetching
   const filteredEvaluations = useMemo(() => {
+    if (!rawEvaluations) return [];
     if (suitabilityFilter === 'Optimal') {
       return rawEvaluations.filter((e) => e.suitability === 'Optimal');
     }
@@ -123,7 +167,67 @@ export default function MuhurtaFinderView() {
   }, [selectedCategory]);
 
   return (
-    <div className="space-y-6">
+    <div className="relative mx-auto w-full max-w-5xl space-y-6 pb-16">
+      {/* Top Transition Progress Bar */}
+      {isPending && (
+        <div
+          role="progressbar"
+          aria-label="Updating Muhurta calculations..."
+          className="fixed top-0 left-0 right-0 z-50 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-600 animate-pulse"
+        />
+      )}
+
+      {/* Top Application Tab Switcher */}
+      <AppTabSwitcher />
+
+      {/* Top Controls: Location & Search Horizon Anchor */}
+      <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/90 bg-white p-3.5 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800 dark:bg-zinc-900">
+        {/* Location selector trigger */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            data-testid="location-modal-trigger"
+            onClick={() => setIsLocationModalOpen(true)}
+            className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-100 hover:border-amber-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            title="Configure exact Latitude, Longitude, Altitude, Timezone & Ayanamsa"
+          >
+            <span className="text-amber-500">📍</span>
+            <span className="max-w-[180px] truncate sm:max-w-[240px]">{location.name}</span>
+            <span className="rounded bg-zinc-200 px-1.5 py-0.5 text-[10px] font-mono dark:bg-zinc-700">
+              {location.latitude.toFixed(2)}°, {location.longitude.toFixed(2)}°
+            </span>
+            <span className="text-zinc-400">✏️</span>
+          </button>
+        </div>
+
+        {/* Start Anchor Date Navigator */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
+          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            Search from:
+          </span>
+
+          <input
+            type="date"
+            aria-label="Start Date"
+            value={startDateStr}
+            onChange={(e) => {
+              if (e.target.value && /^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) {
+                setStartDateStr(e.target.value);
+              }
+            }}
+            className="min-w-[135px] rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 py-2 text-center text-xs font-semibold text-zinc-800 focus:border-amber-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          />
+
+          <button
+            type="button"
+            onClick={() => setStartDateStr(getTodayIso(location.timezone))}
+            className="rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none"
+          >
+            Today
+          </button>
+        </div>
+      </div>
+
       {/* Hero Header */}
       <MuhurtaHero
         location={location}
@@ -147,8 +251,14 @@ export default function MuhurtaFinderView() {
       />
 
       {/* Results Section */}
-      {filteredEvaluations.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      {isLoading || !rawEvaluations ? (
+        <MuhurtaSkeleton />
+      ) : filteredEvaluations.length > 0 ? (
+        <div
+          className={`grid grid-cols-1 gap-4 lg:grid-cols-2 transition-opacity duration-200 ${
+            isPending ? 'opacity-60' : 'opacity-100'
+          }`}
+        >
           {filteredEvaluations.map((evaluation) => (
             <MuhurtaResultCard
               key={evaluation.isoDate}
@@ -178,7 +288,7 @@ export default function MuhurtaFinderView() {
                 onClick={() => setSuitabilityFilter('All')}
                 className="cursor-pointer rounded-xl bg-amber-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600"
               >
-                Show All Auspicious Days ({rawEvaluations.length} found)
+                Show All Auspicious Days ({rawEvaluations?.length ?? 0} found)
               </button>
             )}
             {daysCount < 180 && (
@@ -202,7 +312,7 @@ export default function MuhurtaFinderView() {
               Classical Shastra Calculations &amp; Verification Methodology
             </h4>
             <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-              Unlike static table lookups, this finder computes high-precision planetary positions in real-time using local astronomical equations (Swiss Ephemeris &amp; Jean Meeus VSOP87 algorithms). It continuously calculates:
+              Unlike static table lookups, this finder computes high-precision planetary positions on our high-performance backend using local astronomical equations (Swiss Ephemeris &amp; Jean Meeus VSOP87 algorithms). It continuously calculates:
             </p>
             <ul className="grid grid-cols-1 gap-1 text-xs text-zinc-600 sm:grid-cols-2 dark:text-zinc-400">
               <li className="flex items-center gap-1.5">

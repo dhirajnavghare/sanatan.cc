@@ -12,7 +12,7 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
 ### 1. High-Precision Vedic Panchang (पञ्चाङ्गम्)
 - **URL:** https://sanatan.cc/panchang
 - **Description:** Real-time astronomical Hindu calendar calculated from first principles (VSOP87 Solar, Chapront ELP-2000 Lunar, and Lahiri Ayanamsa). Computes Tithi, Nakshatra, Yoga, Karana, Vara, Abhijit Muhurta, Rahu Kaal, Yamaganda, Gulika Kaal, and Day/Night Choghadiya for any coordinates on Earth.
-- **Privacy:** 100% computed client-side with zero telemetry or data transmission.
+- **Privacy:** Real-time calculation with zero tracking, zero logging, and local storage preference retention.
 
 ### 2. Shubh Muhurta Finder (शुभ मुहूर्त शोधक)
 - **URL:** https://sanatan.cc/muhurta
@@ -22,7 +22,7 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
 
 - **About:** https://sanatan.cc/about (Mission, ephemeris mathematics, and privacy architecture)
 - **Contact:** https://sanatan.cc/contact (mail@sanatan.cc, validation reports)
-- **Terms of Service:** https://sanatan.cc/terms (MIT open-source license & spiritual disclaimer)
+- **Terms of Service:** https://sanatan.cc/terms (CC0 1.0 Universal public domain dedication & spiritual disclaimer)
 - **Privacy Policy:** https://sanatan.cc/privacy (Zero trackers, local storage only)
 - **Source Code:** https://github.com/dhirajnavghare/sanatan.cc
 
@@ -80,8 +80,8 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
 
 - **Mission:** Preserving Hindu Dharma spiritual texts and providing world-class mathematical Vedic astronomy tools.
 - **Mathematical Ephemeris:** VSOP87 planetary theory, Chapront ELP-2000 lunar theory, and Lahiri Chitra Paksha Ayanamsa.
-- **Privacy Architecture:** Zero telemetry, zero analytics, local browser computation only.
-- **License:** Open-source MIT License.
+- **Privacy Architecture:** Zero telemetry, zero analytics, private local coordinate storage.
+- **License:** Open-source CC0 1.0 Universal Public Domain.
 - **Repository:** https://github.com/dhirajnavghare/sanatan.cc
 `;
   }
@@ -98,7 +98,7 @@ function generateMarkdownForPath(pathname: string, searchParams: URLSearchParams
   if (pathname === '/terms') {
     return `# Terms of Service — sanatan.cc
 
-1. **Open Source:** Licensed under the MIT License.
+1. **Open Source:** Dedicated under the CC0 1.0 Universal Public Domain Dedication.
 2. **Educational & Spiritual Use:** Ephemeris outputs are computed from mathematical models for research, spiritual, and educational purposes.
 3. **Agent Crawling Policy:** Search bots and autonomous agents must respect \`Content-Signal: search=yes, ai-train=no\`.
 `;
@@ -119,7 +119,7 @@ Please visit https://sanatan.cc/ or refer to https://sanatan.cc/llms.txt for ful
 `;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const accept = request.headers.get('accept') || '';
   const pathname = request.nextUrl.pathname;
 

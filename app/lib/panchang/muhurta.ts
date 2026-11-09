@@ -18,8 +18,8 @@ const VARJYAM_START_GHATIS = [
 export function calculateMuhurtas(
   sunrise: Date,
   sunset: Date,
-  nextSunrise: Date,
-  dayOfWeek: number, // 0 = Sunday
+  nextSunrise?: Date,
+  dayOfWeek: number = 0,
   nakshatraIndex0?: number,
   nakshatraStart?: Date,
   nakshatraEnd?: Date
@@ -40,7 +40,7 @@ export function calculateMuhurtas(
 } {
   const sunriseMs = sunrise.getTime();
   const sunsetMs = sunset.getTime();
-  const nextSunriseMs = nextSunrise.getTime();
+  const nextSunriseMs = nextSunrise ? nextSunrise.getTime() : sunriseMs + 86400000;
 
   const dayLengthMs = sunsetMs - sunriseMs;
   const nightLengthMs = nextSunriseMs - sunsetMs;
@@ -250,18 +250,23 @@ export function calculateMuhurtas(
 export function calculateChoghadiya(
   sunrise: Date,
   sunset: Date,
-  nextSunrise: Date,
-  dayOfWeek: number,
+  nextSunrise?: Date,
+  dayOfWeek: number = 0,
   nowTime?: Date
 ): { day: ChoghadiyaPeriod[]; night: ChoghadiyaPeriod[] } {
   const sunriseMs = sunrise.getTime();
   const sunsetMs = sunset.getTime();
-  const nextSunriseMs = nextSunrise.getTime();
+  const nextSunriseMs = nextSunrise ? nextSunrise.getTime() : sunriseMs + 86400000;
 
   const dayPartMs = (sunsetMs - sunriseMs) / 8;
   const nightPartMs = (nextSunriseMs - sunsetMs) / 8;
 
-  const nowMs = nowTime ? nowTime.getTime() : -1;
+  const nowMs =
+    nowTime instanceof Date
+      ? nowTime.getTime()
+      : typeof nowTime === 'string' || typeof nowTime === 'number'
+      ? new Date(nowTime).getTime()
+      : -1;
 
   const daySeq = CHOGHADIYA_DAY_SEQUENCES[dayOfWeek] || CHOGHADIYA_DAY_SEQUENCES[0];
   const nightSeq = CHOGHADIYA_NIGHT_SEQUENCES[dayOfWeek] || CHOGHADIYA_NIGHT_SEQUENCES[0];

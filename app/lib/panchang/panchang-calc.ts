@@ -220,24 +220,29 @@ export function getRashiDetails(index0: number): RashiDetails {
 export function findTransitionTime(
   angleFn: (jd: number) => number,
   spanDegrees: number,
-  startJd: number
+  startJd: number,
+  maxDays: number = 4.0,
+  stepDays?: number
 ): { endJd: number; progressPercent: number } {
   const currentAngle = angleFn(startJd);
-  const currentIdx = Math.floor(currentAngle / spanDegrees);
+  const totalUnits = Math.round(360 / spanDegrees);
+  const rawIdx = Math.floor(currentAngle / spanDegrees);
+  const currentIdx = Math.min(totalUnits - 1, Math.max(0, rawIdx));
 
   // Progress in current limb at startJd
   const angleInLimb = currentAngle - currentIdx * spanDegrees;
   const progressPercent = Math.min(100, Math.max(0, (angleInLimb / spanDegrees) * 100));
 
-  // Forward search in 10-minute steps (up to 4 days)
-  const dtDays = 10 / 1440;
+  // Forward search with adaptive step
+  const dtDays = stepDays !== undefined ? stepDays : (maxDays > 7 ? 0.25 : 10 / 1440);
   let aJd = startJd;
   let bJd = startJd;
 
-  while (bJd - startJd < 4.0) {
+  while (bJd - startJd < maxDays) {
     bJd += dtDays;
     const ang = angleFn(bJd);
-    const idx = Math.floor(ang / spanDegrees);
+    const rawAngIdx = Math.floor(ang / spanDegrees);
+    const idx = Math.min(totalUnits - 1, Math.max(0, rawAngIdx));
     if (idx !== currentIdx) {
       // Crossed boundary between aJd and bJd
       break;
@@ -245,10 +250,12 @@ export function findTransitionTime(
     aJd = bJd;
   }
 
-  // Refine crossing with bisection to sub-second precision (25 iterations gives ~0.03 seconds precision)
+  // Refine crossing with bisection to sub-second precision (26 iterations gives ~0.03 seconds precision)
   for (let i = 0; i < 26; i++) {
     const mid = (aJd + bJd) / 2;
-    const idx = Math.floor(angleFn(mid) / spanDegrees);
+    const ang = angleFn(mid);
+    const rawMidIdx = Math.floor(ang / spanDegrees);
+    const idx = Math.min(totalUnits - 1, Math.max(0, rawMidIdx));
     if (idx === currentIdx) {
       aJd = mid;
     } else {
@@ -325,9 +332,9 @@ export function calculatePanchaAnga(
   const moonRashiCurrent = getRashiDetails(moonRashiCurrentIdx);
   const moonRashiNext = getRashiDetails((moonRashiCurrentIdx + 1) % 12);
 
-  // 7. Sun Rashi (Sankranti)
+  // 7. Sun Rashi (Sankranti) - Search up to 35 days with 6-hour step
   const sunRashiAngleFn = (jd: number) => getSunSiderealLongitude(jd, ayanamsaSystem);
-  const sunRashiTransition = findTransitionTime(sunRashiAngleFn, 30, sunriseJd);
+  const sunRashiTransition = findTransitionTime(sunRashiAngleFn, 30, sunriseJd, 35.0, 0.25);
   const sunRashiCurrentIdx = Math.floor(sunRashiAngleFn(sunriseJd) / 30);
   const sunRashiCurrent = getRashiDetails(sunRashiCurrentIdx);
   const sunRashiNext = getRashiDetails((sunRashiCurrentIdx + 1) % 12);

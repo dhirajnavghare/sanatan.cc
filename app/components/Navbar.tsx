@@ -7,91 +7,85 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const navLinks = [
-    { name: 'Home', href: '/', beta: false },
-    { name: 'Panchang', href: '/panchang', beta: true },
-    { name: 'Shubh Muhurta', href: '/muhurta', beta: true },
+    { name: 'Home', href: '/', icon: '🏠', beta: false },
+    { name: 'Panchang', href: '/panchang', devanagari: 'पञ्चाङ्ग', icon: '🗓', beta: true },
+    { name: 'Shubh Muhurta', href: '/muhurta', devanagari: 'शुभ मुहूर्त', icon: '✨', beta: true },
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/90 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/90">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="group flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-indigo-900 text-lg font-bold text-white shadow-sm ring-1 ring-amber-400/30 transition-transform group-hover:scale-105">
-              ॐ
+    <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/85 backdrop-blur-xl transition-colors dark:border-zinc-800/80 dark:bg-zinc-950/85">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-2.5 sm:px-6">
+        {/* Brand Logo */}
+        <Link href="/" className="group flex items-center gap-3">
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 text-lg font-bold text-white shadow-md shadow-amber-500/20 ring-1 ring-amber-400/40 transition-transform duration-200 group-hover:scale-105">
+            ॐ
+            <span className="absolute inset-0 rounded-xl bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
+          </span>
+          <div className="flex flex-col">
+            <span className="font-serif text-lg font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+              sanatan.cc
             </span>
-            <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-                sanatan.cc
-              </span>
-              <span className="text-[10px] font-medium tracking-wide text-amber-700 dark:text-amber-400">
-                वैदिक ज्ञान एवं अनुप्रयोग
-              </span>
-            </div>
-          </Link>
+            <span className="text-[10px] font-semibold tracking-wider text-amber-700 dark:text-amber-400">
+              वैदिक ज्ञान एवं अनुप्रयोग
+            </span>
+          </div>
+        </Link>
 
-          <nav className="hidden items-center gap-1 sm:flex" aria-label="Main Navigation">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`cursor-pointer rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-amber-100/70 text-amber-900 dark:bg-amber-950/60 dark:text-amber-200'
-                      : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100'
-                  }`}
-                >
-                  {link.name}
-                  {link.beta && (
-                    <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
-                      Beta
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
+        {/* Central Segmented Tab Switcher (Desktop & Tablet) */}
+        <nav
+          className="hidden items-center rounded-2xl border border-zinc-200/80 bg-zinc-100/80 p-1 backdrop-blur-md sm:flex dark:border-zinc-800 dark:bg-zinc-900/80"
+          aria-label="Main Navigation Tabs"
+        >
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                  isActive
+                    ? 'bg-white text-zinc-950 shadow-sm ring-1 ring-black/5 dark:bg-zinc-800 dark:text-amber-300 dark:ring-white/10'
+                    : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
+                }`}
+              >
+                <span>{link.icon}</span>
+                <span>{link.name}</span>
+                {link.beta && (
+                  <span
+                    className={`rounded-full px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider ${
+                      isActive
+                        ? 'bg-amber-500/20 text-amber-800 dark:bg-amber-400/20 dark:text-amber-300'
+                        : 'bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
+                    }`}
+                  >
+                    Beta
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
 
-        <div className="flex items-center gap-3">
+        {/* Right Side Actions */}
+        <div className="flex items-center gap-2">
           <a
-            href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Panchang%20Beta%20Feedback"
-            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-            title="Send Feedback to mail@sanatan.cc"
+            href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Beta%20Feedback"
+            className="hidden items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 shadow-sm transition hover:bg-zinc-100 hover:text-zinc-900 md:inline-flex dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+            title="Send calculation feedback or observations to mail@sanatan.cc"
           >
             <span>✉️</span>
-            <span className="hidden sm:inline">Feedback</span>
+            <span>Feedback</span>
           </a>
 
-          <div className="flex items-center gap-1.5 sm:hidden">
-            <Link
-              href="/panchang"
-              className="cursor-pointer flex items-center gap-1 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:from-amber-700 hover:to-amber-800"
-            >
-              <span>पञ्चाङ्ग</span>
-            </Link>
-            <Link
-              href="/muhurta"
-              className="cursor-pointer flex items-center gap-1 rounded-xl bg-gradient-to-r from-indigo-700 to-indigo-800 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:from-indigo-800 hover:to-indigo-900"
-            >
-              <span>शुभ मुहूर्त</span>
-            </Link>
-          </div>
           <a
             href="https://github.com/dhirajnavghare/sanatan.cc"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+            className="flex h-8 w-8 items-center justify-center rounded-xl border border-zinc-200/80 bg-zinc-50 text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
             title="GitHub Repository"
             aria-label="GitHub Repository"
           >
-            <svg
-              className="h-5 w-5 fill-current"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
+            <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -99,6 +93,29 @@ export default function Navbar() {
               />
             </svg>
           </a>
+        </div>
+      </div>
+
+      {/* Mobile Sub-Navigation Bar */}
+      <div className="flex border-t border-zinc-200/60 bg-zinc-50/70 p-1.5 sm:hidden dark:border-zinc-800/60 dark:bg-zinc-900/70">
+        <div className="grid w-full grid-cols-3 gap-1">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center justify-center gap-1 rounded-xl py-1.5 text-xs font-semibold transition ${
+                  isActive
+                    ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-amber-300'
+                    : 'text-zinc-600 dark:text-zinc-400'
+                }`}
+              >
+                <span>{link.icon}</span>
+                <span>{link.devanagari || link.name}</span>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </header>

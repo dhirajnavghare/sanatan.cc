@@ -84,6 +84,7 @@ export async function POST(request: Request) {
                   daysCount: { type: 'number', default: 30 },
                   latitude: { type: 'number' },
                   longitude: { type: 'number' },
+                  timezone: { type: 'string', default: 'Asia/Kolkata' },
                 },
                 required: ['category', 'latitude', 'longitude'],
               },
@@ -141,6 +142,7 @@ export async function POST(request: Request) {
                 ),
               },
             ],
+            isError: false,
           },
         });
       }
@@ -150,13 +152,14 @@ export async function POST(request: Request) {
         const daysCount = (Number(args.daysCount) || 30) as 30 | 60 | 90 | 180;
         const lat = Number(args.latitude ?? PRESET_CITIES[0].latitude);
         const lon = Number(args.longitude ?? PRESET_CITIES[0].longitude);
+        const tz = String(args.timezone || 'Asia/Kolkata');
 
         const loc = {
           name: `Coordinates (${lat.toFixed(2)}°, ${lon.toFixed(2)}°)`,
           latitude: lat,
           longitude: lon,
           altitude: 0,
-          timezone: 'Asia/Kolkata',
+          timezone: tz,
         };
 
         const muhurtas = findMuhurtas({ category, daysCount }, loc);
@@ -183,6 +186,7 @@ export async function POST(request: Request) {
                 text: JSON.stringify(topDates, null, 2),
               },
             ],
+            isError: false,
           },
         });
       }

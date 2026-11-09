@@ -21,11 +21,10 @@ const DAY_OPTIONS: Array<{ value: 30 | 60 | 90 | 180; label: string }> = [
 const SUITABILITY_OPTIONS: Array<{
   value: 'All' | 'Good' | 'Optimal';
   label: string;
-  badgeClass: string;
 }> = [
-  { value: 'All', label: 'All Auspicious', badgeClass: 'bg-zinc-100 dark:bg-zinc-800' },
-  { value: 'Good', label: 'Good & Optimal (≥65%)', badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
-  { value: 'Optimal', label: 'Optimal Only (≥80%)', badgeClass: 'bg-green-500/10 text-green-600 dark:text-green-400' },
+  { value: 'All', label: 'All Auspicious' },
+  { value: 'Good', label: 'Good & Optimal (≥65%)' },
+  { value: 'Optimal', label: 'Optimal Only (≥80%)' },
 ];
 
 export default function MuhurtaFilterBar({
@@ -37,7 +36,7 @@ export default function MuhurtaFilterBar({
   categoryMeta,
 }: MuhurtaFilterBarProps) {
   return (
-    <div className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="space-y-4 rounded-2xl border border-zinc-200/90 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
       {/* Category Info Banner */}
       <div className="flex flex-col gap-2 border-b border-zinc-100 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800">
         <div className="space-y-0.5">
@@ -53,28 +52,34 @@ export default function MuhurtaFilterBar({
         </div>
 
         <div className="flex-none">
-          <span className="inline-flex items-center rounded-lg bg-zinc-100 px-2.5 py-1 text-[11px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+          <span className="inline-flex items-center rounded-xl border border-zinc-200/70 bg-zinc-50 px-2.5 py-1 text-[11px] font-medium text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
             📜 {categoryMeta.traditionalReference}
           </span>
         </div>
       </div>
 
-      {/* Filter Controls */}
+      {/* Segmented Controls / Tabs */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        {/* Time Horizon */}
+        {/* Time Horizon Tabs */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-            Search Horizon:
+            Horizon:
           </span>
-          <div className="inline-flex rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800">
+          <div
+            role="tablist"
+            aria-label="Search Horizon"
+            className="inline-flex rounded-xl border border-zinc-200/80 bg-zinc-100/80 p-1 dark:border-zinc-800 dark:bg-zinc-800/80"
+          >
             {DAY_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
+                role="tab"
+                aria-selected={daysCount === opt.value}
                 onClick={() => onDaysCountChange(opt.value)}
-                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150 ${
                   daysCount === opt.value
-                    ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100'
+                    ? 'bg-white text-zinc-900 shadow-sm ring-1 ring-black/5 dark:bg-zinc-700 dark:text-zinc-50 dark:ring-white/10'
                     : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
                 }`}
               >
@@ -84,21 +89,27 @@ export default function MuhurtaFilterBar({
           </div>
         </div>
 
-        {/* Quality Filter */}
+        {/* Quality Filter Tabs */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-            Quality Filter:
+            Suitability:
           </span>
-          <div className="inline-flex flex-wrap gap-1.5">
+          <div
+            role="tablist"
+            aria-label="Quality Filter"
+            className="inline-flex flex-wrap rounded-xl border border-zinc-200/80 bg-zinc-100/80 p-1 dark:border-zinc-800 dark:bg-zinc-800/80"
+          >
             {SUITABILITY_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
+                role="tab"
+                aria-selected={suitabilityFilter === opt.value}
                 onClick={() => onSuitabilityFilterChange(opt.value)}
-                className={`cursor-pointer rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
+                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150 ${
                   suitabilityFilter === opt.value
-                    ? 'border-amber-500 bg-amber-50 font-bold text-amber-900 ring-1 ring-amber-500/30 dark:border-amber-400 dark:bg-amber-950/40 dark:text-amber-200'
-                    : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300'
+                    ? 'bg-white text-amber-900 shadow-sm ring-1 ring-amber-500/20 dark:bg-zinc-700 dark:text-amber-300 dark:ring-white/10'
+                    : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
                 }`}
               >
                 {opt.label}
@@ -108,17 +119,17 @@ export default function MuhurtaFilterBar({
         </div>
       </div>
 
-      {/* Match summary indicator */}
+      {/* Match Summary Indicator */}
       <div className="flex items-center justify-between border-t border-zinc-100 pt-3 text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-        <div className="flex items-center gap-1.5 font-medium">
+        <div className="flex items-center gap-2 font-medium">
           <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
           <span>
             Found <strong className="text-zinc-900 dark:text-zinc-100">{totalMatches}</strong> auspicious{' '}
-            {totalMatches === 1 ? 'date' : 'dates'} across the next {daysCount} days
+            {totalMatches === 1 ? 'day' : 'days'} across the next {daysCount} days
           </span>
         </div>
-        <span className="text-[11px] text-zinc-400">
-          Showing matching Muhurtas sorted chronologically
+        <span className="hidden text-[11px] text-zinc-400 sm:inline">
+          Sorted chronologically with classical shastra factor scoring
         </span>
       </div>
     </div>

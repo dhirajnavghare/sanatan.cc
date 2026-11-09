@@ -30,14 +30,20 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
           </p>
         </div>
 
-        {/* Day / Night Toggle */}
-        <div className="flex rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800">
+        {/* Day / Night Segmented Tabs */}
+        <div
+          role="tablist"
+          aria-label="Choghadiya Divisions"
+          className="inline-flex rounded-xl border border-zinc-200/80 bg-zinc-100/80 p-1 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-800/80"
+        >
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === 'day'}
             onClick={() => setActiveTab('day')}
-            className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition ${
+            className={`cursor-pointer rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all duration-150 ${
               activeTab === 'day'
-                ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100'
+                ? 'bg-white text-zinc-950 shadow-sm ring-1 ring-black/5 dark:bg-zinc-700 dark:text-amber-300 dark:ring-white/10'
                 : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
             }`}
           >
@@ -45,10 +51,12 @@ export default function ChoghadiyaSection({ data }: ChoghadiyaSectionProps) {
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === 'night'}
             onClick={() => setActiveTab('night')}
-            className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition ${
+            className={`cursor-pointer rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all duration-150 ${
               activeTab === 'night'
-                ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100'
+                ? 'bg-white text-zinc-950 shadow-sm ring-1 ring-black/5 dark:bg-zinc-700 dark:text-indigo-300 dark:ring-white/10'
                 : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
             }`}
           >
