@@ -98,13 +98,23 @@ export default function HeroCosmicSnapshot({
         Kaal: 'काल',
         Udveg: 'उद्वेग',
       };
+      const rulerHiMap: Record<string, string> = {
+        Sun: 'सूर्य',
+        Moon: 'चन्द्र',
+        Mars: 'मंगल',
+        Mercury: 'बुध',
+        Jupiter: 'बृहस्पति',
+        Venus: 'शुक्र',
+        Saturn: 'शनि',
+      };
       const qual = language === 'hi' ? (qualHiMap[currentChoghadiya.quality] || currentChoghadiya.quality) : currentChoghadiya.quality;
+      const ruler = language === 'hi' ? (rulerHiMap[currentChoghadiya.ruler] || currentChoghadiya.ruler) : currentChoghadiya.ruler;
       return {
         type: 'choghadiya',
         title: language === 'hi'
           ? `${isGood ? '🟢' : '⚪'} ${name} चौघड़िया सक्रिय (${qual})`
           : `${isGood ? '🟢' : '⚪'} ${name} Choghadiya Active (${qual})`,
-        desc: `${language === 'hi' ? 'समाप्ति:' : 'Ends:'} ${formatTimeShort(currentChoghadiya.endTime, location.timezone)} • ${language === 'hi' ? 'स्वामी:' : 'Lord:'} ${currentChoghadiya.ruler}`,
+        desc: `${language === 'hi' ? 'समाप्ति:' : 'Ends:'} ${formatTimeShort(currentChoghadiya.endTime, location.timezone)} • ${language === 'hi' ? 'स्वामी:' : 'Lord:'} ${ruler}`,
         badgeClass: isGood
           ? 'bg-emerald-500/20 text-emerald-200 border-emerald-400/30'
           : 'bg-white/10 text-indigo-200 border-white/20',
@@ -189,6 +199,17 @@ export default function HeroCosmicSnapshot({
     PRESET_CITIES.find((c) => c.name === 'New York, USA') || PRESET_CITIES[18],
   ];
 
+  const cityHiMap: Record<string, string> = {
+    'New Delhi': 'नई दिल्ली',
+    'Varanasi': 'वाराणसी',
+    'Ayodhya': 'अयोध्या',
+    'Ujjain': 'उज्जैन',
+    'Mumbai': 'मुम्बई',
+    'Bengaluru': 'बेंगलुरु',
+    'London': 'लंदन',
+    'New York': 'न्यूयॉर्क',
+  };
+
   return (
     <>
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0e1028] via-[#161845] to-[#0a0b1d] p-6 text-white shadow-2xl ring-1 ring-white/15 sm:p-10">
@@ -214,11 +235,16 @@ export default function HeroCosmicSnapshot({
                   }}
                   className="rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md outline-none transition hover:bg-white/15 cursor-pointer dark:bg-zinc-800"
                 >
-                  {PRESET_CITIES.map((c) => (
-                    <option key={c.name} value={c.name} className="bg-zinc-900 text-white">
-                      {c.name.split(',')[0]} ({c.timezone.split('/')[1] || c.timezone})
-                    </option>
-                  ))}
+                  {PRESET_CITIES.map((c) => {
+                    const shortName = c.name.split(',')[0].replace(' (Kashi)', '').replace(' (Standard Meridian)', '');
+                    const displayCity = language === 'hi' ? (cityHiMap[shortName] || shortName) : c.name.split(',')[0];
+                    const tzName = c.timezone.split('/')[1] || c.timezone;
+                    return (
+                      <option key={c.name} value={c.name} className="bg-zinc-900 text-white">
+                        {displayCity} ({tzName})
+                      </option>
+                    );
+                  })}
                 </select>
 
                 <button
@@ -238,7 +264,9 @@ export default function HeroCosmicSnapshot({
               <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs">
                 <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
                 <span className="font-mono font-bold tracking-wider text-emerald-300" suppressHydrationWarning>{localClockStr}</span>
-                <span className="text-[10px] text-zinc-400">({location.timezone.split('/')[1] || location.timezone})</span>
+                <span className="text-[10px] text-zinc-400">
+                  ({language === 'hi' ? (location.timezone.includes('Kolkata') ? 'भारतीय समय' : location.timezone.split('/')[1] || location.timezone) : (location.timezone.split('/')[1] || location.timezone)})
+                </span>
               </div>
             </div>
           </div>
@@ -256,6 +284,7 @@ export default function HeroCosmicSnapshot({
               {topCities.map((c) => {
                 const isSelected = location.name === c.name;
                 const shortCity = c.name.split(',')[0].replace(' (Kashi)', '').replace(' (Standard Meridian)', '');
+                const displayCity = language === 'hi' ? (cityHiMap[shortCity] || shortCity) : shortCity;
                 return (
                   <button
                     key={c.name}
@@ -267,7 +296,7 @@ export default function HeroCosmicSnapshot({
                         : 'border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/15 hover:text-white'
                     }`}
                   >
-                    {shortCity}
+                    {displayCity}
                   </button>
                 );
               })}

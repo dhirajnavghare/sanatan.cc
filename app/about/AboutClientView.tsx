@@ -23,7 +23,7 @@ export default function AboutClientView() {
           </h1>
           <p className="text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
             {isHi
-              ? 'sanatan.cc एक गैर-व्यावसायिक, मुक्त-स्रोत (Open-Source) प्रकल्प है, जो सनातन हिन्दू धर्म के प्रामाणिक आध्यात्मिक ग्रन्थों, दार्शनिक सिद्धान्तों तथा उच्च-सटीक खगोलीय वैदिक पञ्चाङ्ग गणनाओं को विश्वभर में जन-जन तक पहुँचाने हेतु समर्पित है।'
+              ? 'sanatan.cc एक गैर-व्यावसायिक, मुक्त-स्रोत प्रकल्प है, जो सनातन हिन्दू धर्म के प्रामाणिक आध्यात्मिक ग्रन्थों, दार्शनिक सिद्धान्तों तथा उच्च-सटीक खगोलीय वैदिक पञ्चाङ्ग गणनाओं को विश्वभर में जन-जन तक पहुँचाने हेतु समर्पित है।'
               : 'sanatan.cc is a non-commercial, open-source initiative dedicated to preserving and sharing authentic Hindu Dharma spiritual texts, philosophical treatises, and world-class mathematical Vedic ephemeris applications.'}
           </p>
         </div>
@@ -77,11 +77,11 @@ export default function AboutClientView() {
               🤖
             </div>
             <h2 className="mt-4 font-serif text-lg font-bold text-zinc-900 dark:text-zinc-100">
-              {isHi ? 'एजेंट एवं AI-सक्षम अवसंरचना' : 'Agent-Ready Infrastructure'}
+              {isHi ? 'एजेंट एवं आधुनिक अवसंरचना' : 'Agent-Ready Infrastructure'}
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
               {isHi
-                ? 'जिज्ञासु साधकों तथा स्वायत्त AI एजेंट्स दोनों हेतु अभिकल्पित। हम स्वच्छ मार्कडाउन (Accept: text/markdown), इन-ब्राउज़र WebMCP टूल्स (navigator.modelContext), llms.txt तथा MCP सर्वर कार्ड उपलब्ध कराते हैं।'
+                ? 'जिज्ञासु साधकों तथा स्वायत्त एजेंट्स दोनों हेतु अभिकल्पित। हम स्वच्छ मार्कडाउन, इन-ब्राउज़र वेब टूल्स, मानक सन्दर्भ तथा सर्वर कार्ड उपलब्ध कराते हैं।'
                 : 'Designed from the ground up for both human seekers and AI agents. We publish clean Markdown representations (Accept: text/markdown), expose in-browser WebMCP tools (navigator.modelContext), serve standard llms.txt, and host an MCP Server Card (/.well-known/mcp/server-card.json).'}
             </p>
           </div>
@@ -94,7 +94,7 @@ export default function AboutClientView() {
           </h3>
           <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
             {isHi
-              ? 'यह रिपॉजिटरी Creative Commons CC0 1.0 Universal Public Domain Dedication के अन्तर्गत पूर्णतः मुक्त-स्रोत है। हम खगोलविदों, ज्योतिर्विदों तथा विद्वानों को हमारी गणितीय गणनाओं की समीक्षा हेतु सादर आमन्त्रित करते हैं।'
+              ? 'यह प्रकल्प सार्वजनिक हित में पूर्णतः मुक्त-स्रोत (सीसी० १.० सार्वभौमिक समर्पण) है। हम खगोलविदों, ज्योतिर्विदों तथा विद्वानों को हमारी गणितीय गणनाओं की समीक्षा हेतु सादर आमन्त्रित करते हैं।'
               : 'This repository is open-source under the Creative Commons CC0 1.0 Universal Public Domain Dedication. We actively invite astronomers, Jyotish scholars, and developers to audit our mathematical algorithms and report discrepancies against verified observatories.'}
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

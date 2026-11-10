@@ -201,7 +201,7 @@ function MuhurtaQuickCard({
         </h3>
         <p className="text-xs text-zinc-500 dark:text-zinc-400">
           {language === 'hi'
-            ? `${item.panchangSummary.tithiName} • ${item.panchangSummary.nakshatraName}`
+            ? `${item.panchangSummary.tithiNameDevanagari || item.panchangSummary.tithiName} • ${item.panchangSummary.nakshatraNameDevanagari || item.panchangSummary.nakshatraName}`
             : `${item.panchangSummary.tithiName} • ${item.panchangSummary.nakshatraName}`}
         </p>
 
