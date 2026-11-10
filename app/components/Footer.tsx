@@ -76,6 +76,14 @@ export default function Footer() {
                   {language === 'hi' ? 'तीर्थ एवं मन्दिर' : 'Temples & Tirthas'}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/prayers"
+                  className="transition hover:text-amber-600 dark:hover:text-amber-400"
+                >
+                  {language === 'hi' ? 'स्तोत्र एवं चालीसा' : 'Prayers & Chalisas'}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -126,6 +134,16 @@ export default function Footer() {
               {language === 'hi' ? 'ओपन स्टैंडर्ड्स' : 'Agent & Open Standards'}
             </h4>
             <ul className="space-y-1.5 text-xs">
+              <li>
+                <a
+                  href="/api/calendar?type=major"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition hover:text-amber-600 dark:hover:text-amber-400 font-mono text-[11px]"
+                >
+                  /api/calendar (.ics)
+                </a>
+              </li>
               <li>
                 <a
                   href="/llms.txt"

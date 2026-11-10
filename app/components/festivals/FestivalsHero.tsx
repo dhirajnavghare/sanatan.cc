@@ -10,6 +10,7 @@ interface FestivalsHeroProps {
   onYearChange: (year: number) => void;
   location: GeoLocation;
   onOpenLocationModal: () => void;
+  onOpenSyncModal?: () => void;
   nextUpcoming?: FestivalTimelineItem | null;
   totalCount: number;
   majorCount: number;
@@ -22,6 +23,7 @@ export default function FestivalsHero({
   onYearChange,
   location,
   onOpenLocationModal,
+  onOpenSyncModal,
   nextUpcoming,
   totalCount,
   majorCount,
@@ -78,21 +80,35 @@ export default function FestivalsHero({
           {/* Right Controls: Year Selector & Location Button */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-end">
             {/* Year Selector Segmented Control */}
-            <div className="flex items-center gap-1 rounded-2xl border border-zinc-200/80 bg-white/80 p-1 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80">
-              {SUPPORTED_YEARS.map((y) => (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 rounded-2xl border border-zinc-200/80 bg-white/80 p-1 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80">
+                {SUPPORTED_YEARS.map((y) => (
+                  <button
+                    key={y}
+                    type="button"
+                    onClick={() => onYearChange(y)}
+                    className={`rounded-xl px-4 py-2 text-xs font-bold transition-all duration-200 cursor-pointer ${
+                      year === y
+                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md shadow-amber-500/25 ring-1 ring-amber-400/50'
+                        : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
+                    }`}
+                  >
+                    {y}
+                  </button>
+                ))}
+              </div>
+
+              {onOpenSyncModal && (
                 <button
-                  key={y}
                   type="button"
-                  onClick={() => onYearChange(y)}
-                  className={`rounded-xl px-4 py-2 text-xs font-bold transition-all duration-200 cursor-pointer ${
-                    year === y
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md shadow-amber-500/25 ring-1 ring-amber-400/50'
-                      : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
-                  }`}
+                  onClick={onOpenSyncModal}
+                  className="inline-flex items-center gap-1.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-3.5 py-2 text-xs font-bold text-white shadow-md shadow-amber-500/25 ring-1 ring-amber-400/50 transition hover:from-amber-600 hover:to-amber-700 cursor-pointer"
+                  title={isHi ? 'गूगल कैलेण्डर एवं फोन में पर्व सिंक करें' : 'Sync Hindu Festivals to Google Calendar or Phone'}
                 >
-                  {y}
+                  <span>📅</span>
+                  <span>{isHi ? 'कैलेण्डर सिंक' : 'Calendar Sync'}</span>
                 </button>
-              ))}
+              )}
             </div>
 
             {/* Location Pill */}
