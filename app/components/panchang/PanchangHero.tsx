@@ -164,20 +164,13 @@ export default function PanchangHero({ data, onOpenLocationModal }: PanchangHero
             <span className="font-serif text-2xl font-bold tracking-wide text-amber-400 sm:text-3xl">
               {isHi ? 'दैनिक पञ्चाङ्ग' : 'Daily Panchang'}
             </span>
-            <span
-              className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-300 shadow-sm backdrop-blur-sm"
-              title={isHi ? 'सार्वजनिक बीटा — वेधशालाओं एवं पञ्चाङ्गों के साथ गणितीय सत्यापन' : 'Public Beta — Active mathematical verification against traditional observatories and almanacs'}
-            >
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
-              {isHi ? 'बीटा' : 'Beta'}
-            </span>
             <a
-              href={`mailto:mail@sanatan.cc?subject=Panchang%20Beta%20Feedback%20%26%20Validation&body=Hi%20Sanatan.cc%20Team%2C%0A%0AI%20am%20testing%20the%20Panchang%20Beta%20calculator.%20Here%20is%20my%20feedback%20%2F%20observation%3A%0A%0A-%20Location%3A%20${encodeURIComponent(location.name)}%20(${location.latitude.toFixed(4)}%2C%20${location.longitude.toFixed(4)})%0A-%20Date%20Checked%3A%20${encodeURIComponent(data.isoDate || '')}%0A-%20Observation%20%2F%20Discrepancy%3A%0A%0AThanks!`}
+              href={`mailto:mail@sanatan.cc?subject=Panchang%20Feedback%20%26%20Validation&body=Hi%20Sanatan.cc%20Team%2C%0A%0AI%20am%20using%20the%20Panchang%20calculator.%20Here%20is%20my%20feedback%20%2F%20observation%3A%0A%0A-%20Location%3A%20${encodeURIComponent(location.name)}%20(${location.latitude.toFixed(4)}%2C%20${location.longitude.toFixed(4)})%0A-%20Date%20Checked%3A%20${encodeURIComponent(data.isoDate || '')}%0A-%20Observation%20%2F%20Discrepancy%3A%0A%0AThanks!`}
               className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-white/10 px-3 py-1 text-xs font-medium text-amber-200 transition hover:bg-white/20 hover:text-white backdrop-blur-sm"
               title={isHi ? 'गणना सत्यापन या प्रतिक्रिया mail@sanatan.cc पर भेजें' : 'Send feedback or calculation validation notes to mail@sanatan.cc'}
             >
               <span>✉️</span>
-              <span>{isHi ? 'प्रतिक्रिया भेजें' : 'Send Beta Feedback'}</span>
+              <span>{isHi ? 'प्रतिक्रिया भेजें' : 'Send Feedback'}</span>
             </a>
             <button
               onClick={onOpenLocationModal}

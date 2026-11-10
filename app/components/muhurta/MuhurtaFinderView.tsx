@@ -316,7 +316,7 @@ export default function MuhurtaFinderView() {
         </div>
       )}
 
-      {/* Classical Methodology & Beta Feedback Callout */}
+      {/* Classical Methodology & Feedback Callout */}
       <section className="rounded-3xl border border-zinc-200 bg-gradient-to-br from-zinc-50 to-white p-6 shadow-sm dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-900/50">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2 max-w-3xl">
@@ -356,7 +356,7 @@ export default function MuhurtaFinderView() {
 
           <div className="flex-none rounded-2xl border border-amber-500/20 bg-amber-50 p-4 text-xs dark:border-amber-400/20 dark:bg-amber-950/30">
             <div className="font-bold text-amber-900 dark:text-amber-200">
-              {isHi ? 'सक्रिय सार्वजनिक बीटा' : 'Active Public Beta'}
+              {isHi ? 'शास्त्रीय प्रमाण एवं समीक्षा' : 'Classical Shastric Review'}
             </div>
             <p className="mt-1 text-[11px] text-amber-800/90 dark:text-amber-300/90 max-w-xs">
               {isHi
