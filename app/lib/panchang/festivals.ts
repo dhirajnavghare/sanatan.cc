@@ -47,7 +47,7 @@ export const FESTIVAL_RULES: RawFestivalRule[] = [
 
   // Shravana (Month 4)
   { monthIdx: 4, paksha: 'S', tithi: 5, timeOfDay: 's', name: 'Nag Panchami', category: 'Festival', isMajor: true },
-  { monthIdx: 4, paksha: 'S', tithi: 15, timeOfDay: 'a', name: 'Raksha Bandhan', category: 'Festival', isMajor: true },
+  { monthIdx: 4, paksha: 'S', tithi: 15, timeOfDay: 's', name: 'Raksha Bandhan', category: 'Festival', isMajor: true },
   { monthIdx: 4, paksha: 'K', tithi: 8, timeOfDay: 'n', name: 'Krishna Janmashtami', category: 'Festival', isMajor: true },
 
   // Bhadrapada (Month 5)
@@ -184,13 +184,82 @@ function getRawFestivals(
     let cp = tithiAtCheckpoints[rule.timeOfDay];
     let isMatch = cp.paksha === rule.paksha && cp.tithi === rule.tithi;
 
+    // Special Dharmasindhu rule for Holika Dahan: Must not be performed in Bhadra (Vishti Karana)
+    // Defer to Day 2 only if Day 2 preserves Purnima through the daytime (midday).
+    if (rule.name === 'Holika Dahan') {
+      const elP = getElongation(toJulianDay(new Date(checkpoints.p)));
+      const elN = getElongation(toJulianDay(new Date(checkpoints.n)));
+      const isBhadraActive = elP >= 168 && elP < 174;
+      const isBhadraPastMidnight = elN >= 168 && elN < 174;
+
+      // Check if Day 2 preserves Purnima until late afternoon (within 90 mins of sunset)
+      const nextNearSunsetJd = toJulianDay(new Date(ss + 86400000 - 90 * 60000));
+      const nextNearSunsetTithi = Math.floor(getElongation(nextNearSunsetJd) / 12) + 1;
+
+      if (isMatch && isBhadraActive && isBhadraPastMidnight && nextNearSunsetTithi === 15) {
+        // Day 2 preserves Purnima until late afternoon, defer to Day 2 evening
+        isMatch = false;
+      } else if (!isMatch) {
+        // Check if previous evening was deferred to today
+        const prevElP = getElongation(toJulianDay(new Date(checkpoints.p - 86400000)));
+        const prevElN = getElongation(toJulianDay(new Date(checkpoints.n - 86400000)));
+        const thisNearSunsetJd = toJulianDay(new Date(ss - 90 * 60000));
+        const thisNearSunsetTithi = Math.floor(getElongation(thisNearSunsetJd) / 12) + 1;
+        if (prevElP >= 168 && prevElP < 174 && prevElN >= 168 && prevElN < 174 && thisNearSunsetTithi === 15) {
+          isMatch = true;
+          cp = tithiAtCheckpoints.p;
+        }
+      }
+    }
+
+    // Special Dharmasindhu rule for Krishna Janmashtami:
+    // Celebrated on the solar day following the midnight Nishita birth moment
+    if (rule.name === 'Krishna Janmashtami') {
+      const prevNishitaMs = (ss - 86400000 + sr) / 2;
+      const prevNishitaJd = toJulianDay(new Date(prevNishitaMs));
+      const elPrevN = getElongation(prevNishitaJd);
+      const tiIdx = Math.floor(elPrevN / 12);
+      const paksha = tiIdx < 15 ? 'S' : 'K';
+      const tithi = (tiIdx % 15) + 1;
+      isMatch = paksha === 'K' && tithi === 8;
+      if (isMatch) {
+        cp = { paksha: 'K', tithi: 8, jd: prevNishitaJd };
+      }
+    }
+
     // Secondary vyapti rule: if festival is sunrise-based, but tithi begins slightly after sunrise and covers midday
     if (!isMatch && rule.timeOfDay === 's') {
       const middayCp = tithiAtCheckpoints.m;
       if (middayCp.paksha === rule.paksha && middayCp.tithi === rule.tithi) {
-        // Tithi covers midday
-        isMatch = true;
-        cp = middayCp;
+        // Dharmasindhu rule: Udaya Tithi takes precedence. For Purnima (Tithi 15), any touch at sunrise
+        // suffices. For other tithis, at least 3 Muhurtas (~2h 24m) after next sunrise is required.
+        const nextSunriseMs = sr + 86400000;
+        const nextSunriseJd = toJulianDay(new Date(nextSunriseMs));
+        const nextEl = getElongation(nextSunriseJd);
+        const nextTiIdx = Math.floor(nextEl / 12);
+        const nextPaksha = nextTiIdx < 15 ? 'S' : 'K';
+        const nextTithi = (nextTiIdx % 15) + 1;
+        const nextTouchesSunrise = nextPaksha === rule.paksha && nextTithi === rule.tithi;
+
+        let nextHasSufficientVyapti = false;
+        if (nextTouchesSunrise) {
+          if (rule.tithi === 15) {
+            nextHasSufficientVyapti = true; // Any sunrise touch suffices for Purnima festivals
+          } else {
+            // Check tithi at 3 Muhurtas (144 minutes) after next sunrise
+            const threeMuhurtasLaterJd = toJulianDay(new Date(nextSunriseMs + 144 * 60000));
+            const elLater = getElongation(threeMuhurtasLaterJd);
+            const laterTiIdx = Math.floor(elLater / 12);
+            const laterPaksha = laterTiIdx < 15 ? 'S' : 'K';
+            const laterTithi = (laterTiIdx % 15) + 1;
+            nextHasSufficientVyapti = laterPaksha === rule.paksha && laterTithi === rule.tithi;
+          }
+        }
+
+        if (!nextTouchesSunrise || !nextHasSufficientVyapti) {
+          isMatch = true;
+          cp = middayCp;
+        }
       }
     } else if (!isMatch && rule.timeOfDay === 'n') {
       // Dharmasindhu rule: If Nishita (midnight) does not have the tithi due to night kshaya,

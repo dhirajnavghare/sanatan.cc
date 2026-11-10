@@ -386,7 +386,8 @@ export function calculatePanchaAnga(
 export function findNewMoon(startJd: number, direction: 'prev' | 'next'): number {
   const e = getElongation(startJd);
   let estOffsetDays = (direction === 'prev' ? -e : (360 - e)) / 12.19075;
-  if (Math.abs(estOffsetDays) < 0.05) {
+  // Only shift an entire synodic month if startJd is virtually at exact conjunction (< 45 seconds)
+  if (Math.abs(estOffsetDays) < 0.0005) {
     estOffsetDays = direction === 'prev' ? -29.53 : 29.53;
   }
   let aJd = startJd + estOffsetDays - 1.5;

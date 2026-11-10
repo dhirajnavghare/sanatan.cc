@@ -30,7 +30,7 @@ export const DEITIES_DATABASE: DeityRecord[] = [
     keyMantras: [
       {
         title: 'Maha Mrityunjaya Mantra (Rigveda 7.59.12)',
-        devanagari: 'ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम्। उर्वारुकमिव बन्धनान्मृ त्योर्मुक्षीय मामृतात्॥',
+        devanagari: 'ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम्। उर्वारुकमिव बन्धनान्मृत्योर्मुक्षीय मामृतात्॥',
         transliteration: 'oṃ tryambakaṃ yajāmahe sugandhiṃ puṣṭivardhanam | urvārukamiva bandhanān mṛtyor mukṣīya māmṛtāt ||',
         meaning: 'We revere the Three-Eyed Lord Shiva, who is fragrant and nourishes all beings. May He liberate us from death and bondage to mortality, just as a ripe cucumber effortlessly separates from its stalk, leading us into immortality.',
       },
@@ -374,7 +374,7 @@ export const DEITIES_DATABASE: DeityRecord[] = [
     keyMantras: [
       {
         title: 'Maha Lakshmi Beeja Mantra',
-        devanagari: 'ॐ श्रीं ह्रीं क्लीं त्रिभुवनमहाकलक्ष्म्यै अस्माकं दारिद्र्यं नाशय प्रसीद प्रसीद क्लीं ह्रीं श्रीं ॐ नमः॥',
+        devanagari: 'ॐ श्रीं ह्रीं क्लीं त्रिभुवनमहालक्ष्म्यै अस्माकं दारिद्र्यं नाशय प्रसीद प्रसीद क्लीं ह्रीं श्रीं ॐ नमः॥',
         transliteration: 'oṃ śrīṃ hrīṃ klīṃ tribhuvanamahālakṣmyai asmākaṃ dāridryaṃ nāśaya prasīda prasīda klīṃ hrīṃ śrīṃ oṃ namaḥ ||',
         meaning: 'Salutations to the Supreme Goddess Mahalakshmi of the three worlds; dispel all poverty of spirit and mind; shower Thy divine grace upon us.',
       },
