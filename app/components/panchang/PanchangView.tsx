@@ -279,12 +279,12 @@ export default function PanchangView() {
         </div>
       )}
 
-      {/* Rigorous Calculation Disclaimer & Public Beta Notice */}
+      {/* Rigorous Calculation Disclaimer & Astronomical Verification Notice */}
       <div className="rounded-2xl border border-amber-200/60 bg-amber-50/40 p-4 text-[11px] leading-relaxed text-zinc-600 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-zinc-400">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-              {isHi ? 'सार्वजनिक बीटा' : 'Public Beta'}
+              {isHi ? 'खगोलीय सत्यापन' : 'Astronomical Verification'}
             </span>
             <span className="font-semibold text-zinc-800 dark:text-zinc-200">
               {isHi
@@ -294,7 +294,7 @@ export default function PanchangView() {
           </div>
 
           <a
-            href={`mailto:mail@sanatan.cc?subject=Panchang%20Beta%20Feedback%20%26%20Validation&body=Hi%20Sanatan.cc%20Team%2C%0A%0AI%20am%20testing%20the%20Panchang%20Beta%20calculator.%20Here%20is%20my%20feedback%20%2F%20observation%3A%0A%0A-%20Location%3A%20${encodeURIComponent(location.name)}%20(${location.latitude.toFixed(4)}%2C%20${location.longitude.toFixed(4)})%0A-%20Date%20Checked%3A%20${encodeURIComponent(selectedDateStr)}%0A-%20Observation%20%2F%20Discrepancy%3A%0A%0AThanks!`}
+            href={`mailto:mail@sanatan.cc?subject=Panchang%20Feedback%20%26%20Validation&body=Hi%20Sanatan.cc%20Team%2C%0A%0AI%20am%20using%20the%20Panchang%20calculator.%20Here%20is%20my%20feedback%20%2F%20observation%3A%0A%0A-%20Location%3A%20${encodeURIComponent(location.name)}%20(${location.latitude.toFixed(4)}%2C%20${location.longitude.toFixed(4)})%0A-%20Date%20Checked%3A%20${encodeURIComponent(selectedDateStr)}%0A-%20Observation%20%2F%20Discrepancy%3A%0A%0AThanks!`}
             className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-600 focus:outline-none"
             title={isHi ? 'गणना सत्यापन या प्रतिक्रिया mail@sanatan.cc पर भेजें' : 'Send calculation feedback or observations to mail@sanatan.cc'}
           >

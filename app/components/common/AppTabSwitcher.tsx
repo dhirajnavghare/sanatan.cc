@@ -30,9 +30,6 @@ export default function AppTabSwitcher() {
         >
           <span>🗓</span>
           <span>{language === 'hi' ? 'दैनिक पञ्चाङ्ग' : 'Daily Panchang'}</span>
-          <span className={`rounded-full px-1.5 py-0.2 text-[9px] font-extrabold uppercase ${isPanchang ? 'bg-white/25 text-white' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300'}`}>
-            {language === 'hi' ? 'बीटा' : 'Beta'}
-          </span>
         </Link>
 
         <Link
@@ -47,9 +44,6 @@ export default function AppTabSwitcher() {
         >
           <span>✨</span>
           <span>{language === 'hi' ? 'शुभ मुहूर्त अन्वेषक' : 'Shubh Muhurta Finder'}</span>
-          <span className={`rounded-full px-1.5 py-0.2 text-[9px] font-extrabold uppercase ${isMuhurta ? 'bg-white/25 text-white' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300'}`}>
-            {language === 'hi' ? 'बीटा' : 'Beta'}
-          </span>
         </Link>
 
         <Link
@@ -64,9 +58,6 @@ export default function AppTabSwitcher() {
         >
           <span>🪔</span>
           <span>{language === 'hi' ? 'व्रत एवं उत्सव पञ्चिका' : 'Festivals Timeline'}</span>
-          <span className={`rounded-full px-1.5 py-0.2 text-[9px] font-extrabold uppercase ${isFestivals ? 'bg-white/25 text-white' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300'}`}>
-            {language === 'hi' ? 'बीटा' : 'Beta'}
-          </span>
         </Link>
       </div>
     </div>

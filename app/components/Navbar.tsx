@@ -9,12 +9,12 @@ export default function Navbar() {
   const { language, setLanguage } = useLanguage();
 
   const navLinks = [
-    { name: 'Home', devanagari: 'मुखपृष्ठ', href: '/', icon: '🏠', beta: false },
-    { name: 'Panchang', devanagari: 'पञ्चाङ्ग', href: '/panchang', icon: '🗓', beta: true },
-    { name: 'Muhurta', devanagari: 'शुभ मुहूर्त', href: '/muhurta', icon: '✨', beta: true },
-    { name: 'Festivals', devanagari: 'व्रत-त्योहार', href: '/festivals', icon: '🪔', beta: true },
-    { name: 'Deities', devanagari: 'देवी-देवता', href: '/devatas', icon: '🕉️', beta: true },
-    { name: 'Temples', devanagari: 'तीर्थ-मन्दिर', href: '/temples', icon: '🛕', beta: true },
+    { name: 'Home', devanagari: 'मुखपृष्ठ', href: '/', icon: '🏠' },
+    { name: 'Panchang', devanagari: 'पञ्चाङ्ग', href: '/panchang', icon: '🗓' },
+    { name: 'Muhurta', devanagari: 'शुभ मुहूर्त', href: '/muhurta', icon: '✨' },
+    { name: 'Festivals', devanagari: 'व्रत-त्योहार', href: '/festivals', icon: '🪔' },
+    { name: 'Deities', devanagari: 'देवी-देवता', href: '/devatas', icon: '🕉️' },
+    { name: 'Temples', devanagari: 'तीर्थ-मन्दिर', href: '/temples', icon: '🛕' },
   ];
 
   return (
@@ -59,17 +59,6 @@ export default function Navbar() {
               >
                 <span>{link.icon}</span>
                 <span>{displayName}</span>
-                {link.beta && (
-                  <span
-                    className={`rounded-full px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider ${
-                      isActive
-                        ? 'bg-white/25 text-white'
-                        : 'bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
-                    }`}
-                  >
-                    {language === 'hi' ? 'बीटा' : 'Beta'}
-                  </span>
-                )}
               </Link>
             );
           })}
@@ -106,7 +95,7 @@ export default function Navbar() {
           </div>
 
           <a
-            href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Beta%20Feedback"
+            href="mailto:mail@sanatan.cc?subject=Sanatan.cc%20Feedback"
             className="hidden items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 shadow-sm transition hover:bg-zinc-100 hover:text-zinc-900 md:inline-flex dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
             title="Send calculation feedback or observations to mail@sanatan.cc"
           >

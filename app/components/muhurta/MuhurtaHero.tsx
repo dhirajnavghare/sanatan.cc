@@ -25,13 +25,6 @@ export default function MuhurtaHero({ location, onOpenLocationModal }: MuhurtaHe
             <span className="font-serif text-2xl font-bold tracking-wide text-amber-400 sm:text-3xl">
               {isHi ? 'शुभ मुहूर्त शोधक' : 'Shubh Muhurta Finder'}
             </span>
-            <span
-              className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-300 shadow-sm backdrop-blur-sm"
-              title={isHi ? 'सार्वजनिक बीटा — वेधशालाओं एवं पञ्चाङ्गों के साथ गणितीय सत्यापन' : 'Public Beta — Active mathematical verification against traditional observatories and almanacs'}
-            >
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
-              {isHi ? 'बीटा' : 'Beta'}
-            </span>
             <button
               type="button"
               data-testid="location-modal-trigger"
