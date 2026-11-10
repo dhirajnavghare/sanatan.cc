@@ -7,6 +7,7 @@ import { MUHURTA_CATEGORIES } from '@/app/lib/muhurta-finder/categories';
 import { findMuhurtas } from '@/app/lib/muhurta-finder/calculator';
 import { MuhurtaCategoryId, MuhurtaDayEvaluation } from '@/app/lib/muhurta-finder/types';
 import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import { cleanBilingualTitle } from '@/app/lib/i18n/formatters';
 
 interface QuickMuhurtaWizardProps {
   location: GeoLocation;
@@ -212,7 +213,7 @@ function MuhurtaQuickCard({
                 key={y}
                 className="rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
               >
-                ✨ {y}
+                ✨ {cleanBilingualTitle(y, language === 'hi')}
               </span>
             ))}
           </div>
@@ -226,7 +227,7 @@ function MuhurtaQuickCard({
               {language === 'hi' ? 'अनुशंसित समय:' : 'Recommended Window:'}
             </span>
             <p className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-              {bestWindow.label.split('(')[0]}
+              {cleanBilingualTitle(bestWindow.label, language === 'hi')}
             </p>
           </div>
         ) : (

@@ -51,6 +51,11 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
             <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
               {isHi ? `${tithi.current.pakshaDevanagari} पक्ष` : `${tithi.current.paksha} Paksha`}
             </span>
+            <p className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+              {isHi
+                ? 'चन्द्र कला एवं दैनिक तिथि (उपवास, पूजा व व्रत निर्धारक)'
+                : 'Lunar phase day determining fasts, pujas, and vows'}
+            </p>
           </div>
 
           <div className="mt-3">
@@ -101,6 +106,11 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
                 ? `स्वामी: ${cleanPlanetLord(nakshatra.current.lord, true)}`
                 : `Lord: ${cleanPlanetLord(nakshatra.current.lord, false)}`}
             </span>
+            <p className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+              {isHi
+                ? 'चन्द्र नक्षत्र मण्डल (मन, चेतना एवं जन्म नक्षत्र ऊर्जा)'
+                : 'Lunar constellation governing mind, consciousness & energy'}
+            </p>
           </div>
 
           <div className="mt-3">
@@ -155,6 +165,11 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
             <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
               {isHi ? 'सूर्य-चन्द्र का संयुक्त योग' : 'Solilunar combination'}
             </span>
+            <p className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+              {isHi
+                ? 'सूर्य-चन्द्र का संयुक्त कोण (दिन की सामान्य शुभता)'
+                : 'Solilunar angular harmony measuring auspiciousness of the day'}
+            </p>
           </div>
 
           <div className="mt-3">
@@ -207,6 +222,11 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
                 ? `देवता: ${cleanDeityName(karana.current.deity, true)}`
                 : `Deity: ${cleanDeityName(karana.current.deity, false)}`}
             </span>
+            <p className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+              {isHi
+                ? 'तिथि का आधा भाग (तात्कालिक सांसारिक कार्यों का फल)'
+                : 'Half-tithi governing immediate action outcomes'}
+            </p>
           </div>
 
           <div className="mt-3">
@@ -260,6 +280,11 @@ export default function PanchaAngaCards({ data }: PanchaAngaCardsProps) {
                   <>Ruling Planet: <strong className="text-zinc-800 dark:text-zinc-200">{cleanPlanetLord(vara.lordPlanet, false)}</strong></>
                 )}
               </span>
+              <p className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+                {isHi
+                  ? 'सौर दिवस (सूर्योदय से आरम्भ होने वाला प्रधान ग्रह वार)'
+                  : 'Solar weekday commencing at sunrise with governing planet'}
+              </p>
             </div>
             <div className="mt-2 text-xs text-zinc-500 sm:mt-0 sm:text-right dark:text-zinc-400" suppressHydrationWarning>
               {isHi
