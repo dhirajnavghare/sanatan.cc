@@ -6,6 +6,7 @@ import { DEITIES_DATABASE } from '@/app/lib/devatas/data';
 import { TEMPLES_DATABASE } from '@/app/lib/temples/data';
 import { MUHURTA_CATEGORIES } from '@/app/lib/muhurta-finder/categories';
 import { FESTIVAL_METADATA_MAP } from '@/app/lib/festivals/metadata';
+import { PRAYERS_DATA } from '@/app/lib/prayers/data';
 import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 import { cleanBilingualTitle, cleanIndianLocation } from '@/app/lib/i18n/formatters';
 
@@ -13,7 +14,7 @@ interface SearchResultItem {
   id: string;
   title: string;
   devanagari?: string;
-  category: 'festival' | 'temple' | 'deity' | 'muhurta' | 'panchang';
+  category: 'festival' | 'temple' | 'deity' | 'muhurta' | 'panchang' | 'prayer';
   categoryLabel: string;
   categoryLabelHindi: string;
   subtitle: string;
@@ -205,6 +206,22 @@ export default function CosmicCommandBar({ className = '' }: { className?: strin
         subtitleHindi: p.subtitleHindi,
         href: p.href,
         icon: p.icon,
+      });
+    });
+
+    // 6. Sacred Prayers & Chalisas
+    PRAYERS_DATA.forEach((prayer) => {
+      items.push({
+        id: `prayer-${prayer.id}`,
+        title: prayer.title,
+        devanagari: prayer.titleDevanagari,
+        category: 'prayer',
+        categoryLabel: 'Prayer / Stotram',
+        categoryLabelHindi: 'स्तोत्र / चालीसा',
+        subtitle: `${prayer.author} • ${prayer.totalVerses} Verses`,
+        subtitleHindi: `${prayer.authorDevanagari} • ${prayer.totalVerses} पद`,
+        href: `/prayers?prayer=${prayer.id}`,
+        icon: '📿',
       });
     });
 
@@ -432,6 +449,8 @@ export default function CosmicCommandBar({ className = '' }: { className?: strin
                                 ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
                                 : item.category === 'muhurta'
                                 ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300'
+                                : item.category === 'prayer'
+                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
                                 : 'bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300'
                             }`}
                           >

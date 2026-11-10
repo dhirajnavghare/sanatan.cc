@@ -7,6 +7,7 @@ import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 export default function Navbar() {
   const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
+  const isHi = language === 'hi';
 
   const navLinks = [
     { name: 'Home', devanagari: 'मुखपृष्ठ', href: '/', icon: '🏠' },
@@ -19,20 +20,19 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/85 backdrop-blur-xl transition-colors dark:border-zinc-800/80 dark:bg-zinc-950/85">
+    <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/90 backdrop-blur-xl transition-colors dark:border-zinc-800/80 dark:bg-zinc-950/90">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-2.5 sm:px-6">
         {/* Brand Logo */}
         <Link href="/" className="group flex items-center gap-3">
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 text-lg font-bold text-white shadow-md shadow-amber-500/20 ring-1 ring-amber-400/40 transition-transform duration-200 group-hover:scale-105">
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 text-lg font-bold text-white shadow-sm shadow-amber-500/20 ring-1 ring-amber-400/40 transition-transform duration-200 group-hover:scale-105">
             ॐ
-            <span className="absolute inset-0 rounded-xl bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
           </span>
           <div className="flex flex-col">
             <span className="font-serif text-lg font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
               sanatan.cc
             </span>
             <span className="text-[10px] font-semibold tracking-wider text-amber-700 dark:text-amber-400">
-              {language === 'hi' ? 'वैदिक ज्ञान एवं अनुप्रयोग' : 'Vedic Wisdom & Ephemeris'}
+              {isHi ? 'वैदिक ज्ञान एवं पञ्चाङ्ग' : 'Vedic Wisdom & Ephemeris'}
             </span>
           </div>
         </Link>
@@ -45,16 +45,16 @@ export default function Navbar() {
         >
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
-            const displayName = language === 'hi' ? link.devanagari : link.name;
+            const displayName = isHi ? link.devanagari : link.name;
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 role="tab"
                 aria-selected={isActive}
-                className={`relative flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                className={`relative flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                   isActive
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md shadow-amber-500/25 ring-1 ring-amber-400/50'
+                    ? 'bg-amber-500 text-white shadow-sm shadow-amber-500/25 ring-1 ring-amber-400/50'
                     : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
                 }`}
               >
@@ -73,7 +73,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setLanguage('hi')}
               aria-label="हिन्दी भाषा चुनें"
-              className={`rounded-lg px-2 py-1 text-[11px] font-bold transition cursor-pointer ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-bold transition cursor-pointer ${
                 language === 'hi'
                   ? 'bg-amber-500 text-white shadow-xs'
                   : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
@@ -85,7 +85,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setLanguage('en')}
               aria-label="Choose English Language"
-              className={`rounded-lg px-2 py-1 text-[11px] font-bold transition cursor-pointer ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-bold transition cursor-pointer ${
                 language === 'en'
                   ? 'bg-amber-500 text-white shadow-xs'
                   : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
@@ -101,7 +101,7 @@ export default function Navbar() {
             title="Send calculation feedback or observations to mail@sanatan.cc"
           >
             <span>✉️</span>
-            <span>{language === 'hi' ? 'प्रतिक्रिया' : 'Feedback'}</span>
+            <span>{isHi ? 'प्रतिक्रिया' : 'Feedback'}</span>
           </a>
 
           <a
@@ -124,7 +124,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Sub-Navigation Bar */}
-      <div className="flex border-t border-zinc-200/60 bg-zinc-50/70 p-1.5 sm:hidden dark:border-zinc-800/60 dark:bg-zinc-900/70">
+      <div className="flex border-t border-zinc-200/60 bg-zinc-50/80 p-1.5 sm:hidden dark:border-zinc-800/60 dark:bg-zinc-900/80">
         <div role="tablist" aria-label="Mobile Navigation Tabs" className="flex items-center w-full overflow-x-auto gap-1 scrollbar-none px-0.5">
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
@@ -134,14 +134,14 @@ export default function Navbar() {
                 href={link.href}
                 role="tab"
                 aria-selected={isActive}
-                className={`flex-none flex items-center justify-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-semibold transition ${
+                className={`flex-none flex items-center justify-center gap-1 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
                   isActive
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-sm'
+                    ? 'bg-amber-500 text-white shadow-xs'
                     : 'text-zinc-600 dark:text-zinc-400'
                 }`}
               >
                 <span>{link.icon}</span>
-                <span>{language === 'hi' ? link.devanagari : link.name}</span>
+                <span>{isHi ? link.devanagari : link.name}</span>
               </Link>
             );
           })}

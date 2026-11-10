@@ -33,7 +33,7 @@ export default function TermsClientView() {
             </h2>
             <p>
               {isHi
-                ? 'sanatan.cc हिन्दू काल-गणना (पञ्चाङ्ग) तथा शुभ मुहूर्त निर्धारण हेतु शैक्षणिक, खगोलीय एवं सांस्कृतिक सॉफ्टवेयर उपकरण प्रदान करता है। सम्पूर्ण कोडबेस Creative Commons CC0 1.0 Universal Public Domain Dedication के अन्तर्गत सार्वजनिक हित में समर्पित है। आप बिना किसी प्रतिबन्ध के इस कार्य का निरीक्षण, विभाजन, संशोधन एवं उपयोग करने हेतु स्वतंत्र हैं।'
+                ? 'sanatan.cc हिन्दू काल-गणना (पञ्चाङ्ग) तथा शुभ मुहूर्त निर्धारण हेतु शैक्षणिक, खगोलीय एवं सांस्कृतिक सॉफ्टवेयर उपकरण प्रदान करता है। सम्पूर्ण कोडबेस सार्वजनिक हित में पूर्णतः मुक्त-स्रोत (सीसी० १.० सार्वभौमिक समर्पण) है। आप बिना किसी प्रतिबन्ध के इस कार्य का निरीक्षण, विभाजन, संशोधन एवं उपयोग करने हेतु स्वतंत्र हैं।'
                 : 'sanatan.cc provides educational, astronomical, and cultural software tools designed to compute Hindu calendar systems (Panchangam) and auspicious time windows (Shubh Muhurtas). The codebase is dedicated to the public domain under the Creative Commons CC0 1.0 Universal Public Domain Dedication. You are free to inspect, fork, modify, and build upon the work for any purpose without restriction.'}
             </p>
           </section>

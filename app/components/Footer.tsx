@@ -131,7 +131,7 @@ export default function Footer() {
           {/* Machine & Agent Interfaces */}
           <div className="space-y-2.5">
             <h4 className="font-serif text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-200">
-              {language === 'hi' ? 'ओपन स्टैंडर्ड्स' : 'Agent & Open Standards'}
+              {language === 'hi' ? 'मुक्त मानक एवं अवसंरचना' : 'Agent & Open Standards'}
             </h4>
             <ul className="space-y-1.5 text-xs">
               <li>
@@ -151,7 +151,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400 font-mono text-[11px]"
                 >
-                  /llms.txt ({language === 'hi' ? 'LLM संदर्भ' : 'LLM Context'})
+                  /llms.txt ({language === 'hi' ? 'एआई संदर्भ' : 'LLM Context'})
                 </a>
               </li>
               <li>
@@ -161,7 +161,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400 font-mono text-[11px]"
                 >
-                  MCP Server Card (SEP-1649)
+                  {language === 'hi' ? 'एमसीपी सर्वर कार्ड (एसईपी-१६४९)' : 'MCP Server Card (SEP-1649)'}
                 </a>
               </li>
               <li>
@@ -181,7 +181,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="transition hover:text-amber-600 dark:hover:text-amber-400"
                 >
-                  {language === 'hi' ? 'GitHub स्रोत कोड ↗' : 'GitHub Source Code ↗'}
+                  {language === 'hi' ? 'गिटहब स्रोत कोड ↗' : 'GitHub Source Code ↗'}
                 </a>
               </li>
             </ul>

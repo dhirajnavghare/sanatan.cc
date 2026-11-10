@@ -60,18 +60,29 @@ export function getCachedDayPanchang(
       startTime: panchang.muhurtas.abhijitMuhurta.startTime,
       endTime: panchang.muhurtas.abhijitMuhurta.endTime,
       quality: 'Abhijit',
-      description: 'Midday auspicious window blessed by Lord Vishnu.',
+      description: 'Midday auspicious window blessed by Lord Vishnu (भगवान विष्णु द्वारा अनुगृहीत मध्याह्न विजय काल)',
     });
   }
 
+  const rulerHiMap: Record<string, string> = {
+    Sun: 'सूर्य',
+    Moon: 'चन्द्र',
+    Mars: 'मंगल',
+    Mercury: 'बुध',
+    Jupiter: 'बृहस्पति',
+    Venus: 'शुक्र',
+    Saturn: 'शनि',
+  };
+
   panchang.choghadiya.day.forEach((ch) => {
     if (ch.quality === 'Amrit' || ch.quality === 'Shubh' || ch.quality === 'Labh') {
+      const rulerHi = rulerHiMap[ch.ruler] || ch.ruler;
       windows.push({
-        label: `${ch.name} Choghadiya (${ch.nameDevanagari})`,
+        label: `${ch.name} Choghadiya (${ch.nameDevanagari} चौघड़िया)`,
         startTime: ch.startTime,
         endTime: ch.endTime,
         quality: ch.quality as 'Shubh' | 'Amrit' | 'Labh',
-        description: `Ruled by ${ch.ruler} — ${ch.nature.toLowerCase()} timing for activities.`,
+        description: `Ruled by ${ch.ruler} — ${ch.nature.toLowerCase()} timing for activities. (स्वामी: ${rulerHi} — शुभ काल)`,
       });
     }
   });
