@@ -8,7 +8,7 @@ test.describe('Homepage Interactive End-to-End Suite', () => {
       } catch {}
     });
     await page.goto('/');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
   });
 
   test('should render live Vedic Pancha-Anga snapshot with 5 limbs', async ({ page }) => {
@@ -71,14 +71,18 @@ test.describe('Homepage Interactive End-to-End Suite', () => {
   test('should support P1 Regional Calendar Switcher (Purnimanta vs Amanta)', async ({ page }) => {
     // Switch to Amanta
     const amantaButton = page.getByRole('button', { name: /Amanta|अमान्त/i }).first();
-    await amantaButton.click();
-    await expect(amantaButton).toHaveClass(/bg-amber-500/);
+    await expect(async () => {
+      await amantaButton.click();
+      await expect(amantaButton).toHaveClass(/bg-amber-500/);
+    }).toPass({ timeout: 8000 });
     await expect(page.getByText(/Amanta|अमान्त/i).first()).toBeVisible();
 
     // Switch to Purnimanta
     const purnimantaButton = page.getByRole('button', { name: /Purnimanta|पूर्णिमान्त/i }).first();
-    await purnimantaButton.click();
-    await expect(purnimantaButton).toHaveClass(/bg-amber-500/);
+    await expect(async () => {
+      await purnimantaButton.click();
+      await expect(purnimantaButton).toHaveClass(/bg-amber-500/);
+    }).toPass({ timeout: 8000 });
     await expect(page.getByText(/Purnimanta|पूर्णिमान्त/i).first()).toBeVisible();
   });
 
@@ -210,6 +214,7 @@ test.describe('Homepage Interactive End-to-End Suite', () => {
 
     await expect(async () => {
       const btn = page.getByRole('button', { name: /Traditional Tabular Print|पारम्परिक मुद्रित सारणी/i });
+      await btn.scrollIntoViewIfNeeded();
       await btn.click();
       await expect(btn).toHaveClass(/bg-zinc-700/);
     }).toPass({ timeout: 10000 });
@@ -217,6 +222,7 @@ test.describe('Homepage Interactive End-to-End Suite', () => {
 
     await expect(async () => {
       const btn = page.getByRole('button', { name: /sanatan\.cc Math|गणितीय परिशुद्धता/i });
+      await btn.scrollIntoViewIfNeeded();
       await btn.click();
       await expect(btn).toHaveClass(/bg-amber-500/);
     }).toPass({ timeout: 10000 });

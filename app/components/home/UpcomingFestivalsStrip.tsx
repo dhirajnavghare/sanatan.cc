@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { GeoLocation } from '@/app/lib/panchang/types';
 import { getFestivalTimeline } from '@/app/lib/festivals/timeline';
 import { FestivalTimelineItem } from '@/app/lib/festivals/types';
+import CalendarSyncModal from '@/app/components/festivals/CalendarSyncModal';
 import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 import { cleanBilingualTitle, cleanPujaMuhurta } from '@/app/lib/i18n/formatters';
 
@@ -15,6 +16,7 @@ interface UpcomingFestivalsStripProps {
 export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsStripProps) {
   const [filter, setFilter] = useState<'all' | 'major' | 'vrat' | 'jayanti'>('major');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const { language, t } = useLanguage();
 
   const currentYear = useMemo(() => new Date().getFullYear(), []);
@@ -82,6 +84,16 @@ export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsSt
               {tab.label}
             </button>
           ))}
+
+          <button
+            type="button"
+            onClick={() => setIsSyncModalOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:from-amber-600 hover:to-amber-700 transition cursor-pointer"
+            title={language === 'hi' ? 'गूगल एवं फोन कैलेण्डर में पर्व सिंक करें' : 'Sync upcoming festivals to Google Calendar or phone'}
+          >
+            <span>📅</span>
+            <span>{language === 'hi' ? 'सिंक' : 'Sync'}</span>
+          </button>
         </div>
       </div>
 
@@ -206,6 +218,13 @@ export default function UpcomingFestivalsStrip({ location }: UpcomingFestivalsSt
           {language === 'hi' ? 'सम्पूर्ण वार्षिक व्रत तालिका देखें →' : 'View Full Annual Timeline →'}
         </Link>
       </div>
+
+      {/* Calendar Sync Modal */}
+      <CalendarSyncModal
+        isOpen={isSyncModalOpen}
+        onClose={() => setIsSyncModalOpen(false)}
+        location={location}
+      />
     </div>
   );
 }

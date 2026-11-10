@@ -3,6 +3,9 @@ import { calculatePanchang, PRESET_CITIES } from '@/app/lib/panchang';
 import { findMuhurtas } from '@/app/lib/muhurta-finder';
 import { MuhurtaCategoryId } from '@/app/lib/muhurta-finder/types';
 import { AyanamsaSystem } from '@/app/lib/panchang/ayanamsa';
+import { getAllPrayers, getPrayerBySlug } from '@/app/lib/prayers/query';
+import { getFestivalTimeline } from '@/app/lib/festivals/timeline';
+import { FestivalCategory } from '@/app/lib/festivals/types';
 
 export async function GET() {
   return NextResponse.json({
@@ -87,6 +90,29 @@ export async function POST(request: Request) {
                   timezone: { type: 'string', default: 'Asia/Kolkata' },
                 },
                 required: ['category', 'latitude', 'longitude'],
+              },
+            },
+            {
+              name: 'get_sacred_prayers',
+              description:
+                'Retrieve authentic Hindu prayers, Chalisas, and Stotrams (Hanuman Chalisa, Shiv Tandav, Shri Suktam, etc.) with verse-by-verse Sanskrit text, transliteration, and meanings.',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  slug: { type: 'string', description: 'Prayer slug identifier, e.g. hanuman-chalisa or shiv-tandav-stotram' },
+                },
+              },
+            },
+            {
+              name: 'sync_festival_calendar',
+              description:
+                'Generate Vedic festival calendar events and Ekadashi schedules with parana times for iCalendar (.ics) and Google Calendar sync.',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  year: { type: 'number', default: 2026 },
+                  category: { type: 'string', enum: ['major', 'ekadashi', 'all'], default: 'major' },
+                },
               },
             },
           ],
@@ -186,6 +212,58 @@ export async function POST(request: Request) {
                 text: JSON.stringify(topDates, null, 2),
               },
             ],
+            isError: false,
+          },
+        });
+      }
+
+      if (toolName === 'get_sacred_prayers') {
+        const slug = args.slug ? String(args.slug) : undefined;
+        if (slug) {
+          const prayer = getPrayerBySlug(slug);
+          return NextResponse.json({
+            jsonrpc: '2.0',
+            id,
+            result: {
+              content: [{ type: 'text', text: JSON.stringify(prayer || { error: 'Not found' }, null, 2) }],
+              isError: !prayer,
+            },
+          });
+        }
+        const prayers = getAllPrayers().map((p) => ({
+          slug: p.slug,
+          title: p.title,
+          deity: p.deity,
+          totalVerses: p.totalVerses,
+          idealTime: p.idealTime,
+        }));
+        return NextResponse.json({
+          jsonrpc: '2.0',
+          id,
+          result: {
+            content: [{ type: 'text', text: JSON.stringify(prayers, null, 2) }],
+            isError: false,
+          },
+        });
+      }
+
+      if (toolName === 'sync_festival_calendar') {
+        const year = Number(args.year) || 2026;
+        const cat = (args.category as FestivalCategory) || 'major';
+        const loc = PRESET_CITIES[0];
+        const timeline = getFestivalTimeline({ year, category: cat }, loc);
+        const events = timeline.festivals.slice(0, 20).map((f) => ({
+          date: f.date,
+          name: f.name,
+          category: f.category,
+          significance: f.significance,
+          panchangUrl: f.panchangUrl,
+        }));
+        return NextResponse.json({
+          jsonrpc: '2.0',
+          id,
+          result: {
+            content: [{ type: 'text', text: JSON.stringify({ year, count: timeline.festivals.length, sampleEvents: events }, null, 2) }],
             isError: false,
           },
         });

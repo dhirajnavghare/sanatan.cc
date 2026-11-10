@@ -146,6 +146,31 @@ const APPS: ApplicationCard[] = [
       { label: 'Local Ephemeris', labelHindi: 'स्थानीय पञ्चाङ्ग' },
     ],
   },
+  {
+    id: 'prayers',
+    name: 'Prayers & Chalisas',
+    nameDevanagari: 'स्तोत्र एवं चालीसा',
+    subtitle: 'Sacred Devotional Chanting & Daily Morning Rituals',
+    subtitleHindi: 'नित्य प्रातः एवं सांध्य पाठ, चालीसा व स्तोत्र संग्रह',
+    description:
+      'Authentic text library of Hanuman Chalisa, Shiv Tandav Stotram, Shri Suktam, Aditya Hridaya, and morning Pratahsmarana mantras with verse-by-verse meaning, font scaler, and Japa repetition counters for daily morning and evening rituals.',
+    descriptionHindi:
+      'हनुमान चालीसा, शिव ताण्डव स्तोत्र, श्रीसूक्त, आदित्य हृदय एवं दैनिक प्रातःस्मरण मन्त्रों का प्रामाणिक पाठ। अक्षर आकार नियंत्रक, जप सङ्कल्प गणक एवं भावार्थ सहित।',
+    icon: '📿',
+    href: '/prayers',
+    badge: 'Daily Ritual',
+    badgeHindi: 'नित्य साधना',
+    gradient: 'from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/20 hover:border-amber-500/50',
+    buttonGradient: 'from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 shadow-amber-500/25',
+    tags: [
+      { label: 'Hanuman Chalisa', labelHindi: 'हनुमान चालीसा', href: '/prayers?prayer=hanuman-chalisa' },
+      { label: 'Shiv Tandav', labelHindi: 'शिव ताण्डव स्तोत्र', href: '/prayers?prayer=shiv-tandav-stotram' },
+      { label: 'Shri Suktam', labelHindi: 'श्रीसूक्तम्', href: '/prayers?prayer=shri-suktam' },
+      { label: 'Aditya Hridaya', labelHindi: 'आदित्य हृदय', href: '/prayers?prayer=aditya-hridaya-stotram' },
+      { label: 'Morning Ritual', labelHindi: 'प्रातः स्मरण' },
+      { label: 'Japa Counter', labelHindi: 'जप सङ्कल्प' },
+    ],
+  },
 ];
 
 export default function InteractiveAppsGrid() {

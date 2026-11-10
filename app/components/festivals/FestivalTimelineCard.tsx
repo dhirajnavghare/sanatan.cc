@@ -3,11 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FestivalTimelineItem } from '@/app/lib/festivals/types';
+import { GeoLocation } from '@/app/lib/panchang/types';
+import { PRESET_CITIES } from '@/app/lib/panchang';
+import { generateGoogleCalendarUrl } from '@/app/lib/calendar/ics-generator';
 import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 import { cleanBilingualTitle, cleanPujaMuhurta } from '@/app/lib/i18n/formatters';
 
 interface FestivalTimelineCardProps {
   festival: FestivalTimelineItem;
+  location?: GeoLocation;
   isLast?: boolean;
 }
 
@@ -19,7 +23,11 @@ const CATEGORY_NAMES_HI: Record<string, string> = {
   Parva: 'पावन पर्व',
 };
 
-export default function FestivalTimelineCard({ festival, isLast = false }: FestivalTimelineCardProps) {
+export default function FestivalTimelineCard({
+  festival,
+  location = PRESET_CITIES[0],
+  isLast = false,
+}: FestivalTimelineCardProps) {
   const { language } = useLanguage();
   const isHi = language === 'hi';
 
@@ -196,13 +204,26 @@ export default function FestivalTimelineCard({ festival, isLast = false }: Festi
               {isHi ? 'दृक सिद्धान्त पञ्चाङ्ग' : 'Drik Panchang Ephemeris'}
             </span>
 
-            <Link
-              href={festival.panchangUrl}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-xs font-bold text-amber-700 transition hover:bg-amber-500 hover:text-white cursor-pointer dark:border-amber-400/30 dark:text-amber-300 dark:hover:bg-amber-600 dark:hover:text-white"
-            >
-              <span>{isHi ? 'दैनिक पञ्चाङ्ग देखें' : 'View Day Panchang'}</span>
-              <span>&rarr;</span>
-            </Link>
+            <div className="flex items-center gap-2">
+              <a
+                href={generateGoogleCalendarUrl(festival, location, language as 'hi' | 'en')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-xs font-semibold text-zinc-700 transition hover:border-amber-400 hover:bg-amber-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-amber-950/40 cursor-pointer"
+                title={isHi ? 'गूगल कैलेण्डर में जोड़ें' : 'Add to Google Calendar'}
+              >
+                <span>📅</span>
+                <span className="hidden sm:inline">{isHi ? 'गूगल कैलेण्डर' : 'Google Calendar'}</span>
+              </a>
+
+              <Link
+                href={festival.panchangUrl}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-xs font-bold text-amber-700 transition hover:bg-amber-500 hover:text-white cursor-pointer dark:border-amber-400/30 dark:text-amber-300 dark:hover:bg-amber-600 dark:hover:text-white"
+              >
+                <span>{isHi ? 'दैनिक पञ्चाङ्ग देखें' : 'View Day Panchang'}</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

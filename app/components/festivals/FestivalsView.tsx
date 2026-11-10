@@ -12,6 +12,7 @@ import {
 import FestivalsHero from './FestivalsHero';
 import FestivalsFilterBar from './FestivalsFilterBar';
 import FestivalTimelineCard from './FestivalTimelineCard';
+import CalendarSyncModal from './CalendarSyncModal';
 import LocationModal from '@/app/components/panchang/LocationModal';
 import { useLanguage } from '@/app/lib/i18n/LanguageContext';
 
@@ -44,6 +45,7 @@ export default function FestivalsView() {
   const [location, setLocation] = useState<GeoLocation>(DEFAULT_LOCATION);
   const [ayanamsa, setAyanamsa] = useState<AyanamsaSystem>('Lahiri');
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
 
   const [data, setData] = useState<FestivalTimelineResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -204,6 +206,7 @@ export default function FestivalsView() {
         onYearChange={handleYearChange}
         location={location}
         onOpenLocationModal={() => setIsLocationModalOpen(true)}
+        onOpenSyncModal={() => setIsSyncModalOpen(true)}
         nextUpcoming={data?.nextUpcoming}
         totalCount={data?.totalCount || 0}
         majorCount={data?.categories.find((c) => c.id === 'major')?.count || 0}
@@ -304,6 +307,7 @@ export default function FestivalsView() {
                       <FestivalTimelineCard
                         key={fest.id}
                         festival={fest}
+                        location={location}
                         isLast={idx === group.festivals.length - 1}
                       />
                     ))}
@@ -314,6 +318,15 @@ export default function FestivalsView() {
           </div>
         )}
       </div>
+
+      {/* Calendar Sync Modal */}
+      <CalendarSyncModal
+        isOpen={isSyncModalOpen}
+        onClose={() => setIsSyncModalOpen(false)}
+        location={location}
+        initialCategory={category}
+        initialYear={year}
+      />
 
       {/* Observer Location Modal */}
       <LocationModal

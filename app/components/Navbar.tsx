@@ -13,6 +13,7 @@ export default function Navbar() {
     { name: 'Panchang', devanagari: 'पञ्चाङ्ग', href: '/panchang', icon: '🗓' },
     { name: 'Muhurta', devanagari: 'शुभ मुहूर्त', href: '/muhurta', icon: '✨' },
     { name: 'Festivals', devanagari: 'व्रत-त्योहार', href: '/festivals', icon: '🪔' },
+    { name: 'Prayers', devanagari: 'स्तोत्र-चालीसा', href: '/prayers', icon: '📿' },
     { name: 'Deities', devanagari: 'देवी-देवता', href: '/devatas', icon: '🕉️' },
     { name: 'Temples', devanagari: 'तीर्थ-मन्दिर', href: '/temples', icon: '🛕' },
   ];
@@ -124,7 +125,7 @@ export default function Navbar() {
 
       {/* Mobile Sub-Navigation Bar */}
       <div className="flex border-t border-zinc-200/60 bg-zinc-50/70 p-1.5 sm:hidden dark:border-zinc-800/60 dark:bg-zinc-900/70">
-        <div role="tablist" aria-label="Mobile Navigation Tabs" className="grid w-full grid-cols-6 gap-1">
+        <div role="tablist" aria-label="Mobile Navigation Tabs" className="flex items-center w-full overflow-x-auto gap-1 scrollbar-none px-0.5">
           {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
             return (
@@ -133,7 +134,7 @@ export default function Navbar() {
                 href={link.href}
                 role="tab"
                 aria-selected={isActive}
-                className={`flex items-center justify-center gap-1 rounded-xl py-1.5 text-xs font-semibold transition ${
+                className={`flex-none flex items-center justify-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-semibold transition ${
                   isActive
                     ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-sm'
                     : 'text-zinc-600 dark:text-zinc-400'
