@@ -81,6 +81,53 @@ export default function TermsClientView() {
               {isHi ? ' पर अथवा हमारी सार्वजनिक गिटहब रिपॉजिटरी के माध्यम से सम्पर्क करें।' : ' or via our public GitHub repository.'}
             </p>
           </section>
+
+          <section className="space-y-2 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6 shadow-sm dark:border-emerald-500/20 dark:bg-emerald-950/20">
+            <h2 className="font-serif text-base font-bold text-zinc-900 dark:text-zinc-100">
+              {isHi
+                ? '५. गैर-व्यापारी घोषणा (Non-Trader Status Declaration)'
+                : '5. Non-Trader Status Declaration (EU DSA & Google Play Compliance)'}
+            </h2>
+            <p>
+              {isHi
+                ? 'यूरोपीय संघ के डिजिटल सेवा अधिनियम (EU Digital Services Act - Article 30) एवं गूगल प्ले की "ट्रेडर / नॉन-ट्रेडर" नीतियों के अन्तर्गत, डेवलपर यह औपचारिक घोषणा करता है कि "sanatan.cc" एवं एंड्रॉइड ऍप "cc.sanatan.app" विशुद्ध गैर-व्यावसायिक, नि:शुल्क एवं धर्मार्थ शैक्षणिक सेवाएँ हैं। डेवलपर किसी भी व्यावसायिक संस्था अथवा व्यापारी (Trader) के रूप में कार्य नहीं करता है:'
+                : 'Under Article 30 of the EU Digital Services Act (DSA) and Google Play Trader Status Policies, the developer certifies that "sanatan.cc" and the Android app "cc.sanatan.app" are non-commercial, free educational and cultural services. The developer does NOT act as a commercial trader:'}
+            </p>
+            <ul className="list-disc space-y-1.5 pl-5 pt-1">
+              <li>
+                <strong className="text-zinc-900 dark:text-zinc-100">
+                  {isHi ? 'शून्य शुल्क (100% Free):' : 'Zero Fees (100% Free):'}
+                </strong>{' '}
+                {isHi
+                  ? 'वेबसाइट एवं मोबाइल ऍप पूर्णतः नि:शुल्क उपलब्ध हैं; डाउनलोड अथवा उपयोग का कोई शुल्क नहीं है।'
+                  : 'Both the website and mobile app are 100% free with no download or access charges.'}
+              </li>
+              <li>
+                <strong className="text-zinc-900 dark:text-zinc-100">
+                  {isHi ? 'शून्य इन-ऍप खरीद (No IAP):' : 'No In-App Purchases (No IAP):'}
+                </strong>{' '}
+                {isHi
+                  ? 'कोई डिजिटल वस्तुएं, सशुल्क सुविधाएं, टोकन अथवा सदस्यताएं (Subscriptions) नहीं हैं।'
+                  : 'Zero in-app purchases, micro-transactions, digital goods, or paid subscriptions.'}
+              </li>
+              <li>
+                <strong className="text-zinc-900 dark:text-zinc-100">
+                  {isHi ? 'शून्य विज्ञापन राजस्व (No Ad Monetization):' : 'Zero Ad Monetization:'}
+                </strong>{' '}
+                {isHi
+                  ? 'कोई व्यावसायिक विज्ञापन या विज्ञापन-नेटवर्क मुद्रीकरण (Google AdMob आदि) नहीं है।'
+                  : 'Zero commercial advertisements or monetization networks (no Google AdMob, etc.).'}
+              </li>
+              <li>
+                <strong className="text-zinc-900 dark:text-zinc-100">
+                  {isHi ? 'शून्य डेटा मुद्रीकरण (Zero Data Monetization):' : 'Zero Data Monetization:'}
+                </strong>{' '}
+                {isHi
+                  ? 'उपयोगकर्ता डेटा का कभी भी किसी व्यावसायिक इकाई के साथ विक्रय, व्यापार अथवा साझाकरण नहीं किया जाता।'
+                  : 'No user data is ever sold, rented, monetized, or traded.'}
+              </li>
+            </ul>
+          </section>
         </div>
       </div>
     </div>

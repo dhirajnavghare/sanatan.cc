@@ -8,7 +8,10 @@ import {
 } from './constants';
 import { MuhurtaPeriod, ChoghadiyaPeriod } from './types';
 
-// Varjyam start ghatis for each of the 27 Nakshatras (Ashwini = 0)
+// Varjyam (Visha Ghati / Tyajya) elapsed start ghatis (out of 60) for each of the 27 Nakshatras (Ashwini = 0)
+// Classical reference: Kalaprakasika / Muhurta Chintamani / Muhurta Martanda
+// These values represent elapsed ghatis from nakshatra commencement:
+// e.g., 50 for Ashwini (51st ghati), 24 for Bharani (25th ghati), 11 for Ardra (11th ghati).
 const VARJYAM_START_GHATIS = [
   50, 24, 30, 40, 14, 11, 30, 20, 32, 30,
   20, 18, 21, 20, 14, 14, 10, 14, 56, 24,
@@ -167,15 +170,18 @@ export function calculateMuhurtas(
   };
 
   // 11. Dur Muhurtas: specific malefic daytime muhurtas
-  // 1-indexed daytime muhurta numbers for each day of week (0 = Sun)
+  // 1-indexed daytime muhurta numbers for each day of week (0 = Sun .. 6 = Sat)
+  // Classical reference: Muhurta Chintamani (Vivaha Prakarana, verse 54):
+  // "ravav aryama brahmarakshash ca some kuje vahnipitrye budhe cabhijit syat |
+  //  gurau toyarakshau bhrigau brahmapitrye shanav ishasarpau muhurta nishiddhah ||"
   const durMuhurtaRules: Record<number, number[]> = {
-    0: [14],
-    1: [8, 12],
-    2: [4, 11],
-    3: [5],
-    4: [6, 7],
-    5: [4, 9],
-    6: [2, 3],
+    0: [14],    // Sun: Aryama (14th)
+    1: [9, 12], // Mon: Brahma (9th) & Rakshasa (12th)
+    2: [4, 11], // Tue: Pitrya (4th) & Vahni (11th)
+    3: [8],     // Wed: Abhijit (8th - reason Abhijit is avoided on Wednesday)
+    4: [6, 12], // Thu: Toya (6th) & Rakshasa (12th)
+    5: [4, 9],  // Fri: Pitrya (4th) & Brahma (9th)
+    6: [1, 2],  // Sat: Isha (1st) & Sarpa (2nd)
   };
 
   const durMuhurtas: MuhurtaPeriod[] = (durMuhurtaRules[dayOfWeek] || []).map((mIdx, idx) => ({

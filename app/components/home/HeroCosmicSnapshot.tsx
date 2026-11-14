@@ -221,11 +221,21 @@ export default function HeroCosmicSnapshot({
           {/* Top Control Bar: City Selector, GPS, & Live Time */}
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/20 text-base text-amber-300">
-                📍
-              </span>
+              <Link
+                href="/settings"
+                title={language === 'hi' ? 'प्रधान देशान्तर सेटिंग्स देखें' : 'View Prime Meridian Settings'}
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/20 text-base text-amber-300 transition hover:bg-amber-500/30 cursor-pointer"
+              >
+                🧭
+              </Link>
               <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                <span className="font-semibold text-zinc-300">{language === 'hi' ? 'स्थान:' : 'Coordinates:'}</span>
+                <Link
+                  href="/settings"
+                  className="font-semibold text-zinc-300 hover:text-amber-300 transition cursor-pointer"
+                  title={language === 'hi' ? 'प्रधान देशान्तर सेटिंग्स में बदलें' : 'Manage in Prime Meridian Settings'}
+                >
+                  {language === 'hi' ? 'प्रधान देशान्तर:' : 'Meridian & City:'}
+                </Link>
                 <select
                   aria-label="Select location"
                   value={location.name}

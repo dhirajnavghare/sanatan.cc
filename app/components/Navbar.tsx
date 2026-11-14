@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import { playTempleBell, triggerHaptic } from '@/app/lib/services/sacredAudio';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -17,10 +18,32 @@ export default function Navbar() {
     { name: 'Prayers', devanagari: 'स्तोत्र-चालीसा', href: '/prayers', icon: '📿' },
     { name: 'Deities', devanagari: 'देवी-देवता', href: '/devatas', icon: '🕉️' },
     { name: 'Temples', devanagari: 'तीर्थ-मन्दिर', href: '/temples', icon: '🛕' },
+    { name: 'Settings', devanagari: 'सेटिंग्स', href: '/settings', icon: '⚙️' },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/90 backdrop-blur-xl transition-colors dark:border-zinc-800/80 dark:bg-zinc-950/90">
+      {/* Android App Coming Soon Banner */}
+      <div
+        data-testid="navbar-android-banner"
+        className="border-b border-amber-500/20 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 px-3 py-1 text-center text-white"
+      >
+        <div className="mx-auto flex max-w-5xl items-center justify-center gap-2 text-[11px] sm:text-xs font-semibold">
+          <span className="flex items-center gap-1.5">
+            <span className="text-xs">🤖</span>
+            <span>
+              {isHi
+                ? 'सनातन एंड्रॉइड ऐप शीघ्र आ रहा है Google Play Store पर'
+                : 'Sanatan Android App Coming Soon to Google Play Store'}
+            </span>
+          </span>
+          <span className="hidden sm:inline-block text-amber-200">•</span>
+          <span className="hidden sm:inline-block rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+            {isHi ? '१००% ऑफ़लाइन एवं विज्ञापन-मुक्त' : '100% Offline & Ad-Free'}
+          </span>
+        </div>
+      </div>
+
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-2.5 sm:px-6">
         {/* Brand Logo */}
         <Link href="/" className="group flex items-center gap-3">
@@ -67,6 +90,21 @@ export default function Navbar() {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
+          {/* Temple Bell Chime Action */}
+          <button
+            type="button"
+            data-testid="header-bell-btn"
+            onClick={async () => {
+              await triggerHaptic('tap', true);
+              await playTempleBell(1.0);
+            }}
+            title={isHi ? 'मन्दिर की घंटी बजाएं' : 'Chime Temple Brass Bell'}
+            aria-label={isHi ? 'मन्दिर की घंटी बजाएं' : 'Chime Temple Brass Bell'}
+            className="flex h-8 w-8 items-center justify-center rounded-xl border border-amber-300 bg-amber-50 text-base transition hover:bg-amber-100 dark:border-amber-700/60 dark:bg-amber-950/40 cursor-pointer active:scale-95"
+          >
+            🔔
+          </button>
+
           {/* Language Switcher */}
           <div className="flex items-center rounded-xl border border-zinc-200/80 bg-zinc-100/80 p-0.5 dark:border-zinc-800 dark:bg-zinc-900/80">
             <button
