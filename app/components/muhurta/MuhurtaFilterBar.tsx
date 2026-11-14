@@ -57,7 +57,7 @@ export default function MuhurtaFilterBar({
     label: string;
   }> = [
     { value: 'All', label: isHi ? 'सभी शुभ मुहूर्त' : 'All Auspicious' },
-    { value: 'Good', label: isHi ? 'उत्तम एवं श्रेष्ठ (≥६५%)' : 'Good & Optimal (≥65%)' },
+    { value: 'Good', label: isHi ? 'उत्तम (≥६५%)' : 'Good (≥65%)' },
     { value: 'Optimal', label: isHi ? 'केवल श्रेष्ठ (≥८०%)' : 'Optimal Only (≥80%)' },
   ];
 

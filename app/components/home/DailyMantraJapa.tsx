@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/app/lib/i18n/LanguageContext';
+import { playTempleBell, playShankhNaad, triggerHaptic } from '@/app/lib/services/sacredAudio';
 
 interface SacredMantra {
   title: string;
@@ -88,9 +89,11 @@ export default function DailyMantraJapa() {
   };
 
   const handleBeadClick = () => {
+    triggerHaptic('tap');
     if (japaCount + 1 >= 108) {
       setJapaCount(0);
       setCompletedMalas((prev) => prev + 1);
+      playTempleBell(1.0);
     } else {
       setJapaCount((prev) => prev + 1);
     }
@@ -290,13 +293,41 @@ export default function DailyMantraJapa() {
               </p>
             )}
 
-            <button
-              type="button"
-              onClick={handleResetJapa}
-              className="text-center text-xs font-semibold text-zinc-600 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer"
-            >
-              {language === 'hi' ? 'रीसेट करें' : 'Reset Counter'}
-            </button>
+            <div className="flex items-center justify-between gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic('tap');
+                  playTempleBell(1.0);
+                }}
+                className="inline-flex items-center gap-1 rounded-xl border border-amber-300 bg-amber-50/80 px-2.5 py-1 text-[11px] font-bold text-amber-800 transition hover:bg-amber-100 dark:border-amber-700/60 dark:bg-amber-950/40 dark:text-amber-300 cursor-pointer"
+                title="Ring authentic Temple Brass Bell"
+              >
+                <span>🔔</span>
+                <span>{language === 'hi' ? 'घंटी' : 'Bell'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic('tap');
+                  playShankhNaad(1.0);
+                }}
+                className="inline-flex items-center gap-1 rounded-xl border border-indigo-300 bg-indigo-50/80 px-2.5 py-1 text-[11px] font-bold text-indigo-800 transition hover:bg-indigo-100 dark:border-indigo-700/60 dark:bg-indigo-950/40 dark:text-indigo-300 cursor-pointer"
+                title="Blow sacred Shankh Naad"
+              >
+                <span>🐚</span>
+                <span>{language === 'hi' ? 'शंख' : 'Shankh'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetJapa}
+                className="text-center text-xs font-semibold text-zinc-600 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 cursor-pointer"
+              >
+                {language === 'hi' ? 'रीसेट करें' : 'Reset Counter'}
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import PrivacyClientView from './PrivacyClientView';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — sanatan.cc',
+  title: 'Privacy Policy — Sanatan Panchang & Muhurta (cc.sanatan.app) | sanatan.cc',
   description:
-    'Privacy Policy for sanatan.cc — Zero trackers, zero advertising, and complete data privacy.',
+    'Comprehensive Privacy Policy for the Sanatan Panchang & Muhurta Android application (package: cc.sanatan.app) and the sanatan.cc web portal. Zero trackers, zero advertising, offline autonomy, and complete data privacy.',
   alternates: {
     canonical: '/privacy',
   },

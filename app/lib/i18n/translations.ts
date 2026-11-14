@@ -8,6 +8,7 @@ export interface Translations {
   navFestivals: string;
   navDeities: string;
   navTemples: string;
+  navSettings: string;
   navFeedback: string;
 
   // Hero & Panchang
@@ -98,6 +99,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     navFestivals: 'Festivals',
     navDeities: 'Deities',
     navTemples: 'Temples',
+    navSettings: 'Settings',
     navFeedback: 'Feedback',
 
     heroTitle: "Today's Vedic Panchang",
@@ -177,6 +179,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     navFestivals: 'व्रत-त्योहार',
     navDeities: 'देवी-देवता',
     navTemples: 'तीर्थ-मन्दिर',
+    navSettings: 'सेटिंग्स',
     navFeedback: 'प्रतिक्रिया',
 
     heroTitle: 'आज का वैदिक पञ्चाङ्ग',

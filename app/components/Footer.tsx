@@ -84,6 +84,20 @@ export default function Footer() {
                   {language === 'hi' ? 'स्तोत्र एवं चालीसा' : 'Prayers & Chalisas'}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/settings"
+                  className="transition hover:text-amber-600 dark:hover:text-amber-400"
+                >
+                  {language === 'hi' ? 'सेटिंग्स व प्रधान देशान्तर' : 'Settings & Meridian'}
+                </Link>
+              </li>
+              <li>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+                  <span>🤖</span>
+                  <span>{language === 'hi' ? 'एंड्रॉइड ऐप (शीघ्र उपलब्ध)' : 'Android App (Coming Soon)'}</span>
+                </span>
+              </li>
             </ul>
           </div>
 
@@ -108,6 +122,16 @@ export default function Footer() {
                 >
                   {language === 'hi' ? 'सम्पर्क एवं सहायता' : 'Contact & Support'}
                 </Link>
+              </li>
+              <li>
+                <a
+                  href="https://dhirajnavghare.com/contact"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition hover:text-amber-600 dark:hover:text-amber-400"
+                >
+                  {language === 'hi' ? 'डेवलपर सम्पर्क ↗' : 'Developer Contact ↗'}
+                </a>
               </li>
               <li>
                 <Link
@@ -186,22 +210,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-        </div>
-
-        {/* Website Public Beta Status Notice */}
-        <div className="mt-8 rounded-2xl border border-amber-500/25 bg-amber-500/5 p-4 text-center backdrop-blur-xs dark:border-amber-400/20 dark:bg-amber-400/5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-bold text-amber-700 dark:text-amber-300">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
-            </span>
-            <span>{language === 'hi' ? 'सार्वजनिक बीटा संस्करण' : 'Public Beta Release'}</span>
-          </div>
-          <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
-            {language === 'hi'
-              ? 'यह जालस्थल वर्तमान में सार्वजनिक बीटा संस्करण में है। समस्त शास्त्रीय मुहूर्त, पञ्चाङ्ग एवं खगोलीय गणनाएं वेधशाला मानकों के साथ निरंतर परिष्कृत एवं सत्यापित की जा रही हैं। आपके सुझाव एवं प्रेक्षण सादर आमन्त्रित हैं।'
-              : 'This website is currently in public beta. All classical muhurta, panchang, and astronomical ephemeris calculations are actively validated and refined against observatory standards. Your feedback and observations are always welcome.'}
-          </p>
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-zinc-200/60 pt-6 text-[11px] text-zinc-500 sm:flex-row dark:border-zinc-800/60 dark:text-zinc-400">
