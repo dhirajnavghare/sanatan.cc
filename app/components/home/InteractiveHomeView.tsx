@@ -181,15 +181,14 @@ export default function InteractiveHomeView() {
             currentDate={currentDate}
             onSelectDate={(d) => {
               setCurrentDate(d);
-              setViewMode('daily');
             }}
             location={location}
             isHi={isHi}
           />
         )}
 
-        {/* 4. DAILY PANCHANG VIEW MODE (Default) */}
-        {viewMode === 'daily' && (
+        {/* 4. DAILY PANCHANG VIEW MODE (Default & Selected Month Date Details) */}
+        {(viewMode === 'daily' || viewMode === 'monthly') && (
           <>
             {/* Sacred Vrat Hero Card (Sankashti, Ekadashi, Pradosha, Purnima) */}
             <VratHeroCard
