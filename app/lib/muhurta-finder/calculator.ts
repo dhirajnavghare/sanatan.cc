@@ -92,8 +92,8 @@ export function getCachedDayPanchang(
   const avoidWindows: { label: string; startTime: Date; endTime: Date }[] = [
     {
       label: 'Rahu Kaal (राहु काल)',
-      startTime: panchang.muhurtas.rahuKaal.startTime,
-      endTime: panchang.muhurtas.rahuKaal.endTime,
+      startTime: muhurtas.rahuKaal.startTime,
+      endTime: muhurtas.rahuKaal.endTime,
     },
   ];
 
